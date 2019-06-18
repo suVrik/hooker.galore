@@ -22,12 +22,15 @@ RenderFetchSystem::RenderFetchSystem(World& world)
 #if BX_PLATFORM_WINDOWS
     platform_data.nwh = native_info.info.win.window;
 #elif BX_PLATFORM_OSX
-    platform_data.ndt = NULL;
+    platform_data.ndt = nullptr;
     platform_data.nwh = native_info.info.cocoa.window;
 #endif
     bgfx::setPlatformData(platform_data);
 
-    if (!bgfx::init()) {
+    bgfx::Init init;
+    //init.type = bgfx::RendererType::OpenGL;
+
+    if (!bgfx::init(init)) {
         throw std::runtime_error("Failed to initialize a renderer!");
     }
 

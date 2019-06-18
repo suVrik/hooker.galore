@@ -15,11 +15,11 @@ struct GeometryPassSingleComponent final {
     bgfx::ProgramHandle geometry_no_parallax_pass_program = BGFX_INVALID_HANDLE;
     bgfx::ProgramHandle geometry_blockout_pass_program    = BGFX_INVALID_HANDLE;
 
-    bgfx::UniformHandle color_roughness_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle normal_metal_ao_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle parallax_uniform        = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle parallax_scale_uniform  = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle norm_matrix_uniform     = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle color_roughness_uniform   = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle normal_metal_ao_uniform   = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle parallax_uniform          = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle parallax_settings_uniform = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle camera_position_uniform   = BGFX_INVALID_HANDLE;
 };
 
 } // namespace hg

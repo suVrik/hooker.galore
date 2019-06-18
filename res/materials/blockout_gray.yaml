@@ -2,3 +2,4 @@ color_roughness: blockout_gray_diffuse_roughness.png
 normal_metal_ao: blockout_gray_normal_metal_ao.png
 parallax: blockout_gray_height.png
 parallax_scale: 0
+parallax_steps: 0

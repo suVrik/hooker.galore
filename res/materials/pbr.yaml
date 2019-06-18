@@ -1,4 +1,5 @@
-color_roughness: test_color_roughness.png
-normal_metal_ao: test_normal_metal_ao.png
-parallax: test_parallax.png
-parallax_scale: 0.5
+color_roughness: grass_color_roughness.png
+normal_metal_ao: grass_normal_metal_ao.png
+parallax: grass_parallax.png
+parallax_scale: 0.05
+parallax_steps: 25

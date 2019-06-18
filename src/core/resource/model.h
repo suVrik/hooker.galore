@@ -25,6 +25,7 @@ public:
         float tangent_x;
         float tangent_y;
         float tangent_z;
+        float tangent_w;
         float u;
         float v;
     };

@@ -6,6 +6,8 @@ project(hooker_galore)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BINARY_DIR "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 # Compile Hooker Galore sources.
 
@@ -221,6 +223,12 @@ function(deploy_resources TYPE GLOB_PATTERN OUT_DEPENDENCIES)
     foreach(input ${FILE_LIST})
         string(SUBSTRING ${input} ${source_directory_length} -1 input_relative)
         set(output "${CMAKE_BINARY_DIR}/resources/${input_relative}")
+
+        if(WIN32)
+            STRING(REGEX REPLACE "/" "\\\\" input ${input})
+            STRING(REGEX REPLACE "/" "\\\\" output ${output})
+        endif()
+
         add_custom_command(
                 DEPENDS ${input}
                 OUTPUT ${output}
@@ -233,11 +241,11 @@ function(deploy_resources TYPE GLOB_PATTERN OUT_DEPENDENCIES)
     set(${OUT_DEPENDENCIES} ${dependencies} PARENT_SCOPE)
 endfunction()
 
-#set(resources "")
-#deploy_resources("level" "${CMAKE_SOURCE_DIR}/res/levels/*.yaml" resources)
-#deploy_resources("material" "${CMAKE_SOURCE_DIR}/res/materials/*.yaml" resources)
-#deploy_resources("model" "${CMAKE_SOURCE_DIR}/res/models/*.glb" resources)
-#deploy_resources("preset" "${CMAKE_SOURCE_DIR}/res/presets/*.yaml" resources)
-#deploy_resources("texture" "${CMAKE_SOURCE_DIR}/res/textures/*.png" resources)
-#add_custom_target(deploy_resources ALL DEPENDS "${resources}")
-#add_dependencies(hooker_galore deploy_resources)
+set(resources "")
+deploy_resources("level" "${CMAKE_SOURCE_DIR}/res/levels/*.yaml" resources)
+deploy_resources("material" "${CMAKE_SOURCE_DIR}/res/materials/*.yaml" resources)
+deploy_resources("model" "${CMAKE_SOURCE_DIR}/res/models/*.glb" resources)
+deploy_resources("preset" "${CMAKE_SOURCE_DIR}/res/presets/*.yaml" resources)
+deploy_resources("texture" "${CMAKE_SOURCE_DIR}/res/textures/*.png" resources)
+add_custom_target(deploy_resources ALL DEPENDS "${resources}")
+add_dependencies(hooker_galore deploy_resources)

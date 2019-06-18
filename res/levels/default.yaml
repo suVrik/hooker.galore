@@ -1153,7 +1153,25 @@ entities:
       path: sphere/sphere_7_7.yaml
   - TransformComponent:
       translation:
+        x: 1
+        y: 5
+        z: 0
+      rotation:
         x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    ModelComponent:
+      path: blockout.glb
+    MaterialComponent:
+      path: test.yaml
+  - TransformComponent:
+      translation:
+        x: -1
         y: 5
         z: 0
       rotation:

@@ -360,6 +360,18 @@ void ResourceSystem::load_material(const TextureSingleComponent& texture_single_
                 throw std::runtime_error("Field \"parallax_scale\" is missing.");
             }
             result.parallax_scale = parallax_scale.as<float>(0.f);
+            if (result.parallax_scale <= -glm::epsilon<float>() || result.parallax_scale >= 1.f + glm::epsilon<float>()) {
+                throw std::runtime_error("Invalid \"parallax_scale\" value.");
+            }
+
+            YAML::Node parallax_steps = node["parallax_steps"];
+            if (!parallax_steps) {
+                throw std::runtime_error("Field \"parallax_steps\" is missing.");
+            }
+            result.parallax_steps = parallax_steps.as<float>(0.f);
+            if (result.parallax_steps <= -glm::epsilon<float>() || result.parallax_steps >= 32.f + glm::epsilon<float>()) {
+                throw std::runtime_error("Invalid \"parallax_steps\" value.");
+            }
         }
     }
     catch (const std::runtime_error& error) {
@@ -420,14 +432,14 @@ void ResourceSystem::load_model_node(Model::Node& result, const tinygltf::Model 
         const glm::mat3 matrix(node.matrix[0],  node.matrix[1],  node.matrix[2],
                                node.matrix[4],  node.matrix[5],  node.matrix[6],
                                node.matrix[8],  node.matrix[9],  node.matrix[10]);
-        result.translation = -glm::vec3(node.matrix[12], node.matrix[13], node.matrix[14]);
+        result.translation = glm::vec3(node.matrix[12], node.matrix[13], node.matrix[14]);
         result.rotation = glm::quat(matrix);
         result.scale = glm::vec3(glm::length(matrix[0]), glm::length(matrix[1]), glm::length(matrix[2]));
     } else {
         // Specified as translation, rotation, scale (all optional).
 
         if (node.translation.size() == 3) {
-            result.translation = -glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
+            result.translation = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
         } else {
             result.translation = glm::vec3();
         }
@@ -524,9 +536,9 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
 
             for (size_t i = 0; i < num_vertices; i++) {
                 const auto* const position_source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
-                vertex_data[i].x = -position_source_data[0];
-                vertex_data[i].y = -position_source_data[1];
-                vertex_data[i].z = -position_source_data[2];
+                vertex_data[i].x = position_source_data[0];
+                vertex_data[i].y = position_source_data[1];
+                vertex_data[i].z = position_source_data[2];
             }
         } else if (attribute == "NORMAL") {
             const size_t byte_stride = buffer_view.byteStride == 0 ? sizeof(float) * 3 : buffer_view.byteStride;
@@ -543,9 +555,9 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
 
             for (size_t i = 0; i < num_vertices; i++) {
                 const auto* const source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
-                vertex_data[i].normal_x = -source_data[0];
-                vertex_data[i].normal_y = -source_data[1];
-                vertex_data[i].normal_z = -source_data[2];
+                vertex_data[i].normal_x = source_data[0];
+                vertex_data[i].normal_y = source_data[1];
+                vertex_data[i].normal_z = source_data[2];
             }
         } else if (attribute == "TANGENT") {
             const size_t byte_stride = buffer_view.byteStride == 0 ? sizeof(float) * 4 : buffer_view.byteStride;
@@ -562,9 +574,10 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
 
             for (size_t i = 0; i < num_vertices; i++) {
                 const auto* const source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
-                vertex_data[i].tangent_x = -source_data[0];
-                vertex_data[i].tangent_y = -source_data[1];
-                vertex_data[i].tangent_z = -source_data[2];
+                vertex_data[i].tangent_x = source_data[0];
+                vertex_data[i].tangent_y = source_data[1];
+                vertex_data[i].tangent_z = source_data[2];
+                vertex_data[i].tangent_w = source_data[3];
             }
         } else if (attribute == "TEXCOORD_0") {
             if (accessor.type != TINYGLTF_TYPE_VEC2 ||

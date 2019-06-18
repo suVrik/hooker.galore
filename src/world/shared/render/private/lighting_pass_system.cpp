@@ -84,7 +84,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
 
     static float t = 0.f;
     t += 0.02;
-    float pos[4] = { std::cos(t) * 3.f, std::sin(t) + 5.f, std::sin(t) * 3.f, 1.f };
+    float pos[4] = { std::cos(t) * 3.f, std::sin(t) * 0.2f + 8.f, std::sin(t) * 3.f, 1.f };
 
     bgfx::setTexture(0, lighting_pass_single_component.color_roughness_uniform, geometry_pass_single_component.color_roughness_texture);
     bgfx::setTexture(1, lighting_pass_single_component.normal_metal_ao_uniform, geometry_pass_single_component.normal_metal_ao_texture);

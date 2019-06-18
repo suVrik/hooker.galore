@@ -11,6 +11,7 @@ public:
     const Texture* normal_metal_ao = nullptr;
     const Texture* parallax        = nullptr; // Optional.
     float parallax_scale           = 0.f;     // Optional.
+    float parallax_steps           = 0.f;     // Optional.
 };
 
 } // namespace hg

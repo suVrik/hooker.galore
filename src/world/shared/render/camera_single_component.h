@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../../../../lib/entt/include/entt/entity/registry.hpp"
-#include "../../../../lib/glm/include/glm/mat4x4.hpp"
+#include <entt/entity/registry.hpp>
+#include <glm/ext/quaternion_float.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace hg {
 
@@ -9,6 +10,8 @@ namespace hg {
 struct CameraSingleComponent final {
     entt::entity active_camera = entt::null;
 
+    glm::vec3 translation                    = glm::vec3(0.f);
+    glm::quat rotation                       = glm::quat(0.f, 0.f, 0.f, 1.f);
     glm::mat4 view_matrix                    = glm::mat4(1.f);
     glm::mat4 projection_matrix              = glm::mat4(1.f);
     glm::mat4 view_projection_matrix         = glm::mat4(1.f);
