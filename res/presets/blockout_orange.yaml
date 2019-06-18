@@ -1,0 +1,6 @@
+TransformComponent:
+ModelComponent:
+  path: blockout.glb
+MaterialComponent:
+  path: blockout_orange.yaml
+BlockoutComponent:
