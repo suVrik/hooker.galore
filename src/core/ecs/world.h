@@ -27,6 +27,7 @@ public:
     /** Perform `entt::registry::assign` on earlier registered component. Default constructor is used.
         Undefined behavior if `component` is not a registered type. */
     entt::meta_handle assign(entt::entity entity, entt::meta_type component) noexcept;
+    entt::meta_handle assign(entt::entity entity, const entt::meta_any& component) noexcept;
 
     /** Perform `entt::registry::remove` on earlier registered component.
         Undefined behavior if `component` is not a registered type. */
@@ -73,6 +74,7 @@ public:
 private:
     struct ComponentDescriptor final {
         entt::meta_handle(*assign)(World* world, entt::entity entity);
+        entt::meta_handle(*assign_copy)(World* world, entt::entity entity, const entt::meta_any& copy);
         void(*remove)(World* world, entt::entity entity);
         bool(*has)(const World* world, entt::entity entity);
         entt::meta_handle(*get)(const World* world, entt::entity entity);

@@ -9,7 +9,7 @@ namespace hg {
 /** `PresetSingleComponent` contains editor presets. */
 class PresetSingleComponent final {
 public:
-    std::map<std::string, entt::meta_any> presets;
+    std::map<std::string, std::vector<entt::meta_any>> presets;
 };
 
 } // namespace hg

@@ -592,7 +592,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(float) * 2 && byte_stride * (num_vertices - 1) + sizeof(float) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const float *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = texcoord_source_data[0];
+                        vertex_data[i].u = 1.f - texcoord_source_data[0];
                         vertex_data[i].v = texcoord_source_data[1];
                     }
                 } else {
@@ -603,7 +603,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(uint8_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint8_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint8_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = texcoord_source_data[0] / 255.f;
+                        vertex_data[i].u = 1.f - texcoord_source_data[0] / 255.f;
                         vertex_data[i].v = texcoord_source_data[1] / 255.f;
                     }
                 } else {
@@ -614,7 +614,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(uint16_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint16_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint16_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = texcoord_source_data[0] / 65535.f;
+                        vertex_data[i].u = 1.f - texcoord_source_data[0] / 65535.f;
                         vertex_data[i].v = texcoord_source_data[1] / 65535.f;
                     }
                 } else {
@@ -728,7 +728,7 @@ void ResourceSystem::load_presets() const {
 
         const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "presets";
         resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const ghc::filesystem::path& file) {
-            entt::meta_any preset;
+            std::vector<entt::meta_any> preset;
             const std::string name = file.lexically_relative(directory).lexically_normal().string();
 
             load_preset(preset, file.string());
@@ -739,7 +739,7 @@ void ResourceSystem::load_presets() const {
     }
 }
 
-void ResourceSystem::load_preset(entt::meta_any& result, const std::string &path) const {
+void ResourceSystem::load_preset(std::vector<entt::meta_any>& result, const std::string &path) const {
     try {
         std::ifstream stream(path);
         if (!stream.is_open()) {
@@ -763,14 +763,15 @@ void ResourceSystem::load_preset(entt::meta_any& result, const std::string &path
                 throw std::runtime_error(fmt::format("Component type \"{}\" is not registered.", component_name));
             }
 
-            result = component_type.construct();
-            if (!result) {
+            entt::meta_any component = component_type.construct();
+            if (!component) {
                 throw std::runtime_error(fmt::format("Component \"{}\" is not default-constructible.", component_name));
             }
 
             if (!component_it->second.IsNull()) {
-                load_properties(result, component_it->second);
+                load_properties(component, component_it->second);
             }
+            result.push_back(std::move(component));
         }
     }
     catch (const std::runtime_error& error) {

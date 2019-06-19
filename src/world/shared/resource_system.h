@@ -56,7 +56,7 @@ private:
     void load_model_primitive(Model::Primitive& result, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const;
 
     void load_presets() const;
-    void load_preset(entt::meta_any& result, const std::string &path) const;
+    void load_preset(std::vector<entt::meta_any>& result, const std::string &path) const;
     void load_properties(entt::meta_handle object, const YAML::Node& node) const;
 
     void load_level() const;

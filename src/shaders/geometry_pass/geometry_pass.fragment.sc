@@ -16,7 +16,6 @@ uniform vec4 u_parallax_settings;
 vec2 parallax_uv(vec2 uv, vec3 view_dir) {
     float cur_layer_depth = 0.0;
     vec2 delta_uv = view_dir.xy * u_parallax_scale / (view_dir.z * u_parallax_steps);
-    delta_uv.y = -delta_uv.y;
     vec2 cur_uv = uv;
 
     float depth_from_tex;
