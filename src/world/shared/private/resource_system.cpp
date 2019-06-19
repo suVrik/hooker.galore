@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/resource/filesystem.h"
 #include "core/resource/material.h"
 #include "core/resource/texture.h"
 #include "world/editor/preset_single_component.h"
@@ -20,6 +19,7 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <future>
+#include <ghc/filesystem.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/mat4x4.hpp>
 #include <iostream>
@@ -41,11 +41,11 @@ bool compare_case_insensitive(const std::string& a, const std::string& b) noexce
 }
 
 template <typename T>
-void iterate_recursive_parallel(const filesystem::path& directory, const std::string& extension, T callback) {
-    std::vector<filesystem::path> files;
-    if (filesystem::exists(directory)) {
-        for (const auto& directory_entry : filesystem::recursive_directory_iterator(directory)) {
-            const filesystem::path& file_path = directory_entry.path();
+void iterate_recursive_parallel(const ghc::filesystem::path& directory, const std::string& extension, T callback) {
+    std::vector<ghc::filesystem::path> files;
+    if (ghc::filesystem::exists(directory)) {
+        for (const auto& directory_entry : ghc::filesystem::recursive_directory_iterator(directory)) {
+            const ghc::filesystem::path& file_path = directory_entry.path();
             if (compare_case_insensitive(file_path.extension().string(), extension)) {
                 files.push_back(file_path);
             }
@@ -58,7 +58,7 @@ void iterate_recursive_parallel(const filesystem::path& directory, const std::st
     std::mutex output_mutex;
     auto process_files = [&]() {
         while (true) {
-            filesystem::path file;
+            ghc::filesystem::path file;
 
             {
                 std::lock_guard<std::mutex> guard(files_mutex);
@@ -205,7 +205,7 @@ std::string ResourceSystem::get_resource_directory() const {
 #if defined(__APPLE__) && defined(HG_MACOS_BUNDLE)
     const std::string result = base_path;
 #else
-    const std::string result = (filesystem::path(base_path) / "resources").string();
+    const std::string result = (ghc::filesystem::path(base_path) / "resources").string();
 #endif
     SDL_free(base_path);
     return result;
@@ -215,8 +215,8 @@ void ResourceSystem::load_textures() const {
     auto& texture_single_component = world.set<TextureSingleComponent>();
     std::mutex texture_single_component_mutex;
 
-    const filesystem::path directory = filesystem::path(get_resource_directory()) / "textures";
-    resource_system_details::iterate_recursive_parallel(directory, ".png", [&](const filesystem::path& file) {
+    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "textures";
+    resource_system_details::iterate_recursive_parallel(directory, ".png", [&](const ghc::filesystem::path& file) {
         std::unique_ptr<Texture> texture = std::make_unique<Texture>();
         const std::string name = file.lexically_relative(directory).lexically_normal().string();
 
@@ -301,8 +301,8 @@ void ResourceSystem::load_materials() const {
     auto& texture_single_component = world.ctx<TextureSingleComponent>();
     std::mutex material_single_component_mutex;
 
-    const filesystem::path directory = filesystem::path(get_resource_directory()) / "materials";
-    resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const filesystem::path& file) {
+    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "materials";
+    resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const ghc::filesystem::path& file) {
         std::unique_ptr<Material> material = std::make_unique<Material>();
         const std::string name = file.lexically_relative(directory).lexically_normal().string();
 
@@ -383,8 +383,8 @@ void ResourceSystem::load_models() const  {
     auto& model_single_component = world.set<ModelSingleComponent>();
     std::mutex model_single_component_mutex;
 
-    const filesystem::path directory = filesystem::path(get_resource_directory()) / "models";
-    resource_system_details::iterate_recursive_parallel(directory, ".glb", [&](const filesystem::path& file) {
+    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "models";
+    resource_system_details::iterate_recursive_parallel(directory, ".glb", [&](const ghc::filesystem::path& file) {
         std::unique_ptr<Model> model = std::make_unique<Model>();
         const std::string name = file.lexically_relative(directory).lexically_normal().string();
 
@@ -726,8 +726,8 @@ void ResourceSystem::load_presets() const {
     if (auto* preset_single_component = world.try_ctx<PresetSingleComponent>(); preset_single_component != nullptr) {
         std::mutex preset_single_component_mutex;
 
-        const filesystem::path directory = filesystem::path(get_resource_directory()) / "presets";
-        resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const filesystem::path& file) {
+        const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "presets";
+        resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const ghc::filesystem::path& file) {
             entt::meta_any preset;
             const std::string name = file.lexically_relative(directory).lexically_normal().string();
 
@@ -844,8 +844,8 @@ void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node&
 void ResourceSystem::load_level() const {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
 
-    const filesystem::path level_path = filesystem::path(get_resource_directory()) / "levels" / level_single_component.level_name;
-    if (!filesystem::exists(level_path)) {
+    const ghc::filesystem::path level_path = ghc::filesystem::path(get_resource_directory()) / "levels" / level_single_component.level_name;
+    if (!ghc::filesystem::exists(level_path)) {
         throw std::runtime_error(fmt::format("Specified level \"{}\" doesn't exist.", level_path.string()));
     }
 
