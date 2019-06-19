@@ -1389,6 +1389,14 @@ inline std::string toUtf8(const charT* unicodeString)
     return toUtf8(std::basic_string<charT, std::char_traits<charT>>(unicodeString));
 }
 
+#ifdef __cpp_lib_string_view
+template <typename charT, typename traits>
+inline std::string toUtf8(const std::basic_string_view<charT, traits>& unicodeString)
+{
+    return toUtf8(unicodeString.c_str());
+}
+#endif
+
 }  // namespace detail
 
 #ifdef GHC_EXPAND_IMPL
