@@ -16,14 +16,14 @@ EditorCameraSystem::EditorCameraSystem(World& world) noexcept
 
     // TODO: Load all these settings from file.
     auto& editor_camera_component = world.assign<EditorCameraComponent>(camera_single_component.active_camera);
-    editor_camera_component.yaw = glm::pi<float>() * 9.f / 12.f;
-    editor_camera_component.pitch = -glm::pi<float>() / 4.f;
+    editor_camera_component.yaw = -glm::pi<float>() * 3.f / 4.f;
+    editor_camera_component.pitch = glm::pi<float>() / 4.f;
 
     auto& transform_component = world.assign<TransformComponent>(camera_single_component.active_camera);
     transform_component.translation.x = 10.f;
     transform_component.translation.y = 10.f;
     transform_component.translation.z = 10.f;
-    transform_component.rotation = glm::rotate(glm::rotate(glm::quat(0.f, 0.f, 0.f, 1.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
+    transform_component.rotation = glm::rotate(glm::rotate(glm::quat(1.f, 0.f, 0.f, 0.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
 }
 
 void EditorCameraSystem::update(float elapsed_time) {
@@ -74,11 +74,11 @@ void EditorCameraSystem::update(float elapsed_time) {
 
         if (normal_input_single_component.is_down(Control::BUTTON_RIGHT)) {
             editor_camera_component.yaw -= normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
-            editor_camera_component.pitch -= normal_input_single_component.get_delta_mouse_y() * MOUSE_SENSITIVITY;
+            editor_camera_component.pitch += normal_input_single_component.get_delta_mouse_y() * MOUSE_SENSITIVITY;
             editor_camera_component.pitch = glm::clamp(editor_camera_component.pitch, -glm::half_pi<float>(), glm::half_pi<float>());
         }
 
-        transform_component.rotation = glm::rotate(glm::rotate(glm::quat(0.f, 0.f, 0.f, 1.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
+        transform_component.rotation = glm::rotate(glm::rotate(glm::quat(1.f, 0.f, 0.f, 0.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
         transform_component.translation += transform_component.rotation * glm::vec3(delta_x, 0.f, 0.f) + glm::vec3(0.f, delta_y, 0.f) + transform_component.rotation * glm::vec3(0.f, 0.f, delta_z);
     }
 }

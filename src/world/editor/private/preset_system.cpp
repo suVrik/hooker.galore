@@ -45,7 +45,6 @@ void PresetSystem::update(float /*elapsed_time*/) {
         for (const auto& [preset_name, preset] : preset_single_component.presets) {
             if (std::find(preset_name.begin(), preset_name.end(), PATH_DELIMITER) != preset_name.end()) {
                 std::vector<std::string> preset_path = split(preset_name, PATH_DELIMITER);
-
             }
         }
 

@@ -83,7 +83,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
-    // TODO: Acquire from some component.
+    // TODO: Acquire light position from some component.
     static float t = 0.f;
     t += 0.02;
     float pos[4] = { std::cos(t) * 3.f, std::sin(t) * 0.2f + 8.f, std::sin(t) * 3.f, 1.f };
@@ -97,10 +97,6 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
 
     // TODO: Remove it.
     dd::sphere(glm::vec3(pos[0], pos[1], pos[2]), glm::vec3(1.f, 1.f, 1.f), 0.1f);
-
-
-    float ppp[16] = { 1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 10.f, 5.f, 0.f, 1.f };
-    dd::axisTriad(ppp, 0.5f, 3.f);
 
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
 

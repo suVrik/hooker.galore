@@ -37,7 +37,6 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(RunningWorldSingleComponent);
     REGISTER_COMPONENT(TextureSingleComponent);
     REGISTER_COMPONENT(WindowSingleComponent);
-    REGISTER_COMPONENT(WindowSingleComponent);
 
     REGISTER_COMPONENT(BlockoutComponent);
     REGISTER_COMPONENT(EditorCameraComponent);

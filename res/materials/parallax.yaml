@@ -1,0 +1,5 @@
+color_roughness: parallax_color_roughness.png
+normal_metal_ao: parallax_normal_metal_ao.png
+parallax: parallax_parallax.png
+parallax_scale: 0.05
+parallax_steps: 25

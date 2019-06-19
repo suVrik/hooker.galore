@@ -439,15 +439,15 @@ void ResourceSystem::load_model_node(Model::Node& result, const tinygltf::Model 
         // Specified as translation, rotation, scale (all optional).
 
         if (node.translation.size() == 3) {
-            result.translation = glm::vec3(node.translation[0], node.translation[1], node.translation[2]);
+            result.translation = glm::vec3(node.translation[0], node.translation[1], -node.translation[2]);
         } else {
-            result.translation = glm::vec3();
+            result.translation = glm::vec3(0.f);
         }
 
         if (node.rotation.size() == 4) {
-            result.rotation = glm::quat(node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]);
+            result.rotation = glm::quat(node.rotation[3], -node.rotation[0], -node.rotation[1], node.rotation[2]);
         } else {
-            result.rotation = glm::quat(0.f, 0.f, 0.f, 1.f);
+            result.rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
         }
 
         if (node.scale.size() == 3) {
@@ -538,7 +538,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 const auto* const position_source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
                 vertex_data[i].x = position_source_data[0];
                 vertex_data[i].y = position_source_data[1];
-                vertex_data[i].z = position_source_data[2];
+                vertex_data[i].z = -position_source_data[2];
             }
         } else if (attribute == "NORMAL") {
             const size_t byte_stride = buffer_view.byteStride == 0 ? sizeof(float) * 3 : buffer_view.byteStride;
@@ -557,7 +557,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 const auto* const source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
                 vertex_data[i].normal_x = source_data[0];
                 vertex_data[i].normal_y = source_data[1];
-                vertex_data[i].normal_z = source_data[2];
+                vertex_data[i].normal_z = -source_data[2];
             }
         } else if (attribute == "TANGENT") {
             const size_t byte_stride = buffer_view.byteStride == 0 ? sizeof(float) * 4 : buffer_view.byteStride;
@@ -576,8 +576,8 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 const auto* const source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
                 vertex_data[i].tangent_x = source_data[0];
                 vertex_data[i].tangent_y = source_data[1];
-                vertex_data[i].tangent_z = source_data[2];
-                vertex_data[i].tangent_w = source_data[3];
+                vertex_data[i].tangent_z = -source_data[2];
+                vertex_data[i].tangent_w = -source_data[3];
             }
         } else if (attribute == "TEXCOORD_0") {
             if (accessor.type != TINYGLTF_TYPE_VEC2 ||

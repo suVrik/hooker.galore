@@ -36,35 +36,21 @@ vec3 to_world_space_position(vec3 position) {
 }
 
 void main() {
-#if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
-    vec2 uv = vec2(v_texcoord0.x, 1.0 - v_texcoord0.y);
-#else
-    vec2 uv = v_texcoord0;
-#endif
-
-    vec4 color_roughness = texture2D(s_color_roughness, uv);
+    vec4 color_roughness = texture2D(s_color_roughness, v_texcoord0);
     vec3 color = color_roughness.xyz;
     float roughness = color_roughness.w;
 
-    vec4 normal_metal_ao = texture2D(s_normal_metal_ao, uv);
+    vec4 normal_metal_ao = texture2D(s_normal_metal_ao, v_texcoord0);
     vec3 normal = decodeNormalOctahedron(normal_metal_ao.xy);
     float metal = normal_metal_ao.z;
     float ao = normal_metal_ao.w;
 
-    float clip_depth = to_clip_space_depth(texture2D(s_depth, uv).x);
-	vec3 clip_position = to_clip_space_position(vec3(uv * 2.0 - 1.0, clip_depth));
+    float clip_depth = to_clip_space_depth(texture2D(s_depth, v_texcoord0).x);
+	vec3 clip_position = to_clip_space_position(vec3(v_texcoord0 * 2.0 - 1.0, clip_depth));
 	vec3 world_position = to_world_space_position(clip_position);
 
 	vec3 light_dir = normalize(u_light_position.xyz - world_position);
 
 	float diffuse = max(dot(light_dir, normal), 0.0);
-
-	vec3 result = diffuse * color + color * 0.3;
-
-    // HDR tonemapping
-    //result = result / (result + vec3(1.0, 1.0, 1.0));
-    // gamma correct
-    //result = pow(result, vec3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));
-
-	gl_FragColor = vec4(result, 1.0);
+	gl_FragColor = vec4(diffuse * color + color * 0.3, 1.0);
 }

@@ -33,7 +33,6 @@ struct GeometryPassSystem::DrawNodeContext final {
     bgfx::UniformHandle normal_metal_ao_uniform   = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle parallax_uniform          = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle parallax_settings_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle camera_position_uniform   = BGFX_INVALID_HANDLE;
 
     const Texture* color_roughness = nullptr;
     const Texture* normal_metal_ao = nullptr;
@@ -72,7 +71,6 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     geometry_pass_single_component.normal_metal_ao_uniform   = bgfx::createUniform("s_normal_metal_ao",   bgfx::UniformType::Sampler);
     geometry_pass_single_component.parallax_uniform          = bgfx::createUniform("s_parallax",          bgfx::UniformType::Sampler);
     geometry_pass_single_component.parallax_settings_uniform = bgfx::createUniform("u_parallax_settings", bgfx::UniformType::Vec4);
-    geometry_pass_single_component.camera_position_uniform   = bgfx::createUniform("u_camera_position",   bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(GEOMETRY_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.f, 0);
 }
@@ -97,7 +95,6 @@ GeometryPassSystem::~GeometryPassSystem() {
     destroy_valid(geometry_pass_single_component.normal_metal_ao_uniform);
     destroy_valid(geometry_pass_single_component.parallax_uniform);
     destroy_valid(geometry_pass_single_component.parallax_settings_uniform);
-    destroy_valid(geometry_pass_single_component.camera_position_uniform);
 }
 
 void GeometryPassSystem::update(float /*elapsed_time*/) {
@@ -118,7 +115,6 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     context.normal_metal_ao_uniform   = geometry_pass_single_component.normal_metal_ao_uniform;
     context.parallax_uniform          = geometry_pass_single_component.parallax_uniform;
     context.parallax_settings_uniform = geometry_pass_single_component.parallax_settings_uniform;
-    context.camera_position_uniform   = geometry_pass_single_component.camera_position_uniform;
     context.camera_position           = glm::vec4(camera_single_component.translation, 0.f);
 
     m_group.each([&](entt::entity entity, ModelComponent& model_component, MaterialComponent& material_component, TransformComponent& transform_component) {
@@ -188,9 +184,9 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
 }
 
 void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::Node& node, const glm::mat4& transform) const noexcept {
-    glm::mat4 local_transform = glm::mat4_cast(node.rotation);
+    glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
+    local_transform = local_transform * glm::mat4_cast(node.rotation);
     local_transform = glm::scale(local_transform, node.scale);
-    local_transform = glm::translate(local_transform, node.translation);
 
     const glm::mat4 world_transform = transform * local_transform;
 
@@ -213,14 +209,12 @@ void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::
                 assert(bgfx::isValid(context.parallax_settings_uniform));
 
                 bgfx::setTexture(2, context.parallax_uniform, context.parallax->handle);
-
                 bgfx::setUniform(context.parallax_settings_uniform, glm::value_ptr(context.parallax_settings), 1);
-                bgfx::setUniform(context.camera_position_uniform,   glm::value_ptr(context.camera_position),   1);
             }
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_Z | BGFX_STATE_WRITE_A | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_Z | BGFX_STATE_WRITE_A | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CCW);
 
             assert(bgfx::isValid(context.program));
             

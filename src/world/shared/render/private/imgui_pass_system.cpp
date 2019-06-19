@@ -2,8 +2,8 @@
 #include "core/render/render_pass.h"
 #include "shaders/imgui_pass/imgui_pass.fragment.h"
 #include "shaders/imgui_pass/imgui_pass.vertex.h"
-#include "world/shared/imgui_render_system.h"
 #include "world/shared/imgui_single_component.h"
+#include "world/shared/render/imgui_pass_system.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
@@ -12,7 +12,7 @@
 
 namespace hg {
 
-namespace imgui_render_system_details {
+namespace imgui_pass_system_details {
 
 static const bgfx::EmbeddedShader IMGUI_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER(imgui_pass_vertex),
@@ -20,9 +20,9 @@ static const bgfx::EmbeddedShader IMGUI_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER_END()
 };
 
-} // namespace imgui_render_system_details
+} // namespace imgui_pass_system_details
 
-ImguiRenderSystem::ImguiRenderSystem(World& world) noexcept
+ImguiPassSystem::ImguiPassSystem(World& world) noexcept
         : NormalSystem(world) {
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();
 
@@ -44,8 +44,8 @@ ImguiRenderSystem::ImguiRenderSystem(World& world) noexcept
     imgui_context_single_component.font_uniform_handle = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
-    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(imgui_render_system_details::IMGUI_PASS_SHADER, type, "imgui_pass_vertex");
-    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(imgui_render_system_details::IMGUI_PASS_SHADER, type, "imgui_pass_fragment");
+    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(imgui_pass_system_details::IMGUI_PASS_SHADER, type, "imgui_pass_vertex");
+    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(imgui_pass_system_details::IMGUI_PASS_SHADER, type, "imgui_pass_fragment");
     imgui_context_single_component.program_handle = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     auto& window_single_component = world.ctx<WindowSingleComponent>();
@@ -53,7 +53,7 @@ ImguiRenderSystem::ImguiRenderSystem(World& world) noexcept
     bgfx::setViewRect(IMGUI_PASS, 0, 0, window_single_component.width, window_single_component.height);
 }
 
-ImguiRenderSystem::~ImguiRenderSystem() {
+ImguiPassSystem::~ImguiPassSystem() {
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();
     if (bgfx::isValid(imgui_context_single_component.font_texture_handle)) {
         bgfx::destroy(imgui_context_single_component.font_texture_handle);
@@ -66,7 +66,7 @@ ImguiRenderSystem::~ImguiRenderSystem() {
     }
 }
 
-void ImguiRenderSystem::update(float /*elapsed_time*/) {
+void ImguiPassSystem::update(float /*elapsed_time*/) {
     assert(world.after("WindowSystem") && world.after("ImguiFetchSystem") && world.before("RenderSystem"));
 
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();

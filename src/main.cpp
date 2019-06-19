@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
                 "LightingPassSystem",
                 "DebugDrawPassSystem",
                 "EditorGridSystem",
-                "ImguiRenderSystem",
+                "ImguiPassSystem",
                 "RenderSystem",
         };
         std::vector<std::string> fixed_system_order;

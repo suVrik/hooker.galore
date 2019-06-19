@@ -11,7 +11,7 @@ struct CameraSingleComponent final {
     entt::entity active_camera = entt::null;
 
     glm::vec3 translation                    = glm::vec3(0.f);
-    glm::quat rotation                       = glm::quat(0.f, 0.f, 0.f, 1.f);
+    glm::quat rotation                       = glm::quat(1.f, 0.f, 0.f, 0.f);
     glm::mat4 view_matrix                    = glm::mat4(1.f);
     glm::mat4 projection_matrix              = glm::mat4(1.f);
     glm::mat4 view_projection_matrix         = glm::mat4(1.f);

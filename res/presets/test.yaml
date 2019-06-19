@@ -1,5 +1,0 @@
-TransformComponent:
-ModelComponent:
-  path: test.glb
-MaterialComponent:
-  path: test.yaml

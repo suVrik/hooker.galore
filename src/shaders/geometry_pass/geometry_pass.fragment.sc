@@ -7,7 +7,6 @@ SAMPLER2D(s_color_roughness, 0);
 SAMPLER2D(s_normal_metal_ao, 1);
 SAMPLER2D(s_parallax,        2);
 
-uniform vec4 u_camera_position;
 uniform vec4 u_parallax_settings;
 
 #define u_parallax_scale u_parallax_settings.x
@@ -15,13 +14,12 @@ uniform vec4 u_parallax_settings;
 #define u_parallax_depth u_parallax_settings.z
 
 vec2 parallax_uv(vec2 uv, vec3 view_dir) {
-    view_dir.y = -view_dir.y;
-
     float cur_layer_depth = 0.0;
     vec2 delta_uv = view_dir.xy * u_parallax_scale / (view_dir.z * u_parallax_steps);
+    delta_uv.y = -delta_uv.y;
     vec2 cur_uv = uv;
 
-    float depth_from_tex = texture2D(s_parallax, cur_uv).r;
+    float depth_from_tex;
 
     for (int i = 0; i < 32; i++) {
         cur_layer_depth += u_parallax_depth;
@@ -43,8 +41,10 @@ vec2 parallax_uv(vec2 uv, vec3 view_dir) {
 void main() {
     mat3 tangent_space_matrix = mat3(v_tangent, v_bitangent, v_normal);
 
-    vec3 tangent_view_direction = mul(tangent_space_matrix, u_camera_position.xyz - v_position);
-    vec2 parallax_texcoord = parallax_uv(v_texcoord0, normalize(tangent_view_direction));
+    vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+    vec3 tangent_view_direction = mul(tangent_space_matrix, camera_position.xyz - v_position);
+    vec3 normalized_tangent_view_direction = normalize(tangent_view_direction);
+    vec2 parallax_texcoord = parallax_uv(v_texcoord0, normalized_tangent_view_direction);
 
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, parallax_texcoord);
 
