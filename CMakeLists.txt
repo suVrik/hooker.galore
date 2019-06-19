@@ -37,7 +37,6 @@ if(WIN32)
         # Link standard C and C++ libraries statically in Release. Link winpthread statically as well.
         target_link_libraries(hooker_galore PRIVATE -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive)
     endif()
-    target_link_libraries(hooker_galore PRIVATE stdc++fs)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/lib/libSDL2main.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/lib/libSDL2.a" mingw32)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/${CMAKE_BUILD_TYPE}/libbgfx.a")
