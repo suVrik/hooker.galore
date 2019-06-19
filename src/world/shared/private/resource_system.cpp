@@ -850,7 +850,7 @@ void ResourceSystem::load_level() const {
     }
 
     try {
-        std::ifstream stream(level_path);
+        std::ifstream stream(level_path.string());
         if (!stream.is_open()) {
             throw std::runtime_error("Failed to open a file.");
         }
