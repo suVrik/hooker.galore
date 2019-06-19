@@ -1393,7 +1393,7 @@ inline std::string toUtf8(const charT* unicodeString)
 template <typename charT, typename traits>
 inline std::string toUtf8(const std::basic_string_view<charT, traits>& unicodeString)
 {
-    return toUtf8(unicodeString.c_str());
+    return toUtf8(unicodeString.data());
 }
 #endif
 
