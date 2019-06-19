@@ -1,11 +1,14 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_camera_component.h"
+#include "world/editor/editor_component.h"
+#include "world/editor/gizmo_single_component.h"
 #include "world/editor/preset_single_component.h"
-#include "world/shared/render/camera_single_component.h"
+#include "world/editor/selected_entity_single_component.h"
 #include "world/shared/imgui_single_component.h"
 #include "world/shared/level_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/blockout_component.h"
+#include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/debug_draw_pass_single_component.h"
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/lighting_pass_single_component.h"
@@ -26,6 +29,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(CameraSingleComponent);
     REGISTER_COMPONENT(DebugDrawPassSingleComponent);
     REGISTER_COMPONENT(GeometryPassSingleComponent);
+    REGISTER_COMPONENT(GizmoSingleComponent);
     REGISTER_COMPONENT(ImguiSingleComponent);
     REGISTER_COMPONENT(LevelSingleComponent);
     REGISTER_COMPONENT(LightingPassSingleComponent);
@@ -35,11 +39,13 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(PresetSingleComponent);
     REGISTER_COMPONENT(QuadSingleComponent);
     REGISTER_COMPONENT(RunningWorldSingleComponent);
+    REGISTER_COMPONENT(SelectedEntitySingleComponent);
     REGISTER_COMPONENT(TextureSingleComponent);
     REGISTER_COMPONENT(WindowSingleComponent);
 
     REGISTER_COMPONENT(BlockoutComponent);
     REGISTER_COMPONENT(EditorCameraComponent);
+    REGISTER_COMPONENT(EditorComponent);
     REGISTER_COMPONENT(MaterialComponent);
     REGISTER_COMPONENT(ModelComponent);
     REGISTER_COMPONENT(TransformComponent);

@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
                 "CameraSystem",
                 "RenderFetchSystem",
                 "PresetSystem",
+                "EntitySelectionSystem",
+                "GizmoSystem",
                 "ResourceSystem",
                 "QuadSystem",
                 "GeometryPassSystem",

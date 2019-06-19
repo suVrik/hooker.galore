@@ -122,9 +122,9 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
             context.parallax          = material_component.material->parallax;
             context.parallax_settings = glm::vec4(material_component.material->parallax_scale, material_component.material->parallax_steps, 1.f / material_component.material->parallax_steps, 0.f);
 
-            glm::mat4 transform = glm::mat4_cast(transform_component.rotation);
+            glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
+            transform = transform * glm::mat4_cast(transform_component.rotation);
             transform = glm::scale(transform, transform_component.scale);
-            transform = glm::translate(transform, transform_component.translation);
 
             if (!world.has<BlockoutComponent>(entity)) {
                 if (context.parallax != nullptr) {

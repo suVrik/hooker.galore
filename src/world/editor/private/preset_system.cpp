@@ -1,9 +1,11 @@
 #include "core/ecs/world.h"
+#include "world/editor/editor_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 
 #include <ghc/filesystem.hpp>
 #include <imgui.h>
+#include <SDL2/SDL_timer.h>
 
 namespace hg {
 
@@ -34,6 +36,8 @@ void PresetSystem::update(float /*elapsed_time*/) {
     };
 
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
+
+    ImGui::SetNextWindowDockID(ImGui::GetID("Main"), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Presets")) {
         std::vector<std::string> directories;
 
@@ -70,6 +74,28 @@ void PresetSystem::update(float /*elapsed_time*/) {
                             for (const entt::meta_any& component_prototype : preset) {
                                 world.assign(entity, component_prototype);
                             }
+
+                            auto is_used = [&](const std::string& name) {
+                                bool result = false;
+                                world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent& editor_component) {
+                                    if (editor_component.name == name) {
+                                        result = true;
+                                    }
+                                });
+                                return result;
+                            };
+
+                            std::string name = ghc::filesystem::path(*preset_path_it).replace_extension("").string();
+                            if (is_used(name)) {
+                                uint32_t i = 2;
+                                while (is_used(name + "-" + std::to_string(i))) {
+                                    i++;
+                                }
+                                name += "-";
+                                name += std::to_string(i);
+                            }
+
+                            world.assign(entity, EditorComponent{ name, SDL_GetTicks() });
                         }
                     }
                 }

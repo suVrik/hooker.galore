@@ -1,4 +1,5 @@
 #include "core/ecs/world.h"
+#include "core/render/ImGuizmo.h"
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/imgui_single_component.h"
 #include "world/shared/normal_input_single_component.h"
@@ -134,6 +135,25 @@ void ImguiFetchSystem::update(float elapsed_time) {
     SDL_CaptureMouse(io.WantCaptureMouse ? SDL_TRUE : SDL_FALSE);
 
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
+
+    // TODO: Is this a place for this?
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+    const ImGuiWindowFlags flags = ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoDocking |
+                                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                                   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
+    ImGui::Begin("Main", nullptr, flags);
+    ImGui::PopStyleVar(3);
+
+    ImGui::DockSpace(ImGui::GetID("Main"), ImVec2(0.f, 0.f), ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
+
+    ImGui::End();
 }
 
 } // namespace hg
