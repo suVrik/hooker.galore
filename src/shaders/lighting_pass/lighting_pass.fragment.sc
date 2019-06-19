@@ -13,17 +13,17 @@ uniform vec4 u_camera_position;
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
     // DirectX & Metal range for Z is [0, 1].
-	return depth;
+    return depth;
 #else
     // OpenGL range for Z is [-1, 1].
-	return depth * 2.0 - 1.0;
+    return depth * 2.0 - 1.0;
 #endif
 }
 
 vec3 to_clip_space_position(vec3 position) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
     // DirectX & Metal coordinate system starts at upper-left corner.
-	return vec3(position.x, -position.y, position.z);
+    return vec3(position.x, -position.y, position.z);
 #else
     // OpenGL coordinate system starts at lower-left corner.
     return position;
@@ -31,8 +31,8 @@ vec3 to_clip_space_position(vec3 position) {
 }
 
 vec3 to_world_space_position(vec3 position) {
-	vec4 result = mul(u_invViewProj, vec4(position, 1.0));
-	return result.xyz / result.w;
+    vec4 result = mul(u_invViewProj, vec4(position, 1.0));
+    return result.xyz / result.w;
 }
 
 void main() {
@@ -46,11 +46,11 @@ void main() {
     float ao = normal_metal_ao.w;
 
     float clip_depth = to_clip_space_depth(texture2D(s_depth, v_texcoord0).x);
-	vec3 clip_position = to_clip_space_position(vec3(v_texcoord0 * 2.0 - 1.0, clip_depth));
-	vec3 world_position = to_world_space_position(clip_position);
+    vec3 clip_position = to_clip_space_position(vec3(v_texcoord0 * 2.0 - 1.0, clip_depth));
+    vec3 world_position = to_world_space_position(clip_position);
 
-	vec3 light_dir = normalize(u_light_position.xyz - world_position);
+    vec3 light_dir = normalize(u_light_position.xyz - world_position);
 
-	float diffuse = max(dot(light_dir, normal), 0.0);
-	gl_FragColor = vec4(diffuse * color + color * 0.3, 1.0);
+    float diffuse = max(dot(light_dir, normal), 0.0);
+    gl_FragColor = vec4(diffuse * color + color * 0.3, 1.0);
 }
