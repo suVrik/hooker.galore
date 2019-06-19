@@ -180,25 +180,36 @@ if(WIN32)
     if(MINGW AND "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         # Deploy "libgcc_s_seh-1.dll", "libstdc++-6.dll" and "libwinpthread-1.dll" in debug as well.
         get_filename_component(compiler_directory "${CMAKE_CXX_COMPILER}" DIRECTORY)
-        add_custom_command(
-                DEPENDS "${compiler_directory}/libgcc_s_seh-1.dll"
-                OUTPUT "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll"
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libgcc_s_seh-1.dll" "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll"
-                COMMENT "Deploying libgcc_s_seh-1.dll"
-        )
-        add_custom_command(
-                DEPENDS "${compiler_directory}/libstdc++-6.dll"
-                OUTPUT "${CMAKE_BINARY_DIR}/libstdc++-6.dll"
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libstdc++-6.dll" "${CMAKE_BINARY_DIR}/libstdc++-6.dll"
-                COMMENT "Deploying libstdc++-6.dll"
-        )
-        add_custom_command(
-                DEPENDS "${compiler_directory}/libwinpthread-1.dll"
-                OUTPUT "${CMAKE_BINARY_DIR}/libwinpthread-1.dll"
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libwinpthread-1.dll" "${CMAKE_BINARY_DIR}/libwinpthread-1.dll"
-                COMMENT "Deploying libwinpthread-1.dll"
-        )
-        list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll" "${CMAKE_BINARY_DIR}/libstdc++-6.dll" "${CMAKE_BINARY_DIR}/libwinpthread-1.dll")
+
+        if(EXISTS "${compiler_directory}/libgcc_s_seh-1.dll")
+            add_custom_command(
+                    DEPENDS "${compiler_directory}/libgcc_s_seh-1.dll"
+                    OUTPUT "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll"
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libgcc_s_seh-1.dll" "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll"
+                    COMMENT "Deploying libgcc_s_seh-1.dll"
+            )
+            list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/libgcc_s_seh-1.dll")
+        endif()
+
+        if(EXISTS "${compiler_directory}/libstdc++-6.dll")
+            add_custom_command(
+                    DEPENDS "${compiler_directory}/libstdc++-6.dll"
+                    OUTPUT "${CMAKE_BINARY_DIR}/libstdc++-6.dll"
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libstdc++-6.dll" "${CMAKE_BINARY_DIR}/libstdc++-6.dll"
+                    COMMENT "Deploying libstdc++-6.dll"
+            )
+            list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/libstdc++-6.dll")
+        endif()
+
+        if(EXISTS "${compiler_directory}/libwinpthread-1.dll")
+            add_custom_command(
+                    DEPENDS "${compiler_directory}/libwinpthread-1.dll"
+                    OUTPUT "${CMAKE_BINARY_DIR}/libwinpthread-1.dll"
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${compiler_directory}/libwinpthread-1.dll" "${CMAKE_BINARY_DIR}/libwinpthread-1.dll"
+                    COMMENT "Deploying libwinpthread-1.dll"
+            )
+            list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/libwinpthread-1.dll")
+        endif()
     endif()
 elseif(APPLE)
     add_custom_command(
