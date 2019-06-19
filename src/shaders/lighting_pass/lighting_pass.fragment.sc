@@ -8,7 +8,6 @@ SAMPLER2D(s_normal_metal_ao, 1);
 SAMPLER2D(s_depth,           2);
 
 uniform vec4 u_light_position;
-uniform vec4 u_camera_position;
 
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL

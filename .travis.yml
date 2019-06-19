@@ -14,7 +14,7 @@ jobs:
       script:
         - mkdir build
         - cd build
-        - cmake -G "Visual Studio 15 2017 Win64" .. -DCMAKE_BUILD_TYPE=Debug
+        - cmake -G "MinGW Makefiles" .. -DCMAKE_BUILD_TYPE=Debug
         - cmake --build . --config Debug -j 2
     - name: "MacOS"
       os: osx

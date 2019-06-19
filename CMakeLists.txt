@@ -28,7 +28,11 @@ target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/glm/in
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/include/")
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/tiny-gltf/include/")
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/stb/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/ghc-filesystem/include/")
+
+# MacOS doesn't support std::filesystem.
+if(APPLE)
+    target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/ghc-filesystem/include/")
+endif()
 
 # Link thirdpary libraries.
 

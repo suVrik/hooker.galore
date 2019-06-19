@@ -38,7 +38,6 @@ struct GeometryPassSystem::DrawNodeContext final {
     const Texture* normal_metal_ao = nullptr;
     const Texture* parallax        = nullptr;
     glm::vec4 parallax_settings    = glm::vec4(0.f);
-    glm::vec4 camera_position      = glm::vec4(0.f);
 
     bgfx::ProgramHandle program    = BGFX_INVALID_HANDLE;
 };
@@ -115,7 +114,6 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     context.normal_metal_ao_uniform   = geometry_pass_single_component.normal_metal_ao_uniform;
     context.parallax_uniform          = geometry_pass_single_component.parallax_uniform;
     context.parallax_settings_uniform = geometry_pass_single_component.parallax_settings_uniform;
-    context.camera_position           = glm::vec4(camera_single_component.translation, 0.f);
 
     m_group.each([&](entt::entity entity, ModelComponent& model_component, MaterialComponent& material_component, TransformComponent& transform_component) {
         if (material_component.material != nullptr && !model_component.model.children.empty()) {

@@ -42,7 +42,6 @@ LightingPassSystem::LightingPassSystem(World& world)
     lighting_pass_single_component.normal_metal_ao_uniform = bgfx::createUniform("s_normal_metal_ao", bgfx::UniformType::Sampler);
     lighting_pass_single_component.depth_uniform           = bgfx::createUniform("s_depth",           bgfx::UniformType::Sampler);
     lighting_pass_single_component.light_position_uniform  = bgfx::createUniform("u_light_position",  bgfx::UniformType::Vec4);
-    lighting_pass_single_component.camera_position_uniform = bgfx::createUniform("u_camera_position", bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);
     bgfx::setViewRect(LIGHTING_PASS, 0, 0, window_single_component.width, window_single_component.height);
@@ -62,7 +61,6 @@ LightingPassSystem::~LightingPassSystem() {
     destroy_valid(lighting_pass_single_component.normal_metal_ao_uniform);
     destroy_valid(lighting_pass_single_component.depth_uniform);
     destroy_valid(lighting_pass_single_component.light_position_uniform);
-    destroy_valid(lighting_pass_single_component.camera_position_uniform);
 }
 
 void LightingPassSystem::update(float /*elapsed_time*/) {
@@ -93,9 +91,8 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
 
     bgfx::setUniform(lighting_pass_single_component.light_position_uniform, pos, 1);
-    bgfx::setUniform(lighting_pass_single_component.camera_position_uniform, glm::value_ptr(camera_single_component.translation), 1);
 
-    // TODO: Remove it.
+    // TODO: Remove debug draw light.
     dd::sphere(glm::vec3(pos[0], pos[1], pos[2]), glm::vec3(1.f, 1.f, 1.f), 0.1f);
 
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
