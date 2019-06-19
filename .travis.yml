@@ -14,7 +14,7 @@ jobs:
       script:
         - mkdir build
         - cd build
-        - cmake -G "MinGW Makefiles" .. -DCMAKE_BUILD_TYPE=Debug
+        - cmake -G "MinGW Makefiles" .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_SH="CMAKE_SH-NOTFOUND"
         - cmake --build . --config Debug -j 2
     - name: "MacOS"
       os: osx
