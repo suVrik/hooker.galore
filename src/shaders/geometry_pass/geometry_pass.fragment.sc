@@ -42,10 +42,9 @@ vec2 parallax_uv(vec2 uv, vec3 view_dir) {
 
 void main() {
     mat3 tangent_space_matrix = mat3(v_tangent, v_bitangent, v_normal);
-    mat3 inv_tangent_space_matrix = transpose(tangent_space_matrix);
 
-    vec3 tangent_view_direction = normalize(mul(inv_tangent_space_matrix, u_camera_position.xyz - v_position));
-    vec2 parallax_texcoord = parallax_uv(v_texcoord0, tangent_view_direction);
+    vec3 tangent_view_direction = mul(tangent_space_matrix, u_camera_position.xyz - v_position);
+    vec2 parallax_texcoord = parallax_uv(v_texcoord0, normalize(tangent_view_direction));
 
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, parallax_texcoord);
 

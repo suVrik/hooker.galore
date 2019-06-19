@@ -1,0 +1,5 @@
+color_roughness: texture.png
+normal_metal_ao: blockout_orange_normal_metal_ao.png
+parallax: blockout_orange_height.png
+parallax_scale: 0.05
+parallax_steps: 25

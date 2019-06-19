@@ -1,5 +1,2 @@
 color_roughness: sphere/sphere_3_4_color_roughness.png
 normal_metal_ao: sphere/sphere_3_4_normal_metal_ao.png
-parallax: sphere/sphere_parallax.png
-parallax_scale: 0
-parallax_steps: 0

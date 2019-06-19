@@ -5,3 +5,5 @@ cmake-build-debug
 cmake-build-release
 cmake-build-xcode
 /bin
+*.fragment.h
+*.vertex.h

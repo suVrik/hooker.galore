@@ -1187,3 +1187,39 @@ entities:
       path: blockout.glb
     MaterialComponent:
       path: pbr.yaml
+  - TransformComponent:
+      translation:
+        x: -1
+        y: 5
+        z: 5
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    ModelComponent:
+      path: test4.glb
+    MaterialComponent:
+      path: test.yaml
+  - TransformComponent:
+      translation:
+        x: 15
+        y: 5
+        z: 5
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    ModelComponent:
+      path: test5.glb
+    MaterialComponent:
+      path: test2.yaml

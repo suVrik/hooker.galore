@@ -8,6 +8,7 @@ SAMPLER2D(s_normal_metal_ao, 1);
 SAMPLER2D(s_depth,           2);
 
 uniform vec4 u_light_position;
+uniform vec4 u_camera_position;
 
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
@@ -57,5 +58,13 @@ void main() {
 	vec3 light_dir = normalize(u_light_position.xyz - world_position);
 
 	float diffuse = max(dot(light_dir, normal), 0.0);
-	gl_FragColor = vec4(diffuse * color + color * 0.3, 1.0);
+
+	vec3 result = diffuse * color + color * 0.3;
+
+    // HDR tonemapping
+    //result = result / (result + vec3(1.0, 1.0, 1.0));
+    // gamma correct
+    //result = pow(result, vec3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));
+
+	gl_FragColor = vec4(result, 1.0);
 }

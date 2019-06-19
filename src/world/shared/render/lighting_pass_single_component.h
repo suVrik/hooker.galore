@@ -11,7 +11,8 @@ struct LightingPassSingleComponent final {
     bgfx::UniformHandle color_roughness_uniform = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle normal_metal_ao_uniform = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle depth_uniform           = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle u_light_position        = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle light_position_uniform        = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle camera_position_uniform        = BGFX_INVALID_HANDLE;
 };
 
 } // namespace hg

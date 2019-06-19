@@ -224,10 +224,8 @@ function(deploy_resources TYPE GLOB_PATTERN OUT_DEPENDENCIES)
         string(SUBSTRING ${input} ${source_directory_length} -1 input_relative)
         set(output "${CMAKE_BINARY_DIR}/resources/${input_relative}")
 
-        if(WIN32)
-            STRING(REGEX REPLACE "/" "\\\\" input ${input})
-            STRING(REGEX REPLACE "/" "\\\\" output ${output})
-        endif()
+        file(TO_NATIVE_PATH ${input} input)
+        file(TO_NATIVE_PATH ${output} output)
 
         add_custom_command(
                 DEPENDS ${input}
@@ -235,6 +233,9 @@ function(deploy_resources TYPE GLOB_PATTERN OUT_DEPENDENCIES)
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different ${input} ${output}
                 COMMENT "Deploying ${TYPE} ${input}"
         )
+
+        message("${output}")
+
         list(APPEND dependencies ${output})
     endforeach()
 
