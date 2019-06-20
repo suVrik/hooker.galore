@@ -3,6 +3,7 @@
 #include "world/editor/gizmo_single_component.h"
 #include "world/editor/gizmo_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/transform_component.h"
 
@@ -20,27 +21,45 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     auto& gizmo_single_component = world.ctx<GizmoSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
+    auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
 
     if (world.valid(selected_entity_single_component.selected_entity)) {
-        // TODO: Better looking tool selection. Shortcuts as well.
-        ImGui::SetNextWindowDockID(ImGui::GetID("Main"), ImGuiCond_FirstUseEver);
         if (ImGui::Begin("Tool")) {
-            if (ImGui::Button("Translate")) {
-                gizmo_single_component.operation = ImGuizmo::OPERATION::TRANSLATE;
+            const ImVec2 window_size = ImGui::GetWindowSize();
+
+            auto button = [&](const char* title, Control shortcut, ImGuizmo::OPERATION operation) {
+                const ImGuizmo::OPERATION old_operation = gizmo_single_component.operation;
+                if (old_operation == operation) {
+                    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.8f, 0.1f, 1.f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.85f, 0.2f, 1.f));
+                    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.7f, 0.f, 1.f));
+                }
+                if (ImGui::Button(title, ImVec2(window_size.x / 2 - 15.f, window_size.y / 2 - 33.f)) ||
+                    normal_input_single_component.is_pressed(shortcut)) {
+                    gizmo_single_component.operation = operation;
+                }
+                if (old_operation == operation) {
+                    ImGui::PopStyleColor(3);
+                }
+            };
+
+            if (normal_input_single_component.is_pressed(Control::KEY_GRAVE)) {
+                gizmo_single_component.is_local_space = !gizmo_single_component.is_local_space;
+            }
+            if (ImGui::RadioButton("Local space (~)", gizmo_single_component.is_local_space)) {
+                gizmo_single_component.is_local_space = true;
             }
             ImGui::SameLine();
-            if (ImGui::Button("Rotate")) {
-                gizmo_single_component.operation = ImGuizmo::OPERATION::ROTATE;
+            if (ImGui::RadioButton("World space", !gizmo_single_component.is_local_space)) {
+                gizmo_single_component.is_local_space = false;
             }
+
+            button("Translate (1)", Control::KEY_1, ImGuizmo::OPERATION::TRANSLATE);
             ImGui::SameLine();
-            if (ImGui::Button("Scale")) {
-                gizmo_single_component.operation = ImGuizmo::OPERATION::SCALE;
-            }
+            button("Rotate (2)", Control::KEY_2, ImGuizmo::OPERATION::ROTATE);
+            button("Scale (3)", Control::KEY_3, ImGuizmo::OPERATION::SCALE);
             ImGui::SameLine();
-            // TODO: Implement bounds tool as well.
-            if (ImGui::Button("Bounds")) {
-                gizmo_single_component.operation = ImGuizmo::OPERATION::BOUNDS;
-            }
+            button("Bounds (4)", Control::KEY_4, ImGuizmo::OPERATION::BOUNDS);
         }
         ImGui::End();
 
@@ -52,7 +71,11 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
         ImGuiIO& io = ImGui::GetIO();
         ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-        ImGuizmo::Manipulate(glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix), gizmo_single_component.operation, ImGuizmo::MODE::WORLD, glm::value_ptr(transform));
+        ImGuizmo::Manipulate(glm::value_ptr(camera_single_component.view_matrix),
+                glm::value_ptr(camera_single_component.projection_matrix),
+                gizmo_single_component.operation,
+                gizmo_single_component.is_local_space ? ImGuizmo::MODE::LOCAL : ImGuizmo::MODE::WORLD,
+                glm::value_ptr(transform));
 
         transform_component.scale = glm::vec3(glm::length(transform[0]), glm::length(transform[1]), glm::length(transform[2]));
         transform[0] /= transform_component.scale.x;

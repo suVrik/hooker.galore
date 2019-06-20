@@ -8,6 +8,7 @@ namespace hg {
 class GizmoSingleComponent final {
 public:
     ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
+    bool is_local_space = false;
 };
 
 } // namespace hg
