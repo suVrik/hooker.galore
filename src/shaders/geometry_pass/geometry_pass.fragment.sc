@@ -22,14 +22,14 @@ vec2 parallax_uv(vec2 uv, vec3 view_dir) {
 
     for (int i = 0; i < 32; i++) {
         cur_layer_depth += u_parallax_depth;
-        cur_uv -= delta_uv;
+        cur_uv += delta_uv;
         depth_from_tex = texture2D(s_parallax, cur_uv).r;
         if (depth_from_tex < cur_layer_depth) {
             break;
         }
     }
 
-    vec2 prev_uv = cur_uv + delta_uv;
+    vec2 prev_uv = cur_uv - delta_uv;
     float next = depth_from_tex - cur_layer_depth;
     float prev = texture2D(s_parallax, prev_uv).r - cur_layer_depth + u_parallax_depth;
     float weight = next / (next - prev);
