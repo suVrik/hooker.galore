@@ -86,9 +86,10 @@ void PropertyEditorSystem::list_properties(entt::meta_handle object) const noexc
                     data.set(object, value);
                 }
             } else if (data_type == TYPE_QUAT) {
-                glm::quat value = data_copy.cast<glm::quat>();
-                if (ImGui::InputFloat4(data_name.c_str(), &value.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
-                    data.set(object, glm::normalize(value));
+                const glm::quat value = data_copy.cast<glm::quat>();
+                glm::vec3 euler_angles = glm::degrees(glm::eulerAngles(value));
+                if (ImGui::InputFloat3(data_name.c_str(), &euler_angles.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+                    data.set(object, glm::normalize(glm::quat(glm::radians(euler_angles))));
                 }
             } else if (data_type == TYPE_STRING) {
                 static char buffer[1024];
