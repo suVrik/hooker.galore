@@ -1169,6 +1169,9 @@ entities:
       path: blockout.glb
     MaterialComponent:
       path: grass.yaml
+    EditorComponent:
+      name: grass-cube
+      guid: 1
   - TransformComponent:
       translation:
         x: -2
@@ -1187,3 +1190,6 @@ entities:
       path: blockout.glb
     MaterialComponent:
       path: parallax.yaml
+    EditorComponent:
+      name: parallax-cube
+      guid: 2

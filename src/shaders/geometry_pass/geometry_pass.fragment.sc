@@ -48,8 +48,7 @@ void main() {
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, parallax_texcoord);
 
     vec3 normal;
-    normal.x = normal_metal_ao.x * 2.0 - 1.0;
-    normal.y = 1.0 - normal_metal_ao.y * 2.0;
+    normal.xy = 1.0 - normal_metal_ao.xy * 2.0;
     normal.z = sqrt(1.0 - dot(normal.xy, normal.xy));
     normal = normalize(mul(tangent_space_matrix, normal));
 

@@ -592,7 +592,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(float) * 2 && byte_stride * (num_vertices - 1) + sizeof(float) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const float *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = 1.f - texcoord_source_data[0];
+                        vertex_data[i].u = -texcoord_source_data[0];
                         vertex_data[i].v = texcoord_source_data[1];
                     }
                 } else {
@@ -603,7 +603,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(uint8_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint8_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint8_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = 1.f - texcoord_source_data[0] / 255.f;
+                        vertex_data[i].u = -(texcoord_source_data[0] / 255.f);
                         vertex_data[i].v = texcoord_source_data[1] / 255.f;
                     }
                 } else {
@@ -614,7 +614,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 if (byte_stride >= sizeof(uint16_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint16_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint16_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = 1.f - texcoord_source_data[0] / 65535.f;
+                        vertex_data[i].u = -(texcoord_source_data[0] / 65535.f);
                         vertex_data[i].v = texcoord_source_data[1] / 65535.f;
                     }
                 } else {
@@ -815,6 +815,7 @@ void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node&
             }
 
             static entt::meta_type TYPE_INT    = entt::resolve<int32_t>();
+            static entt::meta_type TYPE_UINT   = entt::resolve<uint32_t>();
             static entt::meta_type TYPE_FLOAT  = entt::resolve<float>();
             static entt::meta_type TYPE_BOOL   = entt::resolve<bool>();
             static entt::meta_type TYPE_STRING = entt::resolve<std::string>();
@@ -822,6 +823,10 @@ void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node&
             if (property_type == TYPE_INT) {
                 if (!property.set(object, property_it->second.as<int32_t>(0))) {
                     throw std::runtime_error(fmt::format("Failed to set integer property \"{}\" value.", property_name));
+                }
+            } else if (property_type == TYPE_UINT) {
+                if (!property.set(object, property_it->second.as<uint32_t>(0))) {
+                    throw std::runtime_error(fmt::format("Failed to set unsigned integer property \"{}\" value.", property_name));
                 }
             } else if (property_type == TYPE_FLOAT) {
                 if (!property.set(object, property_it->second.as<float>(0.f))) {
