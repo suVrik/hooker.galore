@@ -4,6 +4,7 @@
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/gizmo_system.h"
 #include "world/editor/preset_system.h"
+#include "world/editor/property_editor_system.h"
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/render/camera_system.h"
 #include "world/shared/render/debug_draw_pass_system.h"
@@ -32,6 +33,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(ImguiPassSystem);
     REGISTER_SYSTEM(LightingPassSystem);
     REGISTER_SYSTEM(PresetSystem);
+    REGISTER_SYSTEM(PropertyEditorSystem);
     REGISTER_SYSTEM(QuadSystem);
     REGISTER_SYSTEM(RenderFetchSystem);
     REGISTER_SYSTEM(RenderSystem);

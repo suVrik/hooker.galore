@@ -28,6 +28,7 @@ public:
         Undefined behavior if `component` is not a registered type. */
     entt::meta_handle assign(entt::entity entity, entt::meta_type component) noexcept;
     entt::meta_handle assign(entt::entity entity, const entt::meta_any& component) noexcept;
+    entt::meta_handle assign(entt::entity entity, const entt::meta_handle& component) noexcept;
 
     /** Perform `entt::registry::remove` on earlier registered component.
         Undefined behavior if `component` is not a registered type. */
@@ -45,12 +46,17 @@ public:
         Undefined behavior if `component` is not a registered type. */
     entt::meta_handle get_or_assign(entt::entity entity, entt::meta_type component) noexcept;
 
+    /** Iterate over all components of specified `entity`. */
+    template <typename T>
+    void each(entt::entity entity, T callback) const noexcept;
+
     /** Allow using entt versions of `assign`, `remove`, `has`, `get` and `get_or_assign` methods. */
     using entt::registry::assign;
     using entt::registry::remove;
     using entt::registry::has;
     using entt::registry::get;
     using entt::registry::get_or_assign;
+    using entt::registry::each;
 
     /** Register system `T` with member function `update` and specified `name`. */
     template <typename T>
@@ -74,7 +80,7 @@ public:
 private:
     struct ComponentDescriptor final {
         entt::meta_handle(*assign)(World* world, entt::entity entity);
-        entt::meta_handle(*assign_copy)(World* world, entt::entity entity, const entt::meta_any& copy);
+        entt::meta_handle(*assign_copy)(World* world, entt::entity entity, const void* copy);
         void(*remove)(World* world, entt::entity entity);
         bool(*has)(const World* world, entt::entity entity);
         entt::meta_handle(*get)(const World* world, entt::entity entity);

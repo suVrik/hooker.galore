@@ -4,9 +4,9 @@
 namespace hg {
 
 REFLECTION_REGISTRATION {
-    entt::reflect<MaterialComponent>("MaterialComponent"_hs)
+    entt::reflect<MaterialComponent>("MaterialComponent"_hs, std::make_pair("name"_hs, "MaterialComponent"))
             .ctor<>()
-            .data<&MaterialComponent::path>("path"_hs);
+            .data<&MaterialComponent::path>("path"_hs, std::make_pair("name"_hs, "path"));
 }
 
 } // namespace hg

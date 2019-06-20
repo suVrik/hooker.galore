@@ -2,6 +2,7 @@
 #include "world/editor/editor_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
+#include "world/editor/selected_entity_single_component.h"
 
 #include <ghc/filesystem.hpp>
 #include <imgui.h>
@@ -36,6 +37,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
     };
 
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
+    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
     ImGui::SetNextWindowDockID(ImGui::GetID("Main"), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Presets")) {
@@ -95,7 +97,8 @@ void PresetSystem::update(float /*elapsed_time*/) {
                                 name += std::to_string(i);
                             }
 
-                            world.assign(entity, EditorComponent{ name, SDL_GetTicks() });
+                            world.assign<EditorComponent>(entity, EditorComponent{ name, SDL_GetTicks() });
+                            selected_entity_single_component.selected_entity = entity;
                         }
                     }
                 }

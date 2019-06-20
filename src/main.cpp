@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
                 "PresetSystem",
                 "EntitySelectionSystem",
                 "GizmoSystem",
+                "PropertyEditorSystem",
                 "ResourceSystem",
                 "QuadSystem",
                 "GeometryPassSystem",
