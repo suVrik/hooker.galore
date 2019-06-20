@@ -50,7 +50,7 @@ void main() {
     vec3 normal;
     normal.xy = 1.0 - normal_metal_ao.xy * 2.0;
     normal.z = sqrt(1.0 - dot(normal.xy, normal.xy));
-    normal = normalize(mul(tangent_space_matrix, normal));
+    normal = normalize(mul(transpose(tangent_space_matrix), normal));
 
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);
     gl_FragData[1] = vec4(encodeNormalOctahedron(normal), normal_metal_ao.zw);
