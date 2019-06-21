@@ -72,23 +72,23 @@ void PropertyEditorSystem::list_properties(entt::meta_handle object) const noexc
             entt::meta_any data_copy = data.get(object);
             if (data_type == TYPE_VEC2) {
                 glm::vec2 value = data_copy.cast<glm::vec2>();
-                if (ImGui::InputFloat2(data_name.c_str(), &value.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+                if (ImGui::InputFloat2(data_name.c_str(), &value.x)) {
                     data.set(object, value);
                 }
             } else if (data_type == TYPE_VEC3) {
                 glm::vec3 value = data_copy.cast<glm::vec3>();
-                if (ImGui::InputFloat3(data_name.c_str(), &value.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+                if (ImGui::InputFloat3(data_name.c_str(), &value.x)) {
                     data.set(object, value);
                 }
             } else if (data_type == TYPE_VEC4) {
                 glm::vec4 value = data_copy.cast<glm::vec4>();
-                if (ImGui::InputFloat4(data_name.c_str(), &value.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+                if (ImGui::InputFloat4(data_name.c_str(), &value.x)) {
                     data.set(object, value);
                 }
             } else if (data_type == TYPE_QUAT) {
                 const glm::quat value = data_copy.cast<glm::quat>();
                 glm::vec3 euler_angles = glm::degrees(glm::eulerAngles(value));
-                if (ImGui::InputFloat3(data_name.c_str(), &euler_angles.x, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue)) {
+                if (ImGui::InputFloat3(data_name.c_str(), &euler_angles.x)) {
                     data.set(object, glm::normalize(glm::quat(glm::radians(euler_angles))));
                 }
             } else if (data_type == TYPE_STRING) {

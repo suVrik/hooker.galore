@@ -2,10 +2,13 @@
 #include "core/render/render_pass.h"
 #include "core/resource/material.h"
 #include "core/resource/texture.h"
+#include "shaders/geometry_blockout_pass/geometry_blockout_pass.vertex.h"
+#include "shaders/geometry_no_parallax_pass/geometry_no_parallax_pass.fragment.h"
+#include "shaders/geometry_no_parallax_pass/geometry_no_parallax_pass.vertex.h"
 #include "shaders/geometry_pass/geometry_pass.fragment.h"
 #include "shaders/geometry_pass/geometry_pass.vertex.h"
-#include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/blockout_component.h"
+#include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/geometry_pass_system.h"
 #include "world/shared/window_single_component.h"
@@ -21,6 +24,18 @@ namespace geometry_pass_system_details {
 static const bgfx::EmbeddedShader GEOMETRY_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER(geometry_pass_vertex),
         BGFX_EMBEDDED_SHADER(geometry_pass_fragment),
+        BGFX_EMBEDDED_SHADER_END()
+};
+
+static const bgfx::EmbeddedShader GEOMETRY_BLOCKOUT_PASS_SHADER[] = {
+        BGFX_EMBEDDED_SHADER(geometry_blockout_pass_vertex),
+        BGFX_EMBEDDED_SHADER(geometry_pass_fragment),
+        BGFX_EMBEDDED_SHADER_END()
+};
+
+static const bgfx::EmbeddedShader GEOMETRY_NO_PARALLAX_PASS_SHADER[] = {
+        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_vertex),
+        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_fragment),
         BGFX_EMBEDDED_SHADER_END()
 };
 
@@ -58,12 +73,12 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_fragment");
     geometry_pass_single_component.geometry_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-    vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_vertex");   // TODO: Another shader.
-    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_fragment"); // TODO: Another shader.
+    vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_NO_PARALLAX_PASS_SHADER, type, "geometry_no_parallax_pass_vertex");
+    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_NO_PARALLAX_PASS_SHADER, type, "geometry_no_parallax_pass_fragment");
     geometry_pass_single_component.geometry_no_parallax_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-    vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_vertex");   // TODO: Another shader.
-    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_fragment"); // TODO: Another shader.
+    vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_blockout_pass_vertex");
+    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_pass_fragment");
     geometry_pass_single_component.geometry_blockout_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     geometry_pass_single_component.color_roughness_uniform   = bgfx::createUniform("s_color_roughness",   bgfx::UniformType::Sampler);
@@ -72,6 +87,7 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     geometry_pass_single_component.parallax_settings_uniform = bgfx::createUniform("u_parallax_settings", bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(GEOMETRY_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.f, 0);
+    bgfx::setViewName(GEOMETRY_PASS, "geometry_pass");
 }
 
 GeometryPassSystem::~GeometryPassSystem() {

@@ -94,10 +94,10 @@ void EditorCameraSystem::update(float elapsed_time) {
             }
 
             float delta_y = 0.f;
-            if (normal_input_single_component.is_down(Control::KEY_E)) {
+            if (normal_input_single_component.is_down(Control::KEY_SPACE)) {
                 delta_y = speed;
             }
-            if (normal_input_single_component.is_down(Control::KEY_Q)) {
+            if (normal_input_single_component.is_down(Control::KEY_C)) {
                 delta_y = -speed;
             }
 
