@@ -2,6 +2,7 @@
 #include "world/editor/editor_component.h"
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/render/outline_component.h"
 
 #include <imgui.h>
 
@@ -29,7 +30,11 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
             ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), flags, "%s", editor_component.name.c_str());
             if (ImGui::IsItemClicked()) {
+                if (world.valid(selected_entity_single_component.selected_entity)) {
+                    world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+                }
                 selected_entity_single_component.selected_entity = entity;
+                world.assign<OutlineComponent>(entity);
             }
         });
     }

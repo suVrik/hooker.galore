@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
                 "QuadSystem",
                 "GeometryPassSystem",
                 "LightingPassSystem",
+                "OutlinePassSystem",
                 "DebugDrawPassSystem",
                 "EditorGridSystem",
                 "ImguiPassSystem",

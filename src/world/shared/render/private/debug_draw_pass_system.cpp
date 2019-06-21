@@ -77,7 +77,10 @@ DebugDrawPassSystem::DebugDrawPassSystem(World& world)
     debug_draw_single_component.texture_uniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
     bgfx::setViewClear(DEBUG_DRAW_OFFSCREEN_PASS, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+    bgfx::setViewName(DEBUG_DRAW_OFFSCREEN_PASS, "debug_draw_offscreen_pass");
+
     bgfx::setViewClear(DEBUG_DRAW_ONSCREEN_PASS,  BGFX_CLEAR_NONE,  0x00000000, 1.f, 0);
+    bgfx::setViewName(DEBUG_DRAW_ONSCREEN_PASS, "debug_draw_onscreen_pass");
 
     dd::initialize(this);
 }

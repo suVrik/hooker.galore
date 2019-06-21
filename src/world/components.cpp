@@ -16,6 +16,8 @@
 #include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
+#include "world/shared/render/outline_component.h"
+#include "world/shared/render/outline_pass_single_component.h"
 #include "world/shared/render/quad_single_component.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
@@ -36,6 +38,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(MaterialSingleComponent);
     REGISTER_COMPONENT(ModelSingleComponent);
     REGISTER_COMPONENT(NormalInputSingleComponent);
+    REGISTER_COMPONENT(OutlinePassSingleComponent);
     REGISTER_COMPONENT(PresetSingleComponent);
     REGISTER_COMPONENT(QuadSingleComponent);
     REGISTER_COMPONENT(RunningWorldSingleComponent);
@@ -48,6 +51,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(EditorComponent);
     REGISTER_COMPONENT(MaterialComponent);
     REGISTER_COMPONENT(ModelComponent);
+    REGISTER_COMPONENT(OutlineComponent);
     REGISTER_COMPONENT(TransformComponent);
 }
 

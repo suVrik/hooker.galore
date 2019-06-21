@@ -51,6 +51,7 @@ ImguiPassSystem::ImguiPassSystem(World& world) noexcept
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     bgfx::setViewClear(IMGUI_PASS, BGFX_CLEAR_NONE,  0x00000000, 1.f, 0);
     bgfx::setViewRect(IMGUI_PASS, 0, 0, window_single_component.width, window_single_component.height);
+    bgfx::setViewName(IMGUI_PASS, "imgui_pass");
 }
 
 ImguiPassSystem::~ImguiPassSystem() {
