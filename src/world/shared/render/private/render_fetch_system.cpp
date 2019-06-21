@@ -24,6 +24,9 @@ RenderFetchSystem::RenderFetchSystem(World& world)
 #elif BX_PLATFORM_OSX
     platform_data.ndt = nullptr;
     platform_data.nwh = native_info.info.cocoa.window;
+#elif BX_PLATFORM_LINUX
+    platform_data.ndt = native_info.info.x11.display;
+    platform_data.nwh = reinterpret_cast<void*>(native_info.info.x11.window);
 #endif
     bgfx::setPlatformData(platform_data);
 

@@ -65,6 +65,25 @@ elseif(APPLE)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Darwin/libfmt.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/tiny-gltf/lib/Darwin/libtiny_gltf.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/stb/lib/Darwin/libstb_image.a")
+elseif(UNIX)
+    set(OpenGL_GL_PREFERENCE GLVND)
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(hooker_galore PRIVATE ${OPENGL_LIBRARIES})
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/lib/libSDL2main.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/lib/libSDL2.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbgfx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbimg.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libastc-codec.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/imgui/lib/Linux/libimgui.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Linux/libyaml-cpp.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/debug-draw/lib/Linux/libdebug_draw.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Linux/libfmt.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/tiny-gltf/lib/Linux/libtiny_gltf.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/stb/lib/Linux/libstb_image.a")
+    target_link_libraries(hooker_galore PRIVATE ${CMAKE_DL_LIBS})
+    target_link_libraries(hooker_galore PRIVATE pthread)
+    target_link_libraries(hooker_galore PRIVATE X11)
 endif()
 
 # Set up shared libraries location directory for MacOS.
@@ -80,6 +99,8 @@ function(build_shaders TYPE GLOB_PATTERN)
         set(shader_compiler "${CMAKE_SOURCE_DIR}/lib/bgfx/bin/Windows/shaderc.exe")
     elseif(APPLE)
         set(shader_compiler "${CMAKE_SOURCE_DIR}/lib/bgfx/bin/Darwin/shaderc")
+    elseif(UNIX)
+        set(shader_compiler "${CMAKE_SOURCE_DIR}/lib/bgfx/bin/Linux/shaderc")
     endif()
 
     if("${TYPE}" STREQUAL "vertex")
@@ -144,6 +165,22 @@ function(build_shaders TYPE GLOB_PATTERN)
                     COMMAND echo \"\" >> \"${output}.h\"
                     COMMAND ${shader_compiler} -i "\"${include_directory}\"" --type ${TYPE} --platform osx -p metal -f "\"${input}\"" -o "\"${output}.temp.h\"" --bin2c ${variable_name}_mtl
                     COMMAND cat \"${output}.temp.h\" >> \"${output}.h\"
+                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output}.temp.h\""
+                    COMMENT "Building ${TYPE} shader ${input}"
+            )
+        elseif(UNIX)
+            add_custom_command(
+                    DEPENDS "${input}"
+                    OUTPUT "${output}.h"
+                    COMMAND cp /dev/null ${output}.h
+                    COMMAND echo \"\#include <cstdint>\" >> \"${output}.h\"
+                    COMMAND echo \"\" >> \"${output}.h\"
+                    COMMAND ${shader_compiler} -i "\"${include_directory}\"" --type ${TYPE} --platform linux -f "\"${input}\"" -o "\"${output}.temp.h\"" --bin2c ${variable_name}_glsl
+                    COMMAND cat \"${output}.temp.h\" >> \"${output}.h\"
+                    COMMAND echo \"\" >> \"${output}.h\"
+                    COMMAND ${shader_compiler} -i "\"${include_directory}\"" --type ${TYPE} --platform linux -p spirv -f "\"${input}\"" -o "\"${output}.temp.h\"" --bin2c ${variable_name}_spv
+                    COMMAND cat \"${output}.temp.h\" >> \"${output}.h\"
+                    COMMAND echo \"\" >> \"${output}.h\"
                     COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output}.temp.h\""
                     COMMENT "Building ${TYPE} shader ${input}"
             )
@@ -214,6 +251,14 @@ elseif(APPLE)
             COMMENT "Deploying SDL2.framework"
     )
     list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/SDL2.framework")
+elseif(UNIX)
+    add_custom_command(
+            DEPENDS "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so"
+            OUTPUT "${CMAKE_BINARY_DIR}/libSDL2.so"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so" "${CMAKE_BINARY_DIR}/libSDL2.so"
+            COMMENT "Deploying libSDL2.so"
+    )
+    list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/libSDL2.so")
 endif()
 
 add_custom_target(deploy_shared_libraries ALL DEPENDS "${shared_libraries}")
