@@ -38,10 +38,18 @@ vec2 parallax_uv(vec2 uv, vec3 view_dir) {
 }
 
 void main() {
-    mat3 tangent_space_matrix = mat3(v_tangent, v_bitangent, v_normal);
+    #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
+    // DirectX & Metal treats vec3 as row vectors.
+    mat3 to_tangent_space_matrix = mat3(v_tangent, v_bitangent, v_normal);
+    mat3 from_tangent_space_matrix = transpose(to_tangent_space_matrix);
+    #else
+    // OpenGL treats vec3 as column vectors.
+    mat3 from_tangent_space_matrix = mat3(v_tangent, v_bitangent, v_normal);
+    mat3 to_tangent_space_matrix = transpose(from_tangent_space_matrix);
+    #endif
 
     vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-    vec3 tangent_view_direction = mul(tangent_space_matrix, camera_position.xyz - v_position);
+    vec3 tangent_view_direction = mul(to_tangent_space_matrix, camera_position.xyz - v_position);
     vec3 normalized_tangent_view_direction = normalize(tangent_view_direction);
     vec2 parallax_texcoord = parallax_uv(v_texcoord0, normalized_tangent_view_direction);
 
@@ -50,10 +58,7 @@ void main() {
     vec3 normal;
     normal.xy = 1.0 - normal_metal_ao.xy * 2.0;
     normal.z = sqrt(1.0 - dot(normal.xy, normal.xy));
-    #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
-    tangent_space_matrix = transpose(tangent_space_matrix);
-    #endif
-    normal = normalize(mul(tangent_space_matrix, normal));
+    normal = normalize(mul(from_tangent_space_matrix, normal));
 
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);
     gl_FragData[1] = vec4(encodeNormalOctahedron(normal), normal_metal_ao.zw);
