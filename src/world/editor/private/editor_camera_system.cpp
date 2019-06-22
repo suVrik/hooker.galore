@@ -120,11 +120,15 @@ void EditorCameraSystem::update(float elapsed_time) {
                 delta_y = -speed;
             }
 
+            if (normal_input_single_component.get_mouse_wheel() != 0) {
+                speed *= std::abs(normal_input_single_component.get_mouse_wheel()) * 5.f;
+            }
+
             float delta_z = 0.f;
-            if (normal_input_single_component.is_down(Control::KEY_W)) {
+            if (normal_input_single_component.is_down(Control::KEY_W) || normal_input_single_component.get_mouse_wheel() > 0) {
                 delta_z = speed;
             }
-            if (normal_input_single_component.is_down(Control::KEY_S)) {
+            if (normal_input_single_component.is_down(Control::KEY_S) || normal_input_single_component.get_mouse_wheel() < 0) {
                 delta_z = -speed;
             }
 
