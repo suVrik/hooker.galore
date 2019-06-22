@@ -34,6 +34,38 @@ vec3 to_world_space_position(vec3 position) {
     return result.xyz / result.w;
 }
 
+const float PI = 3.14159265359;
+
+vec3 fresnel_schlick(float cos_theta, vec3 surface_reflect_zero) {
+    return surface_reflect_zero + (1.0 - surface_reflect_zero) * pow(1.0 - cos_theta, 5.0);
+}
+
+float distribution_ggx(vec3 normal, vec3 h, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float dot_normal_half  = max(dot(normal, h), 0.0);
+    float dot_normal_half2 = dot_normal_half * dot_normal_half;
+
+    float denom = (dot_normal_half2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+    return a2 / denom;
+}
+
+float geometry_schlick_ggx(float dot_normal_half, float roughness) {
+    float r = (roughness + 1.0);
+    float k = (r * r) / 8.0;
+
+    float denom = dot_normal_half * (1.0 - k) + k;
+    return dot_normal_half / denom;
+}
+float geometry_smith(vec3 normal, vec3 camera_dir, vec3 light_dir, float roughness) {
+    float dot_normal_camera = max(dot(normal, camera_dir), 0.0);
+    float dot_normal_light = max(dot(normal, light_dir), 0.0);
+    float ggx2  = geometry_schlick_ggx(dot_normal_camera, roughness);
+    float ggx1  = geometry_schlick_ggx(dot_normal_light, roughness);
+    return ggx1 * ggx2;
+}
+
 void main() {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
     // DirectX & Metal coordinate system starts at upper-left corner.
@@ -44,7 +76,7 @@ void main() {
 #endif
 
     vec4 color_roughness = texture2D(s_color_roughness, uv);
-    vec3 color = color_roughness.xyz;
+    vec3 color = pow(color_roughness.xyz, vec3(2.2));
     float roughness = color_roughness.w;
 
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, uv);
@@ -57,7 +89,32 @@ void main() {
     vec3 world_position = to_world_space_position(clip_position);
 
     vec3 light_dir = normalize(u_light_position.xyz - world_position);
+    vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+    vec3 camera_dir = normalize(camera_position.xyz - world_position);
+    vec3 half_dir = normalize(camera_dir + light_dir);
 
-    float diffuse = max(dot(light_dir, normal), 0.0);
-    gl_FragColor = vec4(diffuse * color + color * 0.3, 1.0);
+    vec3 surface_reflect_zero = mix(vec3(0.04), color, metal);
+
+    float distance = length(u_light_position.xyz - world_position);
+    float attenuation = 1.0 / (distance * distance);
+    vec3 light_color = vec3(150.0);
+    vec3 radiance = light_color * attenuation;
+    vec3 f = fresnel_schlick(max(dot(half_dir, camera_dir), 0.0), surface_reflect_zero);
+
+    float ndf = distribution_ggx(normal, half_dir, roughness);
+    float g = geometry_smith(normal, camera_dir, light_dir, roughness);
+
+    vec3 numerator = ndf * g * f;
+    float denominator = 4.0 * max(dot(normal, camera_dir), 0.0) * max(dot(normal, light_dir), 0.0) + 0.001;
+    vec3 specular = numerator / denominator;
+quad_pass_vertex_glsl
+    vec3 kd = (vec3(1.0) - f) * 1.0 - metal;
+    float dot_norm_light = max(dot(normal, light_dir), 0.0);
+    vec3 outgoing_radience = (kd * color / PI + specular) * radiance * dot_norm_light;
+
+    vec3 ambient = vec3(0.03) * color * ao;
+    vec3 color_out = ambient + outgoing_radience;
+    color_out = color_out / (color_out + vec3(1.0));
+    color_out = pow(color_out, vec3(1.0 / 2.2));
+    gl_FragColor = vec4(color_out, 1.0);
 }
