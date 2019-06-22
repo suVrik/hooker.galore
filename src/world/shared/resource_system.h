@@ -51,9 +51,9 @@ private:
 
     void load_models() const;
     void load_model(Model& result, const std::string &path) const;
-    void load_model_node(Model::Node& result, const tinygltf::Model &model, const tinygltf::Node &node) const;
-    void load_model_mesh(Model::Mesh& result, const tinygltf::Model &model, const tinygltf::Node &node) const;
-    void load_model_primitive(Model::Primitive& result, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const;
+    void load_model_node(Model::Node& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const;
+    void load_model_mesh(Model::Mesh& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const;
+    void load_model_primitive(Model::Primitive& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const;
 
     void load_presets() const;
     void load_preset(std::vector<entt::meta_any>& result, const std::string &path) const;

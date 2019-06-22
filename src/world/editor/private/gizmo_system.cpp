@@ -5,6 +5,7 @@
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
+#include "world/shared/render/model_component.h"
 #include "world/shared/render/outline_component.h"
 #include "world/shared/transform_component.h"
 
@@ -71,15 +72,53 @@ void GizmoSystem::update(float /*elapsed_time*/) {
         transform = glm::scale(transform, transform_component->scale);
 
         const bool was_using = ImGuizmo::IsUsing();
-        
+        const bool is_snapping = normal_input_single_component.is_down(Control::KEY_LCTRL);
+
+        float* snap = nullptr;
+        if (is_snapping) {
+            static float SNAP[3] = { 45.f, 45.f, 45.f };
+            if (gizmo_single_component.operation == ImGuizmo::OPERATION::TRANSLATE) {
+                SNAP[0] = 1.f;
+                SNAP[1] = 1.f;
+                SNAP[2] = 1.f;
+            } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::SCALE) {
+                if (!was_using) {
+                    SNAP[0] = 1.f / transform_component->scale.x;
+                    SNAP[1] = 1.f / transform_component->scale.y;
+                    SNAP[2] = 1.f / transform_component->scale.z;
+                }
+            } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::ROTATE) {
+                SNAP[0] = 45.f;
+            }
+            snap = SNAP;
+        }
+
+        float* local_bounds = nullptr;
+        float* bounds_snap = nullptr;
+        if (gizmo_single_component.operation == ImGuizmo::OPERATION::BOUNDS) {
+            if (auto *model_component = world.try_get<ModelComponent>(selected_entity_single_component.selected_entity); model_component != nullptr) {
+                local_bounds = reinterpret_cast<float *>(&model_component->model.bounds);
+            }
+
+            if (is_snapping) {
+                static float BOUNDS_SNAP[3] = { 1.f, 1.f, 1.f };
+                if (!was_using) {
+                    BOUNDS_SNAP[0] = 1.f / transform_component->scale.x;
+                    BOUNDS_SNAP[1] = 1.f / transform_component->scale.y;
+                    BOUNDS_SNAP[2] = 1.f / transform_component->scale.z;
+                }
+                bounds_snap = BOUNDS_SNAP;
+            }
+        }
+
         ImGuiIO& io = ImGui::GetIO();
         ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
         ImGuizmo::Manipulate(glm::value_ptr(camera_single_component.view_matrix),
                 glm::value_ptr(camera_single_component.projection_matrix),
                 gizmo_single_component.operation,
                 gizmo_single_component.is_local_space ? ImGuizmo::MODE::LOCAL : ImGuizmo::MODE::WORLD,
-                glm::value_ptr(transform));
-        
+                glm::value_ptr(transform), nullptr, snap, local_bounds, bounds_snap);
+
         if (!was_using && ImGuizmo::IsUsing() && (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT))) {
             entt::entity new_entity = world.create();
             world.each(selected_entity_single_component.selected_entity, [&](entt::meta_handle component_handle) {

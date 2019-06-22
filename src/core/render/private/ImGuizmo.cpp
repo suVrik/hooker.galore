@@ -1702,7 +1702,7 @@ namespace ImGuizmo
          // snap
          if (snap)
          {
-            float scaleSnap[] = { snap[0], snap[0], snap[0] };
+            float scaleSnap[] = { snap[0], snap[1], snap[2] };
             ComputeSnap(gContext.mScale, scaleSnap);
          }
 

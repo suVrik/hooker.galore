@@ -409,7 +409,16 @@ void ResourceSystem::load_model(Model& result, const std::string &path) const {
             if (scene_to_display < model.scenes.size()) {
                 const tinygltf::Scene &scene = model.scenes[scene_to_display];
                 for (const int node_index : scene.nodes) {
-                    load_model_node(result.children.emplace_back(), model, model.nodes[node_index]);
+                    Model::AABB node_bounds;
+
+                    load_model_node(result.children.emplace_back(), node_bounds, model, model.nodes[node_index]);
+
+                    result.bounds.min_x = std::min(result.bounds.min_x, node_bounds.min_x);
+                    result.bounds.min_y = std::min(result.bounds.min_y, node_bounds.min_y);
+                    result.bounds.min_z = std::min(result.bounds.min_z, node_bounds.min_z);
+                    result.bounds.max_x = std::max(result.bounds.max_x, node_bounds.max_x);
+                    result.bounds.max_y = std::max(result.bounds.max_y, node_bounds.max_y);
+                    result.bounds.max_z = std::max(result.bounds.max_z, node_bounds.max_z);
                 }
             } else {
                 throw std::runtime_error("Invalid defaultScene value.");
@@ -423,7 +432,7 @@ void ResourceSystem::load_model(Model& result, const std::string &path) const {
     }
 }
 
-void ResourceSystem::load_model_node(Model::Node& result, const tinygltf::Model &model, const tinygltf::Node &node) const {
+void ResourceSystem::load_model_node(Model::Node& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const {
     result.name = node.name;
 
     // Load node transform.
@@ -459,28 +468,55 @@ void ResourceSystem::load_model_node(Model::Node& result, const tinygltf::Model 
 
     if (node.mesh > -1 && node.mesh < model.meshes.size()) {
         result.mesh = new Model::Mesh();
-        load_model_mesh(*result.mesh, model, node);
+        Model::AABB mesh_bounds;
+
+        load_model_mesh(*result.mesh, mesh_bounds, model, node);
+
+        bounds.min_x = std::min(bounds.min_x, mesh_bounds.min_x);
+        bounds.min_y = std::min(bounds.min_y, mesh_bounds.min_y);
+        bounds.min_z = std::min(bounds.min_z, mesh_bounds.min_z);
+        bounds.max_x = std::max(bounds.max_x, mesh_bounds.max_x);
+        bounds.max_y = std::max(bounds.max_y, mesh_bounds.max_y);
+        bounds.max_z = std::max(bounds.max_z, mesh_bounds.max_z);
     }
 
     for (const int child_index : node.children) {
         if (child_index >= 0 && child_index < model.nodes.size()) {
-            load_model_node(result.children.emplace_back(), model, model.nodes[child_index]);
+            Model::AABB child_node_bounds;
+
+            load_model_node(result.children.emplace_back(), child_node_bounds, model, model.nodes[child_index]);
+
+            bounds.min_x = std::min(bounds.min_x, child_node_bounds.min_x);
+            bounds.min_y = std::min(bounds.min_y, child_node_bounds.min_y);
+            bounds.min_z = std::min(bounds.min_z, child_node_bounds.min_z);
+            bounds.max_x = std::max(bounds.max_x, child_node_bounds.max_x);
+            bounds.max_y = std::max(bounds.max_y, child_node_bounds.max_y);
+            bounds.max_z = std::max(bounds.max_z, child_node_bounds.max_z);
         } else {
             throw std::runtime_error("Invalid child.");
         }
     }
 }
 
-void ResourceSystem::load_model_mesh(Model::Mesh& result, const tinygltf::Model &model, const tinygltf::Node &node) const {
+void ResourceSystem::load_model_mesh(Model::Mesh& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const {
     const tinygltf::Mesh& mesh = model.meshes[node.mesh];
     for (const tinygltf::Primitive& primitive : mesh.primitives) {
         if (primitive.mode == TINYGLTF_MODE_TRIANGLES) {
-            load_model_primitive(result.primitives.emplace_back(), model, primitive);
+            Model::AABB primitive_bounds;
+
+            load_model_primitive(result.primitives.emplace_back(), primitive_bounds, model, primitive);
+
+            bounds.min_x = std::min(bounds.min_x, primitive_bounds.min_x);
+            bounds.min_y = std::min(bounds.min_y, primitive_bounds.min_y);
+            bounds.min_z = std::min(bounds.min_z, primitive_bounds.min_z);
+            bounds.max_x = std::max(bounds.max_x, primitive_bounds.max_x);
+            bounds.max_y = std::max(bounds.max_y, primitive_bounds.max_y);
+            bounds.max_z = std::max(bounds.max_z, primitive_bounds.max_z);
         }
     }
 }
 
-void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const {
+void ResourceSystem::load_model_primitive(Model::Primitive& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const {
     size_t num_vertices = 0;
     const bgfx::Memory* vertex_memory = nullptr;
     Model::BasicModelVertex* vertex_data = nullptr;
@@ -539,6 +575,13 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, const tinygl
                 vertex_data[i].x = position_source_data[0];
                 vertex_data[i].y = position_source_data[1];
                 vertex_data[i].z = -position_source_data[2];
+
+                bounds.min_x = std::min(bounds.min_x, vertex_data[i].x);
+                bounds.min_y = std::min(bounds.min_y, vertex_data[i].y);
+                bounds.min_z = std::min(bounds.min_z, vertex_data[i].z);
+                bounds.max_x = std::max(bounds.max_x, vertex_data[i].x);
+                bounds.max_y = std::max(bounds.max_y, vertex_data[i].y);
+                bounds.max_z = std::max(bounds.max_z, vertex_data[i].z);
             }
         } else if (attribute == "NORMAL") {
             const size_t byte_stride = buffer_view.byteStride == 0 ? sizeof(float) * 3 : buffer_view.byteStride;
