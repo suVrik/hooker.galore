@@ -12,6 +12,7 @@
 #include "world/shared/render/imgui_pass_system.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/outline_pass_system.h"
+#include "world/shared/render/picking_pass_system.h"
 #include "world/shared/render/quad_system.h"
 #include "world/shared/render/render_fetch_system.h"
 #include "world/shared/render/render_system.h"
@@ -34,6 +35,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(ImguiPassSystem);
     REGISTER_SYSTEM(LightingPassSystem);
     REGISTER_SYSTEM(OutlinePassSystem);
+    REGISTER_SYSTEM(PickingPassSystem);
     REGISTER_SYSTEM(PresetSystem);
     REGISTER_SYSTEM(PropertyEditorSystem);
     REGISTER_SYSTEM(QuadSystem);

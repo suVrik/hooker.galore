@@ -7,6 +7,7 @@
 namespace hg {
 
 class WindowSystem;
+class ImguiFetchSystem;
 
 /** `NormalInputSingleComponent` contains information about keyboard and mouse input changes between normal frames. */
 class NormalInputSingleComponent final {
@@ -49,8 +50,13 @@ private:
     bool m_previous_keys[512] {};
     bool m_keys[512] {};
     char m_text[32] {};
+    bool m_disable_keyboard = false;
+    bool m_previous_disable_keyboard = false;
+    bool m_disable_mouse = false;
+    bool m_previous_disable_mouse = false;
 
     friend class WindowSystem;
+    friend class ImguiFetchSystem;
 };
 
 } // namespace hg

@@ -1,14 +1,16 @@
 #include "core/ecs/world.h"
 #include "core/resource/material.h"
 #include "core/resource/texture.h"
+#include "world/editor/editor_component.h"
+#include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/shared/level_single_component.h"
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
-#include "world/shared/resource_system.h"
 #include "world/shared/render/texture_single_component.h"
+#include "world/shared/resource_system.h"
 
 #define TINYGLTF_NO_STB_IMAGE       1
 #define TINYGLTF_NO_STB_IMAGE_WRITE 1
@@ -892,6 +894,7 @@ void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node&
 
 void ResourceSystem::load_level() const {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
+    auto& guid_single_component = world.set<GuidSingleComponent>();
 
     const ghc::filesystem::path level_path = ghc::filesystem::path(get_resource_directory()) / "levels" / level_single_component.level_name;
     if (!ghc::filesystem::exists(level_path)) {
@@ -938,6 +941,17 @@ void ResourceSystem::load_level() const {
                     load_properties(component, component_it->second);
                 }
             }
+
+            if (!world.has<EditorComponent>(entity)) {
+                throw std::runtime_error("Entity must have EditorComponent.");
+            }
+
+            auto& editor_component = world.get<EditorComponent>(entity);
+            if (guid_single_component.guid_to_entity.count(editor_component.guid) > 0) {
+                throw std::runtime_error("Entity with specified guid already exists.");
+            }
+            guid_single_component.guid_to_entity[editor_component.guid] = entity;
+            // TODO: name_single_component
         }
     }
     catch (const std::runtime_error& error) {

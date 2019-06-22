@@ -5,12 +5,9 @@
 #include "shaders/outline_pass/outline_pass.vertex.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
 #include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/model_component.h"
-#include "world/shared/render/outline_component.h"
 #include "world/shared/render/outline_pass_single_component.h"
 #include "world/shared/render/outline_pass_system.h"
 #include "world/shared/render/quad_single_component.h"
-#include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>
@@ -37,7 +34,8 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 } // namespace outline_pass_system
 
 OutlinePassSystem::OutlinePassSystem(World& world) noexcept
-        : NormalSystem(world) {
+        : NormalSystem(world)
+        , m_group(world.group<OutlineComponent>(entt::get<ModelComponent, TransformComponent>)) {
     using namespace outline_pass_system_details;
 
     auto& outline_pass_single_component = world.set<OutlinePassSingleComponent>();
@@ -92,7 +90,9 @@ void OutlinePassSystem::update(float /*elapsed_time*/) {
 
     bgfx::setViewTransform(OUTLINE_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
 
-    world.view<ModelComponent, OutlineComponent, TransformComponent>().each([&](entt::entity entity, ModelComponent& model_component, OutlineComponent& outline_component, TransformComponent& transform_component) {
+    bgfx::touch(OUTLINE_PASS);
+
+    m_group.each([&](entt::entity entity, OutlineComponent& outline_component, ModelComponent& model_component, TransformComponent& transform_component) {
         glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
         transform = transform * glm::mat4_cast(transform_component.rotation);
         transform = glm::scale(transform, transform_component.scale);

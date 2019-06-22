@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
                 "DebugDrawPassSystem",
                 "EditorGridSystem",
                 "ImguiPassSystem",
+                "PickingPassSystem",
                 "RenderSystem",
         };
         std::vector<std::string> fixed_system_order;

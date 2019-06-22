@@ -732,7 +732,7 @@ namespace ImGuizmo
 
    void SetDrawlist()
    {
-      gContext.mDrawList = ImGui::GetWindowDrawList();
+      gContext.mDrawList = ImGui::GetBackgroundDrawList();
    }
 
    void BeginFrame()
@@ -748,7 +748,7 @@ namespace ImGuizmo
       ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
      
       ImGui::Begin("gizmo", NULL, flags);
-      gContext.mDrawList = ImGui::GetWindowDrawList();
+      gContext.mDrawList = ImGui::GetBackgroundDrawList();
       ImGui::End();
       ImGui::PopStyleVar();
       ImGui::PopStyleColor(2);
@@ -1317,6 +1317,10 @@ namespace ImGuizmo
                unsigned int bigAnchorColor = overBigAnchor ? selectionColor : (0xAAAAAA + anchorAlpha);
                unsigned int smallAnchorColor = overSmallAnchor ? selectionColor : (0xAAAAAA + anchorAlpha);
 
+               if (gContext.mbEnable && (overBigAnchor || overSmallAnchor)) {
+                   ImGui::CaptureMouseFromApp();
+               }
+
                drawList->AddCircleFilled(worldBound1, AnchorBigRadius, 0xFF000000);
             drawList->AddCircleFilled(worldBound1, AnchorBigRadius-1.2f, bigAnchorColor);
 
@@ -1362,6 +1366,8 @@ namespace ImGuizmo
 
            if (gContext.mbUsingBounds)
            {
+               ImGui::CaptureMouseFromApp();
+
                matrix_t scale;
                scale.SetToIdentity();
 

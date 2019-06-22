@@ -51,7 +51,7 @@ void EditorCameraSystem::update(float elapsed_time) {
             speed *= CAMERA_SPEED_DECREASE_FACTOR;
         }
 
-        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) && world.valid(selected_entity_single_component.selected_entity)) {
+        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && world.valid(selected_entity_single_component.selected_entity)) {
             auto& object_transform_component = world.get<TransformComponent>(selected_entity_single_component.selected_entity);
 
             const float distance_to_object = glm::distance(transform_component.translation, object_transform_component.translation);
@@ -72,11 +72,15 @@ void EditorCameraSystem::update(float elapsed_time) {
                 const glm::vec3 vector1 = transform_component.translation - object_transform_component.translation;
                 const glm::vec3 vector2 = glm::cross(vector1, glm::vec3(0.f, 1.f, 0.f));
 
+                if (normal_input_single_component.get_mouse_wheel() != 0) {
+                    speed *= std::abs(normal_input_single_component.get_mouse_wheel()) * 5.f;
+                }
+
                 float distance = glm::length(vector1);
-                if (normal_input_single_component.is_down(Control::KEY_W)) {
+                if (normal_input_single_component.is_down(Control::KEY_W) || normal_input_single_component.get_mouse_wheel() > 0) {
                     distance = std::max(distance - speed, 0.1f);
                 }
-                if (normal_input_single_component.is_down(Control::KEY_S)) {
+                if (normal_input_single_component.is_down(Control::KEY_S) || normal_input_single_component.get_mouse_wheel() < 0) {
                     distance = distance + speed;
                 }
 

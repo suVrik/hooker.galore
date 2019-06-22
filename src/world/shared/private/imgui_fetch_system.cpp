@@ -88,6 +88,11 @@ void ImguiFetchSystem::update(float elapsed_time) {
     ImGuiIO& io = ImGui::GetIO();
 
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
+    normal_input_single_component.m_previous_disable_keyboard = normal_input_single_component.m_disable_keyboard;
+    normal_input_single_component.m_previous_disable_mouse = normal_input_single_component.m_disable_mouse;
+    normal_input_single_component.m_disable_keyboard = false;
+    normal_input_single_component.m_disable_mouse = false;
+
     io.MousePos.x   = static_cast<float>(normal_input_single_component.get_mouse_x());
     io.MousePos.y   = static_cast<float>(normal_input_single_component.get_mouse_y());
     io.MouseWheel   = static_cast<float>(normal_input_single_component.get_mouse_wheel());
@@ -107,6 +112,9 @@ void ImguiFetchSystem::update(float elapsed_time) {
     io.KeySuper = normal_input_single_component.is_down(Control::KEY_LGUI) || normal_input_single_component.is_down(Control::KEY_RGUI);
 
     io.AddInputCharactersUTF8(normal_input_single_component.get_text());
+
+    normal_input_single_component.m_disable_keyboard = io.WantCaptureKeyboard;
+    normal_input_single_component.m_disable_mouse = io.WantCaptureMouse;
 
     io.DeltaTime = std::max(elapsed_time, 1e-4f); // ImGui doesn't accept zero elapsed_time value.
 
@@ -137,7 +145,6 @@ void ImguiFetchSystem::update(float elapsed_time) {
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 
-    // TODO: Is this a place for this?
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
     ImGui::SetNextWindowSize(viewport->Size);
@@ -150,9 +157,7 @@ void ImguiFetchSystem::update(float elapsed_time) {
                                    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Main", nullptr, flags);
     ImGui::PopStyleVar(3);
-
     ImGui::DockSpace(ImGui::GetID("Main"), ImVec2(0.f, 0.f), ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
-
     ImGui::End();
 }
 

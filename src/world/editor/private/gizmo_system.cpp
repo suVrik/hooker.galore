@@ -1,7 +1,9 @@
 #include "core/ecs/world.h"
 #include "core/render/ImGuizmo.h"
+#include "world/editor/editor_component.h"
 #include "world/editor/gizmo_single_component.h"
 #include "world/editor/gizmo_system.h"
+#include "world/editor/guid_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
@@ -20,10 +22,11 @@ GizmoSystem::GizmoSystem(World& world) noexcept
 }
 
 void GizmoSystem::update(float /*elapsed_time*/) {
-    auto& gizmo_single_component = world.ctx<GizmoSingleComponent>();
-    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
+    auto& gizmo_single_component = world.ctx<GizmoSingleComponent>();
+    auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
+    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
     if (ImGui::Begin("Tool")) {
         const ImVec2 window_size = ImGui::GetWindowSize();
@@ -120,18 +123,21 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                 glm::value_ptr(transform), nullptr, snap, local_bounds, bounds_snap);
 
         if (!was_using && ImGuizmo::IsUsing() && (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT))) {
+            world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+
             entt::entity new_entity = world.create();
             world.each(selected_entity_single_component.selected_entity, [&](entt::meta_handle component_handle) {
                 world.assign(new_entity, component_handle);
             });
-            // TODO: Unique editor guid/name as well?
 
-            world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+            auto& editor_component = world.get<EditorComponent>(new_entity);
+            // TODO: editor_component.name = name_single_component.acquire_unique_name(new_entity, editor_component.name);
+            editor_component.guid = guid_single_component.acquire_unique_guid(new_entity);
+
+            selected_entity_single_component.selected_entity = new_entity;
+            world.assign<OutlineComponent>(selected_entity_single_component.selected_entity);
 
             transform_component = &world.get<TransformComponent>(new_entity);
-            selected_entity_single_component.selected_entity = new_entity;
-
-            world.assign<OutlineComponent>(new_entity);
         }
 
         transform_component->scale = glm::vec3(std::max(1e-2f, glm::length(transform[0])), std::max(1e-2f, glm::length(transform[1])), std::max(1e-2f, glm::length(transform[2])));
