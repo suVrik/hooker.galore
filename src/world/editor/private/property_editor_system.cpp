@@ -20,9 +20,12 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
     if (ImGui::Begin("Property Editor")) {
-        if (world.valid(selected_entity_single_component.selected_entity)) {
+        if (selected_entity_single_component.selected_entities.size() == 1) {
+            entt::entity entity = selected_entity_single_component.selected_entities[0];
+            assert(world.valid(entity));
+
             uint32_t idx = 0;
-            world.each(selected_entity_single_component.selected_entity, [&](entt::meta_handle component_handle) {
+            world.each(entity, [&](entt::meta_handle component_handle) {
                 entt::meta_type component_type = component_handle.type();
                 if (component_type) {
                     entt::meta_prop component_name_property = component_type.prop("name"_hs);
@@ -43,7 +46,12 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
             });
             // TODO: Unique editor guid/name?
         } else {
-            ImGui::TextUnformatted("No entity selected.");
+            if (!selected_entity_single_component.selected_entities.empty()) {
+                // TODO: Edit properties of many entities at the same time?
+                ImGui::TextWrapped("Editing properties of multiple entities is not yet supported.");
+            } else {
+                ImGui::TextUnformatted("No entity selected.");
+            }
         }
     }
     ImGui::End();

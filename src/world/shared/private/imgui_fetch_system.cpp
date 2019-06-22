@@ -116,6 +116,10 @@ void ImguiFetchSystem::update(float elapsed_time) {
     normal_input_single_component.m_disable_keyboard = io.WantCaptureKeyboard;
     normal_input_single_component.m_disable_mouse = io.WantCaptureMouse;
 
+    if (io.WantCaptureMouse) {
+        normal_input_single_component.m_mouse_wheel = 0;
+    }
+
     io.DeltaTime = std::max(elapsed_time, 1e-4f); // ImGui doesn't accept zero elapsed_time value.
 
     auto& window_single_component = world.ctx<WindowSingleComponent>();

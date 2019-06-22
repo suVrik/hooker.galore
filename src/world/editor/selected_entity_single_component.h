@@ -11,8 +11,10 @@ class SelectedEntitySingleComponent final {
 public:
     /** Select specified `entity`, assign `OutlineComponent` to it, reset `OutlineComponent` from previous selected entity. */
     void select_entity(World& world, entt::entity entity) noexcept;
+    void add_to_selection(World& world, entt::entity entity) noexcept;
+    void clear_selection(World& world) noexcept;
 
-    entt::entity selected_entity = entt::null;
+    std::vector<entt::entity> selected_entities;
 
     bool is_selecting = false;
     int32_t selection_start_x = 0;

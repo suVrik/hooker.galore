@@ -11,7 +11,9 @@
 #include "world/shared/window_single_component.h"
 
 #include <algorithm>
+#include <glm/common.hpp>
 #include <imgui.h>
+#include <set>
 
 namespace hg {
 
@@ -36,6 +38,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
     if (ImGui::Begin("Level")) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
+        ImGui::Separator();
 
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.f, 0.f, 0.f, 0.f));
         ImGui::BeginChildFrame(ImGui::GetID("level-frame"), ImVec2(0.f, 0.f));
@@ -47,16 +50,16 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
             if (buffer[0] == '\0' || lower_case_name.find(buffer) != std::string::npos) {
                 ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf;
-                if (selected_entity_single_component.selected_entity == entity) {
+                if (std::find(selected_entity_single_component.selected_entities.begin(), selected_entity_single_component.selected_entities.end(), entity) != selected_entity_single_component.selected_entities.end()) {
                     flags |= ImGuiTreeNodeFlags_Selected;
                 }
                 ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), flags, "%s", editor_component.name.c_str());
                 if (ImGui::IsItemClicked()) {
-                    if (world.valid(selected_entity_single_component.selected_entity)) {
-                        world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+                    if (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                        selected_entity_single_component.add_to_selection(world, entity);
+                    } else {
+                        selected_entity_single_component.select_entity(world, entity);
                     }
-                    selected_entity_single_component.selected_entity = entity;
-                    world.assign<OutlineComponent>(entity);
                 }
             }
         });
@@ -72,15 +75,37 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             const bgfx::RendererType::Enum renderer_type = bgfx::getRendererType();
             if (renderer_type == bgfx::RendererType::OpenGL || renderer_type == bgfx::RendererType::OpenGLES) {
                 // OpenGL coordinate system starts at lower-left corner.
+                selected_entity_single_component.selection_start_y = window_single_component.height - selected_entity_single_component.selection_start_y;
                 selected_entity_single_component.selection_end_y = window_single_component.height - selected_entity_single_component.selection_end_y;
             }
 
-            const size_t offset = (window_single_component.width * size_t(selected_entity_single_component.selection_end_y) + size_t(selected_entity_single_component.selection_end_x)) * 4;
-            if (offset + 4 <= picking_pass_single_component.target_data.size()) {
-                const uint32_t selected_object = *reinterpret_cast<uint32_t*>(picking_pass_single_component.target_data.data() + offset) & 0x00FFFFFF;
+            const int32_t selection_start_x = glm::clamp(std::min(selected_entity_single_component.selection_start_x, selected_entity_single_component.selection_end_x), 0, std::max(int32_t(window_single_component.width), 1) - 1);
+            const int32_t selection_start_y = glm::clamp(std::min(selected_entity_single_component.selection_start_y, selected_entity_single_component.selection_end_y), 0, std::max(int32_t(window_single_component.height), 1) - 1);
+            const int32_t selection_end_x = glm::clamp(std::max(selected_entity_single_component.selection_start_x, selected_entity_single_component.selection_end_x), 0, std::max(int32_t(window_single_component.width), 1) - 1);
+            const int32_t selection_end_y = glm::clamp(std::max(selected_entity_single_component.selection_start_y, selected_entity_single_component.selection_end_y), 0, std::max(int32_t(window_single_component.height), 1) - 1);
+
+            std::set<uint32_t> selected_entities;
+            for (int32_t y = selection_start_y; y <= selection_end_y; y++) {
+                for (int32_t x = selection_start_x; x <= selection_end_x; x++) {
+                    const size_t offset = size_t(window_single_component.width * y + x) * 4;
+                    if (offset + sizeof(uint32_t) <= picking_pass_single_component.target_data.size()) {
+                        selected_entities.insert(*reinterpret_cast<uint32_t*>(picking_pass_single_component.target_data.data() + offset) & 0x00FFFFFF);
+                    }
+                }
+            }
+
+            if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                selected_entity_single_component.clear_selection(world);
+            }
+
+            for (uint32_t selected_object : selected_entities) {
                 if (selected_object != 0 && guid_single_component.guid_to_entity.count(selected_object) > 0) {
-                    selected_entity_single_component.select_entity(world, guid_single_component.guid_to_entity[selected_object]);
-                } else {
+                    selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                }
+            }
+
+            if (selected_entities.empty()) {
+                if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
                     selected_entity_single_component.select_entity(world, entt::null);
                 }
             }
@@ -111,11 +136,14 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         }
     }
 
-    if (normal_input_single_component.is_pressed(Control::KEY_DELETE) && world.valid(selected_entity_single_component.selected_entity)) {
-        auto& editor_component = world.get<EditorComponent>(selected_entity_single_component.selected_entity);
-        guid_single_component.guid_to_entity.erase(editor_component.guid);
-        world.destroy(selected_entity_single_component.selected_entity);
-        selected_entity_single_component.selected_entity = entt::null;
+    if (normal_input_single_component.is_pressed(Control::KEY_DELETE)) {
+        for (entt::entity entity : selected_entity_single_component.selected_entities) {
+            if (world.valid(entity)) {
+                guid_single_component.guid_to_entity.erase(world.get<EditorComponent>(entity).guid);
+                world.destroy(entity);
+            }
+        }
+        selected_entity_single_component.selected_entities.clear();
     }
 }
 

@@ -43,6 +43,16 @@ void EditorCameraSystem::update(float elapsed_time) {
     if (world.valid(camera_single_component.active_camera) && world.has<EditorCameraComponent, TransformComponent>(camera_single_component.active_camera)) {
         auto [editor_camera_component, transform_component] = world.get<EditorCameraComponent, TransformComponent>(camera_single_component.active_camera);
 
+        if (normal_input_single_component.is_pressed(Control::KEY_HOME)) {
+            editor_camera_component.yaw = -glm::pi<float>() * 3.f / 4.f;
+            editor_camera_component.pitch = glm::pi<float>() / 4.f;
+
+            transform_component.translation.x = 10.f;
+            transform_component.translation.y = 10.f;
+            transform_component.translation.z = 10.f;
+            transform_component.rotation = glm::rotate(glm::rotate(glm::quat(1.f, 0.f, 0.f, 0.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
+        }
+
         float speed = CAMERA_SPEED * elapsed_time;
         if (normal_input_single_component.is_down(Control::KEY_LSHIFT)) {
             speed *= CAMERA_SPEED_INCREASE_FACTOR;
@@ -51,10 +61,15 @@ void EditorCameraSystem::update(float elapsed_time) {
             speed *= CAMERA_SPEED_DECREASE_FACTOR;
         }
 
-        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && world.valid(selected_entity_single_component.selected_entity)) {
-            auto& object_transform_component = world.get<TransformComponent>(selected_entity_single_component.selected_entity);
+        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && !selected_entity_single_component.selected_entities.empty()) {
+            glm::vec3 middle_translation;
+            for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
+                auto& object_transform_component = world.get<TransformComponent>(selected_entity);
+                middle_translation += object_transform_component.translation;
+            }
+            middle_translation /= selected_entity_single_component.selected_entities.size();
 
-            const float distance_to_object = glm::distance(transform_component.translation, object_transform_component.translation);
+            const float distance_to_object = glm::distance(transform_component.translation, middle_translation);
             if (distance_to_object > glm::epsilon<float>()) {
                 float delta_yaw = 0.f;
                 float delta_pitch = 0.f;
@@ -69,7 +84,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                     delta_pitch = editor_camera_component.pitch - previous_pitch;
                 }
 
-                const glm::vec3 vector1 = transform_component.translation - object_transform_component.translation;
+                const glm::vec3 vector1 = transform_component.translation - middle_translation;
                 const glm::vec3 vector2 = glm::cross(vector1, glm::vec3(0.f, 1.f, 0.f));
 
                 if (normal_input_single_component.get_mouse_wheel() != 0) {
@@ -86,7 +101,7 @@ void EditorCameraSystem::update(float elapsed_time) {
 
                 const glm::quat delta_rotation = glm::rotate(glm::rotate(glm::quat(1.f, 0.f, 0.f, 0.f), delta_yaw, glm::vec3(0.f, 1.f, 0.f)), delta_pitch, vector2);
                 transform_component.rotation = glm::rotate(glm::rotate(glm::quat(1.f, 0.f, 0.f, 0.f), editor_camera_component.yaw, glm::vec3(0.f, 1.f, 0.f)), editor_camera_component.pitch, glm::vec3(1.f, 0.f, 0.f));
-                transform_component.translation = object_transform_component.translation + delta_rotation * glm::normalize(vector1) * distance;
+                transform_component.translation = middle_translation + delta_rotation * glm::normalize(vector1) * distance;
             }
         } else {
             float delta_x = 0.f;

@@ -1,5 +1,7 @@
 #include "core/ecs/world.h"
+#include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/render_fetch_system.h"
+#include "world/shared/render/render_single_component.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
@@ -38,8 +40,6 @@ RenderFetchSystem::RenderFetchSystem(World& world)
     }
 
     bgfx::reset(window_single_component.width, window_single_component.height, BGFX_RESET_VSYNC);
-
-    //bgfx::setDebug(BGFX_DEBUG_STATS);
 }
 
 RenderFetchSystem::~RenderFetchSystem() {
@@ -52,6 +52,13 @@ void RenderFetchSystem::update(float /*elapsed_time*/) {
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     if (window_single_component.resized) {
         bgfx::reset(window_single_component.width, window_single_component.height, BGFX_RESET_VSYNC);
+    }
+
+    auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
+    if (normal_input_single_component.is_pressed(Control::KEY_F10)) {
+        auto& render_single_component = world.ctx<RenderSingleComponent>();
+        render_single_component.show_debug_info = !render_single_component.show_debug_info;
+        bgfx::setDebug(render_single_component.show_debug_info ? BGFX_DEBUG_STATS : 0);
     }
 }
 

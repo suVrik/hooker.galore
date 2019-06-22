@@ -47,6 +47,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
     if (ImGui::Begin("Presets")) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
+        ImGui::Separator();
 
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.f, 0.f, 0.f, 0.f));
         ImGui::BeginChildFrame(ImGui::GetID("level-frame"), ImVec2(0.f, 0.f));
