@@ -110,6 +110,13 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
         }
     }
+
+    if (normal_input_single_component.is_pressed(Control::KEY_DELETE) && world.valid(selected_entity_single_component.selected_entity)) {
+        auto& editor_component = world.get<EditorComponent>(selected_entity_single_component.selected_entity);
+        guid_single_component.guid_to_entity.erase(editor_component.guid);
+        world.destroy(selected_entity_single_component.selected_entity);
+        selected_entity_single_component.selected_entity = entt::null;
+    }
 }
 
 } // namespace hg
