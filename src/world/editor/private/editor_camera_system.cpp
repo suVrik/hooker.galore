@@ -51,7 +51,7 @@ void EditorCameraSystem::update(float elapsed_time) {
             speed *= CAMERA_SPEED_DECREASE_FACTOR;
         }
 
-        if (normal_input_single_component.is_down(Control::KEY_LALT) && world.valid(selected_entity_single_component.selected_entity)) {
+        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) && world.valid(selected_entity_single_component.selected_entity)) {
             auto& object_transform_component = world.get<TransformComponent>(selected_entity_single_component.selected_entity);
 
             const float distance_to_object = glm::distance(transform_component.translation, object_transform_component.translation);
@@ -59,7 +59,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                 float delta_yaw = 0.f;
                 float delta_pitch = 0.f;
 
-                if (normal_input_single_component.is_down(Control::BUTTON_RIGHT)) {
+                if (normal_input_single_component.is_down(Control::BUTTON_RIGHT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
                     const float previous_yaw = editor_camera_component.yaw;
                     const float previous_pitch = editor_camera_component.pitch;
                     editor_camera_component.yaw -= normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
