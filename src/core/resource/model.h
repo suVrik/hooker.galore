@@ -3,6 +3,7 @@
 #include <bgfx/bgfx.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
+#include <limits>
 #include <memory>
 #include <string>
 #include <vector>
@@ -61,7 +62,18 @@ public:
         Mesh* mesh;
     };
 
+    /** `AABB` describes bounds of the model. */
+    struct AABB final {
+        float min_x = std::numeric_limits<float>::max();
+        float min_y = std::numeric_limits<float>::max();
+        float min_z = std::numeric_limits<float>::max();
+        float max_x = -std::numeric_limits<float>::max();
+        float max_y = -std::numeric_limits<float>::max();
+        float max_z = -std::numeric_limits<float>::max();
+    };
+
     std::vector<Node> children;
+    AABB bounds;
 };
 
 } // namespace hg

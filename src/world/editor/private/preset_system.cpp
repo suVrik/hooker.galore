@@ -3,6 +3,7 @@
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/render/outline_component.h"
 
 #include <ghc/filesystem.hpp>
 #include <imgui.h>
@@ -98,7 +99,12 @@ void PresetSystem::update(float /*elapsed_time*/) {
                             }
 
                             world.assign<EditorComponent>(entity, EditorComponent{ name, SDL_GetTicks() });
+
+                            if (world.valid(selected_entity_single_component.selected_entity)) {
+                                world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+                            }
                             selected_entity_single_component.selected_entity = entity;
+                            world.assign<OutlineComponent>(entity);
                         }
                     }
                 }
