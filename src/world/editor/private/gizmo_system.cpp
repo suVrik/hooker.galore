@@ -5,6 +5,7 @@
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
+#include "world/shared/render/outline_component.h"
 #include "world/shared/transform_component.h"
 
 #include <imgui.h>
@@ -85,8 +86,13 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                 world.assign(new_entity, component_handle);
             });
             // TODO: Unique editor guid/name as well?
+
+            world.reset<OutlineComponent>(selected_entity_single_component.selected_entity);
+
             transform_component = &world.get<TransformComponent>(new_entity);
             selected_entity_single_component.selected_entity = new_entity;
+
+            world.assign<OutlineComponent>(new_entity);
         }
 
         transform_component->scale = glm::vec3(std::max(1e-2f, glm::length(transform[0])), std::max(1e-2f, glm::length(transform[1])), std::max(1e-2f, glm::length(transform[2])));
