@@ -10,6 +10,7 @@ SAMPLER2D(s_normal_metal_ao, 1);
 SAMPLER2D(s_depth,           2);
 
 uniform vec4 u_light_position;
+uniform vec4 u_light_color;
 
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
@@ -97,8 +98,7 @@ void main() {
 
     float distance = length(u_light_position.xyz - world_position);
     float attenuation = 1.0 / (distance * distance);
-    vec3 light_color = vec3(150.0, 150.0, 150.0);
-    vec3 radiance = light_color * attenuation;
+    vec3 radiance = u_light_color.xyz * attenuation;
     vec3 f = fresnel_schlick(max(dot(half_dir, camera_dir), 0.0), surface_reflect_zero);
 
     float ndf = distribution_ggx(normal, half_dir, roughness);

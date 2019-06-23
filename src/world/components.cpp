@@ -12,6 +12,7 @@
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/debug_draw_pass_single_component.h"
 #include "world/shared/render/geometry_pass_single_component.h"
+#include "world/shared/render/light_component.h"
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/material_single_component.h"
@@ -55,6 +56,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(BlockoutComponent);
     REGISTER_COMPONENT(EditorCameraComponent);
     REGISTER_COMPONENT(EditorComponent);
+    REGISTER_COMPONENT(LightComponent);
     REGISTER_COMPONENT(MaterialComponent);
     REGISTER_COMPONENT(ModelComponent);
     REGISTER_COMPONENT(OutlineComponent);

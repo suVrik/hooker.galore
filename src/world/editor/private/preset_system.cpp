@@ -49,6 +49,9 @@ void PresetSystem::update(float /*elapsed_time*/) {
         ImGui::InputText("Filter", buffer, sizeof(buffer));
         ImGui::Separator();
 
+        std::string lower_case_filter = buffer;
+        std::transform(lower_case_filter.begin(), lower_case_filter.end(), lower_case_filter.begin(), ::tolower);
+
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.f, 0.f, 0.f, 0.f));
         ImGui::BeginChildFrame(ImGui::GetID("level-frame"), ImVec2(0.f, 0.f));
         ImGui::PopStyleColor();
@@ -60,7 +63,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
             std::string lower_case_name = preset_name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
 
-            if (buffer[0] == '\0' || lower_case_name.find(buffer) != std::string::npos) {
+            if (lower_case_filter.empty() || lower_case_name.find(lower_case_filter) != std::string::npos) {
                 std::vector<std::string> preset_path = split(preset_name, ghc::filesystem::path::preferred_separator);
 
                 auto directories_it = directories.begin();

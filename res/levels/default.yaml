@@ -1406,3 +1406,25 @@ entities:
     EditorComponent:
       name: duck
       guid: 67
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 10
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    LightComponent:
+      color:
+        x: 150
+        y: 150
+        z: 150
+    EditorComponent:
+      name: LIGHT
+      guid: 68

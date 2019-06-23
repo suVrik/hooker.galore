@@ -5,13 +5,16 @@
 #include "shaders/lighting_pass/lighting_pass.vertex.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/geometry_pass_single_component.h"
+#include "world/shared/render/light_component.h"
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
+#include <entt/entity/registry.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace hg {
@@ -42,6 +45,7 @@ LightingPassSystem::LightingPassSystem(World& world)
     lighting_pass_single_component.normal_metal_ao_uniform = bgfx::createUniform("s_normal_metal_ao", bgfx::UniformType::Sampler);
     lighting_pass_single_component.depth_uniform           = bgfx::createUniform("s_depth",           bgfx::UniformType::Sampler);
     lighting_pass_single_component.light_position_uniform  = bgfx::createUniform("u_light_position",  bgfx::UniformType::Vec4);
+    lighting_pass_single_component.light_color_uniform     = bgfx::createUniform("u_light_color",     bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);
     bgfx::setViewRect(LIGHTING_PASS, 0, 0, window_single_component.width, window_single_component.height);
@@ -61,6 +65,7 @@ LightingPassSystem::~LightingPassSystem() {
     destroy_valid(lighting_pass_single_component.normal_metal_ao_uniform);
     destroy_valid(lighting_pass_single_component.depth_uniform);
     destroy_valid(lighting_pass_single_component.light_position_uniform);
+    destroy_valid(lighting_pass_single_component.light_color_uniform);
 }
 
 void LightingPassSystem::update(float /*elapsed_time*/) {
@@ -81,19 +86,17 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
-    // TODO: Acquire light position from some component.
-    static float t = 0.f;
-    t += 0.02;
-    float pos[4] = { std::cos(t) * 1.5f - 2.f, std::sin(t) * 0.2f + 6.f, std::sin(t) * 1.5f, 1.f };
-
     bgfx::setTexture(0, lighting_pass_single_component.color_roughness_uniform, geometry_pass_single_component.color_roughness_texture);
     bgfx::setTexture(1, lighting_pass_single_component.normal_metal_ao_uniform, geometry_pass_single_component.normal_metal_ao_texture);
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
 
-    bgfx::setUniform(lighting_pass_single_component.light_position_uniform, pos, 1);
-
-    // TODO: Remove debug draw light.
-    dd::sphere(glm::vec3(pos[0], pos[1], pos[2]), glm::vec3(1.f, 1.f, 1.f), 0.1f);
+    world.view<LightComponent, TransformComponent>().each([&](entt::entity, LightComponent& light_component, TransformComponent& transform_component) {
+        const glm::vec4 light_position(transform_component.translation, 0.f);
+        const glm::vec4 light_color(light_component.color, 0.f);
+        bgfx::setUniform(lighting_pass_single_component.light_position_uniform, glm::value_ptr(light_position), 1);
+        bgfx::setUniform(lighting_pass_single_component.light_color_uniform,    glm::value_ptr(light_color), 1);
+        dd::sphere(transform_component.translation, glm::vec3(1.f, 1.f, 1.f), 0.1f);
+    });
 
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
 

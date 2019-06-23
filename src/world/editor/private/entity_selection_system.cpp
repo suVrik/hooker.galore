@@ -40,6 +40,9 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         ImGui::InputText("Filter", buffer, sizeof(buffer));
         ImGui::Separator();
 
+        std::string lower_case_filter = buffer;
+        std::transform(lower_case_filter.begin(), lower_case_filter.end(), lower_case_filter.begin(), ::tolower);
+
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.f, 0.f, 0.f, 0.f));
         ImGui::BeginChildFrame(ImGui::GetID("level-frame"), ImVec2(0.f, 0.f));
         ImGui::PopStyleColor();
@@ -48,7 +51,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
             std::string lower_case_name = editor_component.name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
-            if (buffer[0] == '\0' || lower_case_name.find(buffer) != std::string::npos) {
+            if (lower_case_filter.empty() || lower_case_name.find(lower_case_filter) != std::string::npos) {
                 ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf;
                 if (std::find(selected_entity_single_component.selected_entities.begin(), selected_entity_single_component.selected_entities.end(), entity) != selected_entity_single_component.selected_entities.end()) {
                     flags |= ImGuiTreeNodeFlags_Selected;
