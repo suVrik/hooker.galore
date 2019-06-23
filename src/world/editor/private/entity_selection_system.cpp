@@ -136,6 +136,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         }
     }
 
+    // TODO: HISTORY delete the whole bunch of entities.
     if (normal_input_single_component.is_pressed(Control::KEY_DELETE)) {
         for (entt::entity entity : selected_entity_single_component.selected_entities) {
             if (world.valid(entity)) {

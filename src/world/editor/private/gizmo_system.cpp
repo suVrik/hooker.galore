@@ -135,6 +135,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
             if (!was_using && ImGuizmo::IsUsing() && (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT))) {
                 world.reset<OutlineComponent>(selected_entity);
 
+                // TODO: HISTORY copy an entity.
                 entt::entity new_entity = world.create();
                 world.each(selected_entity, [&](entt::meta_handle component_handle) {
                     world.assign(new_entity, component_handle);
@@ -151,6 +152,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                 transform_component = &world.get<TransformComponent>(new_entity);
             }
 
+            // TODO: HISTORY apply transformation to a single entity.
             transform_component->scale = glm::vec3(std::max(1e-2f, glm::length(transform[0])), std::max(1e-2f, glm::length(transform[1])), std::max(1e-2f, glm::length(transform[2])));
             transform[0] /= transform_component->scale.x;
             transform[1] /= transform_component->scale.y;
@@ -202,6 +204,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
                 std::vector<entt::entity> copied_entities;
 
+                // TODO: HISTORY copy bunch of entities.
                 for (entt::entity original_entity : old_selected_entities) {
                     entt::entity new_entity = world.create();
                     world.each(original_entity, [&](entt::meta_handle component_handle) {
@@ -225,6 +228,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
             glm::vec3 delta_translation(delta_transform[3].x, delta_transform[3].y, delta_transform[3].z);
             glm::quat delta_rotation(delta_transform);
 
+            // TODO: HISTORY apply transformation to bunch of entities.
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
                 auto& object_transform_component = world.get<TransformComponent>(selected_entity);
                 if (gizmo_single_component.operation == ImGuizmo::TRANSLATE) {

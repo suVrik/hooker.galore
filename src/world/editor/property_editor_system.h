@@ -11,7 +11,7 @@ public:
     void update(float elapsed_time) override;
 
 private:
-    void list_properties(entt::meta_handle object) const noexcept;
+    bool list_properties(entt::meta_handle object) const noexcept;
 };
 
 } // namespace hg

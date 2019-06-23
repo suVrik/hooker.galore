@@ -88,6 +88,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
                         ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf, "%s", preset_path_it->c_str());
                         if (ImGui::IsItemClicked()) {
                             if (ImGui::IsMouseDoubleClicked(0)) {
+                                // TODO: HISTORY create an entity from preset.
                                 entt::entity entity = world.create();
                                 for (const entt::meta_any& component_prototype : preset) {
                                     world.assign(entity, component_prototype);
