@@ -1,6 +1,9 @@
 #include "core/ecs/world.h"
 #include "core/resource/material.h"
 #include "core/resource/texture.h"
+#include "core/render/render_pass.h"
+#include "shaders/skybox_prebake_pass/skybox_prebake_pass.fragment.h"
+#include "shaders/skybox_prebake_pass/skybox_prebake_pass.vertex.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
@@ -10,6 +13,7 @@
 #include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
+#include "world/shared/render/skybox_single_component.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/resource_system.h"
 
@@ -18,12 +22,15 @@
 
 #include <algorithm>
 #include <bgfx/bgfx.h>
+#include <bgfx/embedded_shader.h>
+#include <bx/uint32_t.h>
 #include <entt/meta/factory.hpp>
 #include <fmt/format.h>
 #include <fstream>
 #include <future>
 #include <ghc/filesystem.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <mutex>
@@ -122,6 +129,95 @@ void destroy_model_node(Model::Node& node) noexcept {
     }
 }
 
+static const bgfx::EmbeddedShader SKYBOX_PREBAKE_PASS_SHADER[] = {
+        BGFX_EMBEDDED_SHADER(skybox_prebake_pass_vertex),
+        BGFX_EMBEDDED_SHADER(skybox_prebake_pass_fragment),
+        BGFX_EMBEDDED_SHADER_END()
+};
+
+static const bgfx::VertexDecl SKYBOX_VERTEX_DECLARATION = [] {
+    bgfx::VertexDecl result;
+    result.begin()
+            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+            .end();
+    return result;
+}();
+
+static glm::mat4 SKYBOX_PROJECTION = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
+
+static glm::mat4 SKYBOX_VIEWS[] = {
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3(-1.f,  0.f,  0.f), glm::vec3(0.f, 1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 1.f,  0.f,  0.f), glm::vec3(0.f, 1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  1.f,  0.f), glm::vec3(0.f, 0.f, -1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f,  0.f), glm::vec3(0.f, 0.f,  1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f,  1.f), glm::vec3(0.f, 1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f, -1.f), glm::vec3(0.f, 1.f,  0.f))
+};
+
+static glm::mat4 SKYBOX_VIEWS_GLSL[] = {
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3(-1.f,  0.f,  0.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 1.f,  0.f,  0.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  1.f,  0.f), glm::vec3(0.f,  0.f, -1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f,  0.f), glm::vec3(0.f,  0.f,  1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f, -1.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f,  1.f), glm::vec3(0.f, -1.f,  0.f)),
+
+};
+
+static float SKYBOX_VERTICES[] = {
+        // back face
+        -1.f, -1.f, -1.f, // bottom-left
+         1.f,  1.f, -1.f, // top-right
+         1.f, -1.f, -1.f, // bottom-right
+         1.f,  1.f, -1.f, // top-right
+        -1.f, -1.f, -1.f, // bottom-left
+        -1.f,  1.f, -1.f, // top-left
+        // front face
+        -1.f, -1.f,  1.f, // bottom-left
+         1.f, -1.f,  1.f, // bottom-right
+         1.f,  1.f,  1.f, // top-right
+         1.f,  1.f,  1.f, // top-right
+        -1.f,  1.f,  1.f, // top-left
+        -1.f, -1.f,  1.f, // bottom-left
+        // left face
+        -1.f,  1.f,  1.f, // top-right
+        -1.f,  1.f, -1.f, // top-left
+        -1.f, -1.f, -1.f, // bottom-left
+        -1.f, -1.f, -1.f, // bottom-left
+        -1.f, -1.f,  1.f, // bottom-right
+        -1.f,  1.f,  1.f, // top-right
+        // right face
+        1.f,  1.f,  1.f, // top-left
+        1.f, -1.f, -1.f, // bottom-right
+        1.f,  1.f, -1.f, // top-right
+        1.f, -1.f, -1.f, // bottom-right
+        1.f,  1.f,  1.f, // top-left
+        1.f, -1.f,  1.f, // bottom-left
+        // bottom face
+        -1.f, -1.f, -1.f, // top-right
+         1.f, -1.f, -1.f, // top-left
+         1.f, -1.f,  1.f, // bottom-left
+         1.f, -1.f,  1.f, // bottom-left
+        -1.f, -1.f,  1.f, // bottom-right
+        -1.f, -1.f, -1.f, // top-right
+        // top face
+        -1.f,  1.f, -1.f, // top-left
+         1.f,  1.f , 1.f, // bottom-right
+         1.f,  1.f, -1.f, // top-right
+         1.f,  1.f,  1.f, // bottom-right
+        -1.f,  1.f, -1.f, // top-left
+        -1.f,  1.f,  1.f  // bottom-left
+};
+
+static const char* VIEW_NAMES[] = {
+        "skybox_right",
+        "skybox_left",
+        "skybox_top",
+        "skybox_bottom",
+        "skybox_front",
+        "skybox_back"
+};
+
 } // namespace resource_system_details
 
 ResourceSystem::ResourceSystem(World& world)
@@ -133,22 +229,29 @@ ResourceSystem::ResourceSystem(World& world)
     load_textures();
 
     try {
-        load_materials();
-        load_models();
-
+        load_skybox();
         try {
-            load_presets();
-            load_level();
+            load_materials();
+            load_models();
+
+            try {
+                load_presets();
+                load_level();
+            }
+            catch (...) {
+                auto &model_single_component = world.ctx<ModelSingleComponent>();
+                for (auto&[material_name, material_ptr] : std::exchange(model_single_component.m_models, {})) {
+                    for (Model::Node &node : material_ptr->children) {
+                        resource_system_details::destroy_model_node(node);
+                    }
+                }
+
+                throw;
+            }
         }
         catch (...) {
-            auto& model_single_component = world.ctx<ModelSingleComponent>();
-            for (auto& [material_name, material_ptr] : std::exchange(model_single_component.m_models, {})) {
-                for (Model::Node& node : material_ptr->children) {
-                    resource_system_details::destroy_model_node(node);
-                }
-            }
-
-            throw;
+            auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
+            bgfx::destroy(skybox_single_component.texture);
         }
     }
     catch (...) {
@@ -162,6 +265,9 @@ ResourceSystem::ResourceSystem(World& world)
 ResourceSystem::~ResourceSystem() {
     auto& texture_single_component = world.ctx<TextureSingleComponent>();
     texture_single_component.m_textures.clear();
+
+    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
+    bgfx::destroy(skybox_single_component.texture);
 
     auto& model_single_component = world.ctx<ModelSingleComponent>();
     for (auto& [material_name, material_ptr] : std::exchange(model_single_component.m_models, {})) {
@@ -317,6 +423,89 @@ void ResourceSystem::load_texture(Texture& texture, const std::string &path) con
     }
 
     texture.handle = bgfx::createTexture2D(texture.width, texture.height, true, 1, format, BGFX_SAMPLER_NONE , bgfx::copy(mip_data.data(), size));
+}
+
+void ResourceSystem::load_skybox() const {
+    auto& skybox_single_component = world.set<SkyboxSingleComponent>();
+    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "skybox";
+    std::string path = directory.string() + "/" + "skybox.hdr";
+    int width, height, channels;
+    stbi_set_flip_vertically_on_load(true);
+    float *data = stbi_loadf(path.c_str(), &width, &height, &channels, 0);
+    if (data == nullptr) {
+        throw std::runtime_error(fmt::format("Failed to load skybox \"{}\".", path));
+    }
+
+    const bgfx::Memory* mem16f = bgfx::alloc(width * height * 4 * sizeof(uint16_t));
+    for (uint16_t h = 0; h < height; h++) {
+        for (uint16_t w = 0; w < width; w++) {
+            for (uint16_t c = 0; c < 3; c++) {
+                const uint32_t offset_out = (h * width + w) * 4 + c;
+                const uint32_t offset_in = (h * width + w) * 3 + c;
+                *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(data[offset_in]);
+            }
+            const uint32_t offset_out = (h * width + w) * 4 + 4;
+            *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(1.f);
+        }
+    }
+    stbi_image_free(data);
+
+    assert(width > 0 && width <= 65535);
+    assert(height > 0 && height <= 65535);
+
+    const uint16_t side_size = 4096;
+
+    skybox_single_component.side = side_size;
+    skybox_single_component.texture = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE | BGFX_TEXTURE_BLIT_DST);
+
+    using namespace resource_system_details;
+
+    bgfx::RendererType::Enum type = bgfx::getRendererType();
+    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_vertex");
+    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_fragment");
+    bgfx::ProgramHandle shader_program_handle = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
+    bgfx::UniformHandle texture_uniform       = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+    bgfx::VertexBufferHandle vertex_buffer    = bgfx::createVertexBuffer(bgfx::makeRef(SKYBOX_VERTICES, sizeof(SKYBOX_VERTICES)), SKYBOX_VERTEX_DECLARATION);
+    bgfx::TextureHandle texture               = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE, mem16f);
+
+    glm::mat4* skybox_views;
+    bgfx::RendererType::Enum renderer_type = bgfx::getRendererType();
+    if (renderer_type == bgfx::RendererType::OpenGL || renderer_type == bgfx::RendererType::OpenGLES) {
+        skybox_views = SKYBOX_VIEWS_GLSL;
+    } else {
+        skybox_views = SKYBOX_VIEWS;
+    }
+
+    for (uint8_t i = 0; i < 6; i++) {
+        bgfx::setViewClear(SKYBOX_PASS_RIGHT + i, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+        bgfx::setViewName(SKYBOX_PASS_RIGHT + i, VIEW_NAMES[i]);
+
+        bgfx::Attachment attachment;
+        attachment.init(skybox_single_component.texture, bgfx::Access::Write, i);
+        bgfx::FrameBufferHandle frame_buffer = bgfx::createFrameBuffer(1, &attachment, false);
+
+        bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, frame_buffer);
+        bgfx::setViewRect(SKYBOX_PASS_RIGHT + i, 0, 0, side_size, side_size);
+
+        bgfx::setViewTransform(SKYBOX_PASS_RIGHT + i, glm::value_ptr(skybox_views[i]), glm::value_ptr(SKYBOX_PROJECTION));
+
+        bgfx::setVertexBuffer(0, vertex_buffer, 0, sizeof(SKYBOX_VERTICES) / sizeof(float) / 3);
+        bgfx::setTexture(0, texture_uniform, texture);
+
+        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CCW);
+        bgfx::submit(SKYBOX_PASS_RIGHT + i, shader_program_handle);
+
+        bgfx::destroy(frame_buffer);
+    }
+
+    bgfx::frame();
+
+    for (uint8_t i = 0; i < 6; i++) {
+        bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, BGFX_INVALID_HANDLE);
+    }
+
+    bgfx::destroy(vertex_buffer);
+    bgfx::destroy(texture);
 }
 
 void ResourceSystem::load_materials() const {

@@ -9,6 +9,7 @@
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/render/skybox_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
@@ -34,6 +35,7 @@ LightingPassSystem::LightingPassSystem(World& world)
     using namespace lighting_pass_system_details;
 
     auto& lighting_pass_single_component = world.set<LightingPassSingleComponent>();
+    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
@@ -46,6 +48,9 @@ LightingPassSystem::LightingPassSystem(World& world)
     lighting_pass_single_component.depth_uniform           = bgfx::createUniform("s_depth",           bgfx::UniformType::Sampler);
     lighting_pass_single_component.light_position_uniform  = bgfx::createUniform("u_light_position",  bgfx::UniformType::Vec4);
     lighting_pass_single_component.light_color_uniform     = bgfx::createUniform("u_light_color",     bgfx::UniformType::Vec4);
+
+    skybox_single_component.texture_uniform  = bgfx::createUniform("s_cubemap",  bgfx::UniformType::Sampler);
+    skybox_single_component.rotation_uniform = bgfx::createUniform("u_rotation", bgfx::UniformType::Mat4);
 
     bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);
     bgfx::setViewRect(LIGHTING_PASS, 0, 0, window_single_component.width, window_single_component.height);
@@ -72,6 +77,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     assert(world.after("WindowSystem") && world.after("RenderFetchSystem") && world.after("GeometryPassSystem") && world.after("QuadSystem") && world.before("RenderSystem"));
 
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();
+    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
@@ -86,9 +92,17 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
+    glm::quat quat_rot = camera_single_component.rotation;
+    quat_rot.w = -quat_rot.w;
+    quat_rot.y = -quat_rot.y;
+    glm::mat4 rotation = glm::mat4_cast(quat_rot);
+
     bgfx::setTexture(0, lighting_pass_single_component.color_roughness_uniform, geometry_pass_single_component.color_roughness_texture);
     bgfx::setTexture(1, lighting_pass_single_component.normal_metal_ao_uniform, geometry_pass_single_component.normal_metal_ao_texture);
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
+    bgfx::setTexture(3, skybox_single_component.texture_uniform,                skybox_single_component.texture);
+
+    bgfx::setUniform(skybox_single_component.rotation_uniform, &rotation);
 
     world.view<LightComponent, TransformComponent>().each([&](entt::entity, LightComponent& light_component, TransformComponent& transform_component) {
         const glm::vec4 light_position(transform_component.translation, 0.f);

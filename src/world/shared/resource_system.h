@@ -45,6 +45,7 @@ private:
 
     void load_textures() const;
     void load_texture(Texture& texture, const std::string &path) const;
+    void load_skybox() const;
 
     void load_materials() const;
     void load_material(const TextureSingleComponent& texture_single_component, Material& result, const std::string &path) const;
