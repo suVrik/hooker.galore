@@ -3,6 +3,7 @@
 #include "world/editor/guid_single_component.h"
 #include "world/editor/property_editor_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/name_single_component.h"
 
 #include <glm/detail/type_quat.hpp>
 #include <glm/glm.hpp>
@@ -19,8 +20,9 @@ PropertyEditorSystem::PropertyEditorSystem(World& world) noexcept
 }
 
 void PropertyEditorSystem::update(float /*elapsed_time*/) {
-    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& name_single_component = world.ctx<NameSingleComponent>();
+    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
     if (ImGui::Begin("Property Editor")) {
         if (selected_entity_single_component.selected_entities.size() == 1) {
@@ -64,9 +66,13 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
                                 }
 
                                 if (editor_component->name != old_name) {
-                                    // TODO: Unregister old name.
-                                    //   Check whether new name is not busy.
-                                    //   If it's busy choose another name.
+                                    name_single_component.name_to_entity.erase(old_name);
+                                    if (editor_component->name.empty()) {
+                                        editor_component->name = "undefined";
+                                    }
+                                    if (name_single_component.name_to_entity.count(editor_component->name) > 0) {
+                                        editor_component->name = name_single_component.acquire_unique_name(entity, editor_component->name);
+                                    }
                                 }
                             }
 

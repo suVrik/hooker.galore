@@ -5,6 +5,7 @@
 #include "world/editor/gizmo_system.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/model_component.h"
@@ -25,6 +26,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& gizmo_single_component = world.ctx<GizmoSingleComponent>();
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
@@ -135,15 +137,15 @@ void GizmoSystem::update(float /*elapsed_time*/) {
             if (!was_using && ImGuizmo::IsUsing() && (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT))) {
                 world.reset<OutlineComponent>(selected_entity);
 
-                // TODO: HISTORY copy an entity.
+                // TODO: HISTORY copy an entity + apply transformation.
                 entt::entity new_entity = world.create();
                 world.each(selected_entity, [&](entt::meta_handle component_handle) {
                     world.assign(new_entity, component_handle);
                 });
 
                 auto& editor_component = world.get<EditorComponent>(new_entity);
-                // TODO: editor_component.name = name_single_component.acquire_unique_name(new_entity, editor_component.name);
                 editor_component.guid = guid_single_component.acquire_unique_guid(new_entity);
+                editor_component.name = name_single_component.acquire_unique_name(new_entity, editor_component.name);
 
                 selected_entity_single_component.selected_entities.clear();
                 selected_entity_single_component.selected_entities.push_back(new_entity);
@@ -212,8 +214,8 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                     });
 
                     auto& editor_component = world.get<EditorComponent>(new_entity);
-                    // TODO: editor_component.name = name_single_component.acquire_unique_name(new_entity, editor_component.name);
                     editor_component.guid = guid_single_component.acquire_unique_guid(new_entity);
+                    editor_component.name = name_single_component.acquire_unique_name(new_entity, editor_component.name);
 
                     copied_entities.push_back(new_entity);
                 }

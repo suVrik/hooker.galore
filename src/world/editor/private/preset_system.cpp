@@ -4,6 +4,7 @@
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/name_single_component.h"
 #include "world/shared/render/outline_component.h"
 
 #include <algorithm>
@@ -40,6 +41,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
     };
 
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
@@ -97,28 +99,8 @@ void PresetSystem::update(float /*elapsed_time*/) {
                                     world.assign(entity, component_prototype);
                                 }
 
-                                auto is_used = [&](const std::string& name) {
-                                    bool result = false;
-                                    world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent& editor_component) {
-                                        if (editor_component.name == name) {
-                                            result = true;
-                                        }
-                                    });
-                                    return result;
-                                };
-
-                                std::string name = ghc::filesystem::path(*preset_path_it).replace_extension("").string();
-                                if (is_used(name)) {
-                                    uint32_t i = 2;
-                                    while (is_used(name + "-" + std::to_string(i))) {
-                                        i++;
-                                    }
-                                    name += "-";
-                                    name += std::to_string(i);
-                                }
-
-                                // TODO: world.assign<EditorComponent>(entity, EditorComponent{ name_single_component.acquire_unique_name(entity, name), guid_single_component.acquire_unique_guid(entity) });
-                                world.assign<EditorComponent>(entity, EditorComponent{ name, guid_single_component.acquire_unique_guid(entity) });
+                                const std::string name = ghc::filesystem::path(*preset_path_it).replace_extension("").string();
+                                world.assign<EditorComponent>(entity, EditorComponent{ name_single_component.acquire_unique_name(entity, name), guid_single_component.acquire_unique_guid(entity) });
 
                                 selected_entity_single_component.select_entity(world, entity);
                             }

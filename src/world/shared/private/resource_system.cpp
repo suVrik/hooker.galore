@@ -5,6 +5,7 @@
 #include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/shared/level_single_component.h"
+#include "world/shared/name_single_component.h"
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
@@ -180,8 +181,13 @@ void ResourceSystem::update(float /*elapsed_time*/) {
             if (original_model != nullptr) {
                 model_component.model = *original_model;
             } else {
-                // TODO: Some "not_loaded" model (e.g. red cube)?
-                //   Now just either keep previous model (if changed) or empty (if added).
+                const Model* blockout_model = model_single_component.get("blockout.glb");
+                assert(blockout_model != nullptr);
+
+                if (blockout_model != nullptr) {
+                    model_component.path = "blockout.glb";
+                    model_component.model = *blockout_model;
+                }
             }
         }
     };
@@ -198,8 +204,13 @@ void ResourceSystem::update(float /*elapsed_time*/) {
             if (original_material != nullptr) {
                 material_component.material = original_material;
             } else {
-                // TODO: Some "not_loaded" material?
-                //   Now just either keep previous material (if changed) or empty (if added).
+                const Material* blockout_material = material_single_component.get("blockout_gray.yaml");
+                assert(blockout_material != nullptr);
+
+                if (blockout_material != nullptr) {
+                    material_component.path = "blockout_gray.yaml";
+                    material_component.material = blockout_material;
+                }
             }
         }
     };
@@ -905,6 +916,7 @@ void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node&
 void ResourceSystem::load_level() const {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
     auto& guid_single_component = world.set<GuidSingleComponent>();
+    auto& name_single_component = world.set<NameSingleComponent>();
 
     const ghc::filesystem::path level_path = ghc::filesystem::path(get_resource_directory()) / "levels" / level_single_component.level_name;
     if (!ghc::filesystem::exists(level_path)) {
@@ -957,11 +969,22 @@ void ResourceSystem::load_level() const {
             }
 
             auto& editor_component = world.get<EditorComponent>(entity);
+
+            if (editor_component.guid > 0x00FFFFFF) {
+                throw std::runtime_error(fmt::format("Invalid entity guid {}.", editor_component.guid));
+            }
             if (guid_single_component.guid_to_entity.count(editor_component.guid) > 0) {
-                throw std::runtime_error("Entity with specified guid already exists.");
+                throw std::runtime_error(fmt::format("Entity with specified guid {} already exists.", editor_component.guid));
             }
             guid_single_component.guid_to_entity[editor_component.guid] = entity;
-            // TODO: name_single_component
+
+            if (editor_component.name.empty()) {
+                throw std::runtime_error("Empty entity names are not allowed.");
+            }
+            if (name_single_component.name_to_entity.count(editor_component.name) > 0) {
+                throw std::runtime_error(fmt::format("Entity with specified name \"{}\" already exists.", editor_component.name));
+            }
+            name_single_component.name_to_entity[editor_component.name] = entity;
         }
     }
     catch (const std::runtime_error& error) {
