@@ -62,7 +62,9 @@ private:
     void load_level() const;
 
     entt::observer m_model_observer;
+    entt::observer m_model_update_observer;
     entt::observer m_material_observer;
+    entt::observer m_material_update_observer;
 };
 
 } // namespace hg

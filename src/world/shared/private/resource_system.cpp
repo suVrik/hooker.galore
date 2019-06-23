@@ -126,7 +126,9 @@ void destroy_model_node(Model::Node& node) noexcept {
 ResourceSystem::ResourceSystem(World& world)
         : NormalSystem(world)
         , m_model_observer(entt::observer(world, entt::collector.group<ModelComponent>()))
-        , m_material_observer(entt::observer(world, entt::collector.group<MaterialComponent>())) {
+        , m_model_update_observer(entt::observer(world, entt::collector.replace<ModelComponent>()))
+        , m_material_observer(entt::observer(world, entt::collector.group<MaterialComponent>()))
+        , m_material_update_observer(entt::observer(world, entt::collector.replace<MaterialComponent>())) {
     load_textures();
 
     try {
@@ -171,31 +173,39 @@ ResourceSystem::~ResourceSystem() {
 void ResourceSystem::update(float /*elapsed_time*/) {
     auto& model_single_component = world.ctx<ModelSingleComponent>();
 
-    m_model_observer.each([&](const entt::entity entity) {
+    auto model_updated = [&](const entt::entity entity) {
         auto& model_component = world.get<ModelComponent>(entity);
-        if (model_component.model.children.empty() && !model_component.path.empty()) {
+        if (!model_component.path.empty()) {
             const Model* original_model = model_single_component.get(model_component.path);
             if (original_model != nullptr) {
                 model_component.model = *original_model;
             } else {
-                throw std::runtime_error(fmt::format("Invalid ModelComponent. Specified file \"{}\" doesn't exist.", model_component.path));
+                // TODO: Some "not_loaded" model (e.g. red cube)?
+                //   Now just either keep previous model (if changed) or empty (if added).
             }
         }
-    });
+    };
+
+    m_model_observer.each(model_updated);
+    m_model_update_observer.each(model_updated);
 
     auto& material_single_component = world.ctx<MaterialSingleComponent>();
 
-    m_material_observer.each([&](const entt::entity entity) {
+    auto material_updated = [&](const entt::entity entity) {
         auto& material_component = world.get<MaterialComponent>(entity);
-        if (material_component.material == nullptr && !material_component.path.empty()) {
+        if (!material_component.path.empty()) {
             const Material* original_material = material_single_component.get(material_component.path);
             if (original_material != nullptr) {
                 material_component.material = original_material;
             } else {
-                throw std::runtime_error(fmt::format("Invalid MaterialComponent. Specified file \"{}\" doesn't exist.", material_component.path));
+                // TODO: Some "not_loaded" material?
+                //   Now just either keep previous material (if changed) or empty (if added).
             }
         }
-    });
+    };
+
+    m_material_observer.each(material_updated);
+    m_material_update_observer.each(material_updated);
 }
 
 std::string ResourceSystem::get_resource_directory() const {

@@ -33,6 +33,11 @@ entt::meta_handle World::assign(entt::entity entity, const entt::meta_handle& co
     return m_components.find(component.type())->second.assign_copy(this, entity, component.data());
 }
 
+entt::meta_handle World::replace(entt::entity entity, const entt::meta_handle& component) noexcept {
+    assert(m_components.count(component.type()) != 0 && "Specified component type is not registered!");
+    return m_components.find(component.type())->second.replace(this, entity, component.data());
+}
+
 void World::remove(entt::entity entity, entt::meta_type component) noexcept {
     assert(m_components.count(component) != 0 && "Specified component type is not registered!");
     m_components.find(component)->second.remove(this, entity);

@@ -1,4 +1,6 @@
 #include "core/ecs/world.h"
+#include "world/editor/editor_component.h"
+#include "world/editor/guid_single_component.h"
 #include "world/editor/property_editor_system.h"
 #include "world/editor/selected_entity_single_component.h"
 
@@ -18,40 +20,68 @@ PropertyEditorSystem::PropertyEditorSystem(World& world) noexcept
 
 void PropertyEditorSystem::update(float /*elapsed_time*/) {
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
+    auto& guid_single_component = world.ctx<GuidSingleComponent>();
 
     if (ImGui::Begin("Property Editor")) {
         if (selected_entity_single_component.selected_entities.size() == 1) {
             entt::entity entity = selected_entity_single_component.selected_entities[0];
             assert(world.valid(entity));
 
-            uint32_t idx = 0;
+            uint32_t index = 0;
             world.each(entity, [&](entt::meta_handle component_handle) {
                 entt::meta_type component_type = component_handle.type();
                 if (component_type) {
+                    std::string component_name;
+
                     entt::meta_prop component_name_property = component_type.prop("name"_hs);
                     if (component_name_property && component_name_property.value().can_cast<const char*>()) {
-                        const auto* component_name = component_name_property.value().cast<const char*>();
-                        if (ImGui::TreeNode(component_name)) {
-                            if (list_properties(component_handle)) {
-                                // TODO: HISTORY changed component.
-                            }
-                            ImGui::TreePop();
-                        }
+                        component_name = component_name_property.value().cast<const char*>();
                     } else {
-                        if (ImGui::TreeNode(("Undefined-" + std::to_string(++idx)).c_str())) {
-                            if (list_properties(component_handle)) {
-                                // TODO: HISTORY changed component.
-                            }
-                            ImGui::TreePop();
+                        component_name = "Undefined-" + std::to_string(++index);
+                    }
+
+                    if (ImGui::TreeNode(component_name.c_str())) {
+                        uint32_t old_guid = 0;
+                        std::string old_name;
+                        if (component_type == entt::resolve<EditorComponent>()) {
+                            auto* editor_component = component_handle.try_cast<EditorComponent>();
+                            assert(editor_component != nullptr);
+
+                            old_guid = editor_component->guid;
+                            old_name = editor_component->name;
                         }
+
+                        if (list_properties(component_handle)) {
+                            if (component_type == entt::resolve<EditorComponent>()) {
+                                auto* editor_component = component_handle.try_cast<EditorComponent>();
+                                assert(editor_component != nullptr);
+
+                                if (editor_component->guid != old_guid) {
+                                    guid_single_component.guid_to_entity.erase(old_guid);
+                                    if (guid_single_component.guid_to_entity.count(editor_component->guid & 0x00FFFFFF) > 0) {
+                                        editor_component->guid = guid_single_component.acquire_unique_guid(entity);
+                                    }
+                                }
+
+                                if (editor_component->name != old_name) {
+                                    // TODO: Unregister old name.
+                                    //   Check whether new name is not busy.
+                                    //   If it's busy choose another name.
+                                }
+                            }
+
+                            // Notify other systems about updated component.
+                            world.replace(entity, component_handle);
+
+                            // TODO: HISTORY changed component.
+                        }
+                        ImGui::TreePop();
                     }
                 }
-                // TODO: Replace to notify other systems?
             });
-            // TODO: Unique editor guid/name?
         } else {
             if (!selected_entity_single_component.selected_entities.empty()) {
-                // TODO: Edit properties of many entities at the same time?
+                // TODO: Edit properties of many entities at the same time.
                 ImGui::TextWrapped("Editing properties of multiple entities is not yet supported.");
             } else {
                 ImGui::TextUnformatted("No entity selected.");

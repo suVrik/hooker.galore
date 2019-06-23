@@ -34,6 +34,15 @@ void World::register_component() noexcept {
         }
     };
 
+    descriptor.replace = [](World* world, entt::entity entity, const void* copy) -> entt::meta_handle {
+        if constexpr (std::is_copy_constructible_v<T>) {
+            return entt::meta_handle(world->replace<T>(entity, *static_cast<const T*>(copy)));
+        } else {
+            assert(false && "Specified type is not copy constructible!");
+            return entt::meta_handle();
+        }
+    };
+
     descriptor.remove = [](World* world, entt::entity entity) {
         world->remove<T>(entity);
     };

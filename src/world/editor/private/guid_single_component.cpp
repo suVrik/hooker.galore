@@ -5,9 +5,9 @@
 namespace hg {
 
 uint32_t GuidSingleComponent::acquire_unique_guid(entt::entity entity) noexcept {
-    uint32_t result = SDL_GetTicks();
+    uint32_t result = SDL_GetTicks() & 0x00FFFFFF;
     while (guid_to_entity.count(result) > 0) {
-        result++;
+        result = (result + 1) & 0x00FFFFFF;
     }
     guid_to_entity[result] = entity;
     return result;
