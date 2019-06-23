@@ -101,7 +101,7 @@ void main() {
 
         float distance = length(u_light_position.xyz - world_position);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = u_light_color * attenuation;
+        vec3 radiance = u_light_color.xyz * attenuation;
         vec3 f = fresnel_schlick(max(dot(half_dir, camera_dir), 0.0), surface_reflect_zero);
 
         float ndf = distribution_ggx(normal, half_dir, roughness);
