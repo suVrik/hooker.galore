@@ -4,6 +4,7 @@
 #include "core/render/render_pass.h"
 #include "shaders/skybox_prebake_pass/skybox_prebake_pass.fragment.h"
 #include "shaders/skybox_prebake_pass/skybox_prebake_pass.vertex.h"
+#include "shaders/skybox_prebake_pass/skybox_irradiance_prebake_pass.fragment.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
@@ -132,6 +133,12 @@ void destroy_model_node(Model::Node& node) noexcept {
 static const bgfx::EmbeddedShader SKYBOX_PREBAKE_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER(skybox_prebake_pass_vertex),
         BGFX_EMBEDDED_SHADER(skybox_prebake_pass_fragment),
+        BGFX_EMBEDDED_SHADER_END()
+};
+
+static const bgfx::EmbeddedShader SKYBOX_IRRADIANCE_PREBAKE_PASS_SHADER[] = {
+        BGFX_EMBEDDED_SHADER(skybox_prebake_pass_vertex),
+        BGFX_EMBEDDED_SHADER(skybox_irradiance_prebake_pass_fragment),
         BGFX_EMBEDDED_SHADER_END()
 };
 
@@ -422,7 +429,7 @@ void ResourceSystem::load_texture(Texture& texture, const std::string &path) con
         target_data += delta_size;
     }
 
-    texture.handle = bgfx::createTexture2D(texture.width, texture.height, true, 1, format, BGFX_SAMPLER_NONE , bgfx::copy(mip_data.data(), size));
+    texture.handle = bgfx::createTexture2D(texture.width, texture.height, true, 1, format, BGFX_SAMPLER_NONE, bgfx::copy(mip_data.data(), size));
 }
 
 void ResourceSystem::load_skybox() const {
@@ -453,22 +460,11 @@ void ResourceSystem::load_skybox() const {
     assert(width > 0 && width <= 65535);
     assert(height > 0 && height <= 65535);
 
-    const uint16_t side_size = 4096;
-
-    skybox_single_component.side = side_size;
-    skybox_single_component.texture = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_TEXTURE_RT);
-
     using namespace resource_system_details;
 
-    bgfx::RendererType::Enum type = bgfx::getRendererType();
-    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_vertex");
-    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_fragment");
-    bgfx::ProgramHandle shader_program_handle = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
-    bgfx::UniformHandle texture_uniform       = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
-    bgfx::VertexBufferHandle vertex_buffer    = bgfx::createVertexBuffer(bgfx::makeRef(SKYBOX_VERTICES, sizeof(SKYBOX_VERTICES)), SKYBOX_VERTEX_DECLARATION);
-    bgfx::TextureHandle texture               = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE, mem16f);
-
-    glm::mat4* skybox_views;
+    bgfx::VertexBufferHandle vertex_buffer = bgfx::createVertexBuffer(
+            bgfx::makeRef(SKYBOX_VERTICES, sizeof(SKYBOX_VERTICES)), SKYBOX_VERTEX_DECLARATION);
+    glm::mat4 *skybox_views;
     bgfx::RendererType::Enum renderer_type = bgfx::getRendererType();
     if (renderer_type == bgfx::RendererType::OpenGL || renderer_type == bgfx::RendererType::OpenGLES) {
         skybox_views = SKYBOX_VIEWS_GLSL;
@@ -476,36 +472,89 @@ void ResourceSystem::load_skybox() const {
         skybox_views = SKYBOX_VIEWS;
     }
 
-    for (uint8_t i = 0; i < 6; i++) {
-        bgfx::setViewClear(SKYBOX_PASS_RIGHT + i, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
-        bgfx::setViewName(SKYBOX_PASS_RIGHT + i, VIEW_NAMES[i]);
+    {
+        const uint16_t side_size = 4096;
 
-        bgfx::Attachment attachment;
-        attachment.init(skybox_single_component.texture, bgfx::Access::Write, i);
-        bgfx::FrameBufferHandle frame_buffer = bgfx::createFrameBuffer(1, &attachment, false);
+        skybox_single_component.texture = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE | BGFX_TEXTURE_RT);
 
-        bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, frame_buffer);
-        bgfx::setViewRect(SKYBOX_PASS_RIGHT + i, 0, 0, side_size, side_size);
+        bgfx::RendererType::Enum type = bgfx::getRendererType();
+        bgfx::ShaderHandle vertex_shader_handle = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_vertex");
+        bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(SKYBOX_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_fragment");
+        bgfx::ProgramHandle shader_program_handle = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
+        bgfx::UniformHandle texture_uniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+        bgfx::TextureHandle texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE, mem16f);
 
-        bgfx::setViewTransform(SKYBOX_PASS_RIGHT + i, glm::value_ptr(skybox_views[i]), glm::value_ptr(SKYBOX_PROJECTION));
+        for (uint8_t i = 0; i < 6; i++) {
+            bgfx::setViewClear(SKYBOX_PASS_RIGHT + i, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+            bgfx::setViewName(SKYBOX_PASS_RIGHT + i, VIEW_NAMES[i]);
 
-        bgfx::setVertexBuffer(0, vertex_buffer, 0, sizeof(SKYBOX_VERTICES) / sizeof(float) / 3);
-        bgfx::setTexture(0, texture_uniform, texture);
+            bgfx::Attachment attachment;
+            attachment.init(skybox_single_component.texture, bgfx::Access::Write, i);
+            bgfx::FrameBufferHandle frame_buffer = bgfx::createFrameBuffer(1, &attachment, false);
 
-        bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CCW);
-        bgfx::submit(SKYBOX_PASS_RIGHT + i, shader_program_handle);
+            bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, frame_buffer);
+            bgfx::setViewRect(SKYBOX_PASS_RIGHT + i, 0, 0, side_size, side_size);
 
-        bgfx::destroy(frame_buffer);
+            bgfx::setViewTransform(SKYBOX_PASS_RIGHT + i, glm::value_ptr(skybox_views[i]), glm::value_ptr(SKYBOX_PROJECTION));
+
+            bgfx::setVertexBuffer(0, vertex_buffer, 0, sizeof(SKYBOX_VERTICES) / sizeof(float) / 3);
+            bgfx::setTexture(0, texture_uniform, texture);
+
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CCW);
+            bgfx::submit(SKYBOX_PASS_RIGHT + i, shader_program_handle);
+
+            bgfx::destroy(frame_buffer);
+        }
+
+        bgfx::frame();
+
+        for (uint8_t i = 0; i < 6; i++) {
+            bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, BGFX_INVALID_HANDLE);
+        }
+        bgfx::destroy(texture);
     }
 
-    bgfx::frame();
+    {
+        const uint16_t side_size = 32;
 
-    for (uint8_t i = 0; i < 6; i++) {
-        bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, BGFX_INVALID_HANDLE);
+        skybox_single_component.texture_irradiance = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE | BGFX_TEXTURE_RT);
+
+        bgfx::RendererType::Enum type = bgfx::getRendererType();
+        bgfx::ShaderHandle vertex_shader_handle = bgfx::createEmbeddedShader(SKYBOX_IRRADIANCE_PREBAKE_PASS_SHADER, type, "skybox_prebake_pass_vertex");
+        bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(SKYBOX_IRRADIANCE_PREBAKE_PASS_SHADER, type, "skybox_irradiance_prebake_pass_fragment");
+        bgfx::ProgramHandle shader_program_handle = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
+        bgfx::UniformHandle texture_uniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+
+        for (uint8_t i = 0; i < 6; i++) {
+            bgfx::setViewClear(SKYBOX_PASS_RIGHT + i, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+            bgfx::setViewName(SKYBOX_PASS_RIGHT + i, VIEW_NAMES[i]);
+
+            bgfx::Attachment attachment;
+            attachment.init(skybox_single_component.texture_irradiance, bgfx::Access::Write, i);
+            bgfx::FrameBufferHandle frame_buffer = bgfx::createFrameBuffer(1, &attachment, false);
+
+            bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, frame_buffer);
+            bgfx::setViewRect(SKYBOX_PASS_RIGHT + i, 0, 0, side_size, side_size);
+
+            bgfx::setViewTransform(SKYBOX_PASS_RIGHT + i, glm::value_ptr(skybox_views[i]), glm::value_ptr(SKYBOX_PROJECTION));
+
+            bgfx::setVertexBuffer(0, vertex_buffer, 0, sizeof(SKYBOX_VERTICES) / sizeof(float) / 3);
+            bgfx::setTexture(0, texture_uniform, skybox_single_component.texture);
+
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CCW);
+            bgfx::submit(SKYBOX_PASS_RIGHT + i, shader_program_handle);
+
+            bgfx::destroy(frame_buffer);
+        }
+
+        bgfx::frame();
+
+        for (uint8_t i = 0; i < 6; i++) {
+            bgfx::setViewFrameBuffer(SKYBOX_PASS_RIGHT + i, BGFX_INVALID_HANDLE);
+        }
     }
 
     bgfx::destroy(vertex_buffer);
-    bgfx::destroy(texture);
 
     std::cout << "[RESOURCE] Loaded \"" << path.string() << "\"." << std::endl;
 }
