@@ -21,24 +21,47 @@ template <typename T>
 void World::register_component() noexcept {
     ComponentDescriptor descriptor{};
 
-    descriptor.assign = [](World* world, entt::entity entity) -> entt::meta_handle {
+    descriptor.construct = []() -> entt::meta_any {
+        static_assert(std::is_default_constructible_v<T>, "Specified component is not default constructible.");
+
+        // `entt::meta_any` requires object to be copy-constructible as well.
+        if constexpr (std::is_copy_constructible_v<T>) {
+            return entt::meta_any(T{});
+        } else {
+            assert(false && "Specified component type is not copy constructible.");
+            return entt::meta_any();
+        }
+    };
+
+    descriptor.copy = [](const entt::meta_handle& component) -> entt::meta_any {
+        if constexpr (std::is_copy_constructible_v<T>) {
+            return entt::meta_any(T(*component.try_cast<T>()));
+        } else {
+            assert(false && "Specified component type is not copy constructible.");
+            return entt::meta_any();
+        }
+    };
+
+    descriptor.assign_default = [](World* world, entt::entity entity) -> entt::meta_handle {
+        static_assert(std::is_default_constructible_v<T>, "Specified component is not default constructible.");
+
         return entt::meta_handle(world->assign<T>(entity));
     };
 
-    descriptor.assign_copy = [](World* world, entt::entity entity, const void* copy) -> entt::meta_handle {
+    descriptor.assign_copy = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
         if constexpr (std::is_copy_constructible_v<T>) {
-            return entt::meta_handle(world->assign<T>(entity, *static_cast<const T*>(copy)));
+            return entt::meta_handle(world->assign<T>(entity, *component.try_cast<T>()));
         } else {
-            assert(false && "Specified type is not copy constructible!");
+            assert(false && "Specified type is not copy constructible.");
             return entt::meta_handle();
         }
     };
 
-    descriptor.replace = [](World* world, entt::entity entity, const void* copy) -> entt::meta_handle {
+    descriptor.replace = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
         if constexpr (std::is_copy_constructible_v<T>) {
-            return entt::meta_handle(world->replace<T>(entity, *static_cast<const T*>(copy)));
+            return entt::meta_handle(world->replace<T>(entity, *component.try_cast<T>()));
         } else {
-            assert(false && "Specified type is not copy constructible!");
+            assert(false && "Specified type is not copy constructible.");
             return entt::meta_handle();
         }
     };

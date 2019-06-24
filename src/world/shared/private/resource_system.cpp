@@ -83,7 +83,7 @@ void iterate_recursive_parallel(const ghc::filesystem::path& directory, const st
 
             {
                 std::lock_guard<std::mutex> guard(output_mutex);
-                std::cout << "Loaded resource \"" << file.string() << "\"." << std::endl;
+                std::cout << "[RESOURCE] Loaded \"" << file.string() << "\"." << std::endl;
             }
         }
     };
@@ -428,12 +428,12 @@ void ResourceSystem::load_texture(Texture& texture, const std::string &path) con
 void ResourceSystem::load_skybox() const {
     auto& skybox_single_component = world.set<SkyboxSingleComponent>();
     const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "skybox";
-    std::string path = directory.string() + "/" + "skybox.hdr";
+    const ghc::filesystem::path path = directory / "skybox.hdr";
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true);
-    float *data = stbi_loadf(path.c_str(), &width, &height, &channels, 0);
+    float *data = stbi_loadf(path.string().c_str(), &width, &height, &channels, 0);
     if (data == nullptr) {
-        throw std::runtime_error(fmt::format("Failed to load skybox \"{}\".", path));
+        throw std::runtime_error(fmt::format("Failed to load skybox \"{}\".", path.string()));
     }
 
     const bgfx::Memory* mem16f = bgfx::alloc(width * height * 4 * sizeof(uint16_t));
@@ -456,7 +456,7 @@ void ResourceSystem::load_skybox() const {
     const uint16_t side_size = 4096;
 
     skybox_single_component.side = side_size;
-    skybox_single_component.texture = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_SAMPLER_NONE | BGFX_TEXTURE_BLIT_DST);
+    skybox_single_component.texture = bgfx::createTextureCube(side_size, false, 1, bgfx::TextureFormat::RGBA16F, BGFX_TEXTURE_RT);
 
     using namespace resource_system_details;
 
@@ -506,6 +506,8 @@ void ResourceSystem::load_skybox() const {
 
     bgfx::destroy(vertex_buffer);
     bgfx::destroy(texture);
+
+    std::cout << "[RESOURCE] Loaded \"" << path.string() << "\"." << std::endl;
 }
 
 void ResourceSystem::load_materials() const {
@@ -1018,7 +1020,12 @@ void ResourceSystem::load_preset(std::vector<entt::meta_any>& result, const std:
                 throw std::runtime_error(fmt::format("Component type \"{}\" is not registered.", component_name));
             }
 
-            entt::meta_any component = component_type.construct();
+            entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
+            if (ignore_property && ignore_property.value().can_cast<bool>() && ignore_property.value().cast<bool>()) {
+                throw std::runtime_error(fmt::format("Component \"{}\" must not be in a level file.", component_name));
+            }
+
+            entt::meta_any component = world.construct_component(component_type);
             if (!component) {
                 throw std::runtime_error(fmt::format("Component \"{}\" is not default-constructible.", component_name));
             }

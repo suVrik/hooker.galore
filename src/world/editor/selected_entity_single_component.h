@@ -12,6 +12,7 @@ public:
     /** Select specified `entity`, assign `OutlineComponent` to it, reset `OutlineComponent` from previous selected entity. */
     void select_entity(World& world, entt::entity entity) noexcept;
     void add_to_selection(World& world, entt::entity entity) noexcept;
+    void remove_from_selection(World& world, entt::entity entity) noexcept;
     void clear_selection(World& world) noexcept;
 
     std::vector<entt::entity> selected_entities;

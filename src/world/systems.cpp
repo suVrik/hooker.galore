@@ -3,6 +3,7 @@
 #include "world/editor/editor_grid_system.h"
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/gizmo_system.h"
+#include "world/editor/history_system.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/property_editor_system.h"
 #include "world/shared/imgui_fetch_system.h"
@@ -31,6 +32,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(EntitySelectionSystem);
     REGISTER_SYSTEM(GeometryPassSystem);
     REGISTER_SYSTEM(GizmoSystem);
+    REGISTER_SYSTEM(HistorySystem);
     REGISTER_SYSTEM(ImguiFetchSystem);
     REGISTER_SYSTEM(ImguiPassSystem);
     REGISTER_SYSTEM(LightingPassSystem);

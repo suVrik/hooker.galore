@@ -1,17 +1,19 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
+#include "world/editor/history_single_component.h"
 #include "world/editor/property_editor_system.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/name_single_component.h"
 
+#include <fmt/format.h>
 #include <glm/detail/type_quat.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace hg {
 
@@ -21,6 +23,7 @@ PropertyEditorSystem::PropertyEditorSystem(World& world) noexcept
 
 void PropertyEditorSystem::update(float /*elapsed_time*/) {
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
@@ -33,55 +36,58 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
             world.each(entity, [&](entt::meta_handle component_handle) {
                 entt::meta_type component_type = component_handle.type();
                 if (component_type) {
-                    std::string component_name;
+                    entt::meta_prop ignore_property = component_handle.type().prop("ignore"_hs);
+                    if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
+                        std::string component_name;
 
-                    entt::meta_prop component_name_property = component_type.prop("name"_hs);
-                    if (component_name_property && component_name_property.value().can_cast<const char*>()) {
-                        component_name = component_name_property.value().cast<const char*>();
-                    } else {
-                        component_name = "Undefined-" + std::to_string(++index);
-                    }
-
-                    if (ImGui::TreeNode(component_name.c_str())) {
-                        uint32_t old_guid = 0;
-                        std::string old_name;
-                        if (component_type == entt::resolve<EditorComponent>()) {
-                            auto* editor_component = component_handle.try_cast<EditorComponent>();
-                            assert(editor_component != nullptr);
-
-                            old_guid = editor_component->guid;
-                            old_name = editor_component->name;
+                        entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                        if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                            component_name = component_name_property.value().cast<const char*>();
+                        } else {
+                            component_name = "Undefined-" + std::to_string(++index);
                         }
 
-                        if (list_properties(component_handle)) {
+                        if (ImGui::TreeNode(component_name.c_str())) {
+                            entt::meta_any component_copy = world.copy_component(component_handle);
+                            assert(component_copy);
+
+                            uint32_t old_guid = 0;
+                            std::string old_name;
                             if (component_type == entt::resolve<EditorComponent>()) {
-                                auto* editor_component = component_handle.try_cast<EditorComponent>();
-                                assert(editor_component != nullptr);
-
-                                if (editor_component->guid != old_guid) {
-                                    guid_single_component.guid_to_entity.erase(old_guid);
-                                    if (guid_single_component.guid_to_entity.count(editor_component->guid & 0x00FFFFFF) > 0) {
-                                        editor_component->guid = guid_single_component.acquire_unique_guid(entity);
-                                    }
-                                }
-
-                                if (editor_component->name != old_name) {
-                                    name_single_component.name_to_entity.erase(old_name);
-                                    if (editor_component->name.empty()) {
-                                        editor_component->name = "undefined";
-                                    }
-                                    if (name_single_component.name_to_entity.count(editor_component->name) > 0) {
-                                        editor_component->name = name_single_component.acquire_unique_name(entity, editor_component->name);
-                                    }
-                                }
+                                auto& editor_component = component_copy.cast<EditorComponent>();
+                                old_guid = editor_component.guid;
+                                old_name = editor_component.name;
                             }
 
-                            // Notify other systems about updated component.
-                            world.replace(entity, component_handle);
+                            if (list_properties(component_copy)) {
+                                if (component_type == entt::resolve<EditorComponent>()) {
+                                    auto& editor_component = component_copy.cast<EditorComponent>();
 
-                            // TODO: HISTORY changed component.
+                                    if (editor_component.guid != old_guid) {
+                                        guid_single_component.guid_to_entity.erase(old_guid);
+                                        if (guid_single_component.guid_to_entity.count(editor_component.guid & 0x00FFFFFF) > 0) {
+                                            editor_component.guid = guid_single_component.acquire_unique_guid(entity);
+                                        }
+                                    }
+
+                                    if (editor_component.name != old_name) {
+                                        name_single_component.name_to_entity.erase(old_name);
+                                        if (editor_component.name.empty()) {
+                                            editor_component.name = "undefined";
+                                        }
+                                        if (name_single_component.name_to_entity.count(editor_component.name) > 0) {
+                                            editor_component.name = name_single_component.acquire_unique_name(entity, editor_component.name);
+                                        }
+                                    }
+                                }
+
+                                auto* change = history_single_component.begin(world, fmt::format("Change component \"{}\"", component_name));
+                                if (change != nullptr) {
+                                    change->replace_component(world, entity, component_copy);
+                                }
+                            }
+                            ImGui::TreePop();
                         }
-                        ImGui::TreePop();
                     }
                 }
             });
@@ -141,10 +147,15 @@ bool PropertyEditorSystem::list_properties(entt::meta_handle object) const noexc
                 }
             } else if (data_type == TYPE_QUAT) {
                 const glm::quat value = data_copy.cast<glm::quat>();
-                glm::vec3 euler_angles = glm::degrees(glm::eulerAngles(value));
+                const glm::vec3 original_euler_angles = glm::degrees(glm::eulerAngles(value));
+                glm::vec3 euler_angles = original_euler_angles;
                 if (ImGui::InputFloat3(data_name.c_str(), &euler_angles.x)) {
-                    data.set(object, glm::normalize(glm::quat(glm::radians(euler_angles))));
-                    is_changed = true;
+                    if (!glm::epsilonEqual(euler_angles.x, original_euler_angles.x, 0.1f) ||
+                        !glm::epsilonEqual(euler_angles.y, original_euler_angles.y, 0.1f) ||
+                        !glm::epsilonEqual(euler_angles.z, original_euler_angles.z, 0.1f)) {
+                        data.set(object, glm::normalize(glm::quat(glm::radians(euler_angles))));
+                        is_changed = true;
+                    }
                 }
             } else if (data_type == TYPE_STRING) {
                 static char buffer[1024];

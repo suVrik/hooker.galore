@@ -24,13 +24,21 @@ public:
     template <typename T>
     void register_component() noexcept;
 
+    /** Construct specified component using default constructor. */
+    entt::meta_any construct_component(entt::meta_type component) const noexcept;
+
+    /** Acquire copy of specified component using copy constructor. */
+    entt::meta_any copy_component(const entt::meta_handle& component) const noexcept;
+
+    /** Return name of specified component. */
+    const char* get_component_name(entt::meta_type component) const noexcept;
+
     /** Perform `entt::registry::assign` on earlier registered component. Default constructor is used.
         Undefined behavior if `component` is not a registered type. */
     entt::meta_handle assign(entt::entity entity, entt::meta_type component) noexcept;
 
     /** Perform `entt::registry::assign` on earlier registered component. Copy constructor is used.
         Undefined behavior if `component` is not a registered type. */
-    entt::meta_handle assign(entt::entity entity, const entt::meta_any& component) noexcept;
     entt::meta_handle assign(entt::entity entity, const entt::meta_handle& component) noexcept;
 
     /** Perform `entt::registry::replace` on earlier registered component. Copy constructor is used.
@@ -87,9 +95,11 @@ public:
 
 private:
     struct ComponentDescriptor final {
-        entt::meta_handle(*assign)(World* world, entt::entity entity);
-        entt::meta_handle(*assign_copy)(World* world, entt::entity entity, const void* copy);
-        entt::meta_handle(*replace)(World* world, entt::entity entity, const void* copy);
+        entt::meta_any(*construct)();
+        entt::meta_any(*copy)(const entt::meta_handle& component);
+        entt::meta_handle(*assign_default)(World* world, entt::entity entity);
+        entt::meta_handle(*assign_copy)(World* world, entt::entity entity, const entt::meta_handle& component);
+        entt::meta_handle(*replace)(World* world, entt::entity entity, const entt::meta_handle& component);
         void(*remove)(World* world, entt::entity entity);
         bool(*has)(const World* world, entt::entity entity);
         entt::meta_handle(*get)(const World* world, entt::entity entity);

@@ -3,6 +3,7 @@
 #include "world/editor/editor_component.h"
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/guid_single_component.h"
+#include "world/editor/history_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/outline_component.h"
@@ -11,6 +12,7 @@
 #include "world/shared/window_single_component.h"
 
 #include <algorithm>
+#include <fmt/format.h>
 #include <glm/common.hpp>
 #include <imgui.h>
 #include <set>
@@ -24,6 +26,7 @@ EntitySelectionSystem::EntitySelectionSystem(World& world) noexcept
 
 void EntitySelectionSystem::update(float /*elapsed_time*/) {
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& picking_pass_single_component = world.ctx<PickingPassSingleComponent>();
     auto& render_single_component = world.ctx<RenderSingleComponent>();
@@ -47,7 +50,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         ImGui::BeginChildFrame(ImGui::GetID("level-frame"), ImVec2(0.f, 0.f));
         ImGui::PopStyleColor();
 
-        size_t idx = 0;
+        size_t index = 0;
         world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
             std::string lower_case_name = editor_component.name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
@@ -56,7 +59,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                 if (std::find(selected_entity_single_component.selected_entities.begin(), selected_entity_single_component.selected_entities.end(), entity) != selected_entity_single_component.selected_entities.end()) {
                     flags |= ImGuiTreeNodeFlags_Selected;
                 }
-                ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), flags, "%s", editor_component.name.c_str());
+                ImGui::TreeNodeEx(reinterpret_cast<void*>(++index), flags, "%s", editor_component.name.c_str());
                 if (ImGui::IsItemClicked()) {
                     if (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
                         selected_entity_single_component.add_to_selection(world, entity);
@@ -97,18 +100,24 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                 }
             }
 
-            if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+            if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT) &&
+                !normal_input_single_component.is_down(Control::KEY_LALT) && !normal_input_single_component.is_down(Control::KEY_RALT)) {
                 selected_entity_single_component.clear_selection(world);
             }
 
             for (uint32_t selected_object : selected_entities) {
                 if (selected_object != 0 && guid_single_component.guid_to_entity.count(selected_object) > 0) {
-                    selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                    if (normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::KEY_RALT)) {
+                        selected_entity_single_component.remove_from_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                    } else {
+                        selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                    }
                 }
             }
 
             if (selected_entities.empty()) {
-                if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT) &&
+                    !normal_input_single_component.is_down(Control::KEY_LALT) && !normal_input_single_component.is_down(Control::KEY_RALT)) {
                     selected_entity_single_component.select_entity(world, entt::null);
                 }
             }
@@ -139,15 +148,28 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         }
     }
 
-    // TODO: HISTORY delete the whole bunch of entities.
-    if (normal_input_single_component.is_pressed(Control::KEY_DELETE)) {
-        for (entt::entity entity : selected_entity_single_component.selected_entities) {
-            if (world.valid(entity)) {
-                guid_single_component.guid_to_entity.erase(world.get<EditorComponent>(entity).guid);
-                world.destroy(entity);
+    if (normal_input_single_component.is_pressed(Control::KEY_DELETE) && !selected_entity_single_component.selected_entities.empty()) {
+        std::string description;
+        if (selected_entity_single_component.selected_entities.size() == 1) {
+            assert(world.has<EditorComponent>(selected_entity_single_component.selected_entities[0]));
+            auto& editor_component = world.get<EditorComponent>(selected_entity_single_component.selected_entities[0]);
+            description = fmt::format("Delete entity \"{}\"", editor_component.name);
+        } else {
+            description = "Delete entities";
+        }
+
+        auto* change = history_single_component.begin(world, description);
+        if (change != nullptr) {
+            std::vector<entt::entity> entities_to_delete = selected_entity_single_component.selected_entities;
+
+            // Remove outline components from these entities first.
+            selected_entity_single_component.clear_selection(world);
+
+            for (entt::entity entity : entities_to_delete) {
+                assert(world.valid(entity));
+                change->delete_entity(world, entity);
             }
         }
-        selected_entity_single_component.selected_entities.clear();
     }
 }
 

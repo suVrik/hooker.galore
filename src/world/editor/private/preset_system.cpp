@@ -1,6 +1,7 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
+#include "world/editor/history_single_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/selected_entity_single_component.h"
@@ -8,6 +9,7 @@
 #include "world/shared/render/outline_component.h"
 
 #include <algorithm>
+#include <fmt/format.h>
 #include <ghc/filesystem.hpp>
 #include <imgui.h>
 #include <SDL2/SDL_timer.h>
@@ -41,6 +43,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
     };
 
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
@@ -61,7 +64,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
         std::vector<std::string> directories;
 
         intptr_t idx = 0;
-        for (const auto& [preset_name, preset] : preset_single_component.presets) {
+        for (auto& [preset_name, preset] : preset_single_component.presets) {
             std::string lower_case_name = preset_name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
 
@@ -93,16 +96,20 @@ void PresetSystem::update(float /*elapsed_time*/) {
                         ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf, "%s", preset_path_it->c_str());
                         if (ImGui::IsItemClicked()) {
                             if (ImGui::IsMouseDoubleClicked(0)) {
-                                // TODO: HISTORY create an entity from preset.
-                                entt::entity entity = world.create();
-                                for (const entt::meta_any& component_prototype : preset) {
-                                    world.assign(entity, component_prototype);
+                                auto* change = history_single_component.begin(world, "");
+                                if (change != nullptr) {
+                                    entt::entity entity = change->create_entity(world, ghc::filesystem::path(*preset_path_it).replace_extension("").string());
+
+                                    assert(world.has<EditorComponent>(entity));
+                                    auto& editor_component = world.get<EditorComponent>(entity);
+                                    change->description = fmt::format("Create entity \"{}\"", editor_component.name);
+
+                                    for (entt::meta_any& component_prototype : preset) {
+                                        change->assign_component(world, entity, component_prototype);
+                                    }
+
+                                    selected_entity_single_component.select_entity(world, entity);
                                 }
-
-                                const std::string name = ghc::filesystem::path(*preset_path_it).replace_extension("").string();
-                                world.assign<EditorComponent>(entity, EditorComponent{ name_single_component.acquire_unique_name(entity, name), guid_single_component.acquire_unique_guid(entity) });
-
-                                selected_entity_single_component.select_entity(world, entity);
                             }
                         }
                     }

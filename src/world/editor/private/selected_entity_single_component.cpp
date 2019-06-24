@@ -21,6 +21,14 @@ void SelectedEntitySingleComponent::add_to_selection(World& world, entt::entity 
     }
 }
 
+void SelectedEntitySingleComponent::remove_from_selection(World& world, entt::entity entity) noexcept {
+    auto it = std::remove(selected_entities.begin(), selected_entities.end(), entity);
+    if (it != selected_entities.end()) {
+        world.reset<OutlineComponent>(entity);
+        selected_entities.erase(it, selected_entities.end());
+    }
+}
+
 void SelectedEntitySingleComponent::clear_selection(World& world) noexcept {
     for (entt::entity entity : selected_entities) {
         if (world.valid(entity)) {

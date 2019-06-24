@@ -3,6 +3,7 @@
 #include "world/editor/editor_component.h"
 #include "world/editor/gizmo_single_component.h"
 #include "world/editor/guid_single_component.h"
+#include "world/editor/history_single_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/imgui_single_component.h"
@@ -39,6 +40,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(GeometryPassSingleComponent);
     REGISTER_COMPONENT(GizmoSingleComponent);
     REGISTER_COMPONENT(GuidSingleComponent);
+    REGISTER_COMPONENT(HistorySingleComponent);
     REGISTER_COMPONENT(ImguiSingleComponent);
     REGISTER_COMPONENT(LevelSingleComponent);
     REGISTER_COMPONENT(LightingPassSingleComponent);

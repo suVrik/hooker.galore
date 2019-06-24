@@ -13,6 +13,8 @@ public:
     bool is_local_space = false;
 
     glm::mat4 transform;
+
+    bool is_changing = false;
 };
 
 } // namespace hg
