@@ -5,6 +5,7 @@
 #include "world/editor/gizmo_system.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/history_single_component.h"
+#include "world/editor/menu_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
@@ -21,7 +22,19 @@ namespace hg {
 
 GizmoSystem::GizmoSystem(World& world) noexcept
         : NormalSystem(world) {
-    world.set<GizmoSingleComponent>();
+    auto& gizmo_single_component = world.set<GizmoSingleComponent>();
+    gizmo_single_component.switch_space = std::make_shared<bool>(false);
+    gizmo_single_component.translate_tool = std::make_shared<bool>(false);
+    gizmo_single_component.rotate_tool = std::make_shared<bool>(false);
+    gizmo_single_component.scale_tool = std::make_shared<bool>(false);
+    gizmo_single_component.bounds_tool = std::make_shared<bool>(false);
+
+    auto& menu_single_component = world.ctx<MenuSingleComponent>();
+    menu_single_component.items.emplace("Tools/Switch space", MenuSingleComponent::MenuItem(gizmo_single_component.switch_space, "~"));
+    menu_single_component.items.emplace("Tools/Translate", MenuSingleComponent::MenuItem(gizmo_single_component.translate_tool, "1"));
+    menu_single_component.items.emplace("Tools/Rotate", MenuSingleComponent::MenuItem(gizmo_single_component.rotate_tool, "2"));
+    menu_single_component.items.emplace("Tools/Scale", MenuSingleComponent::MenuItem(gizmo_single_component.scale_tool, "3"));
+    menu_single_component.items.emplace("Tools/Bounds", MenuSingleComponent::MenuItem(gizmo_single_component.bounds_tool, "4"));
 }
 
 void GizmoSystem::update(float /*elapsed_time*/) {
@@ -36,7 +49,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     if (ImGui::Begin("Tool")) {
         const ImVec2 window_size = ImGui::GetWindowSize();
 
-        auto button = [&](const char* title, Control shortcut, ImGuizmo::OPERATION operation) {
+        auto button = [&](const char* title, Control shortcut, std::shared_ptr<bool>& flag, ImGuizmo::OPERATION operation) {
             const ImGuizmo::OPERATION old_operation = gizmo_single_component.operation;
             if (old_operation == operation) {
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.8f, 0.1f, 1.f));
@@ -44,17 +57,20 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.7f, 0.f, 1.f));
             }
             if (ImGui::Button(title, ImVec2(window_size.x / 2 - 15.f, window_size.y / 2 - 33.f)) ||
-                (normal_input_single_component.is_pressed(shortcut))) {
+                normal_input_single_component.is_pressed(shortcut) || *flag) {
                 gizmo_single_component.operation = operation;
             }
+            *flag = false;
             if (old_operation == operation) {
                 ImGui::PopStyleColor(3);
             }
         };
 
-        if (normal_input_single_component.is_pressed(Control::KEY_GRAVE)) {
+        if (normal_input_single_component.is_pressed(Control::KEY_GRAVE) || *gizmo_single_component.switch_space) {
             gizmo_single_component.is_local_space = !gizmo_single_component.is_local_space;
         }
+        *gizmo_single_component.switch_space = false;
+
         if (ImGui::RadioButton("Local space (~)", gizmo_single_component.is_local_space)) {
             gizmo_single_component.is_local_space = true;
         }
@@ -63,12 +79,12 @@ void GizmoSystem::update(float /*elapsed_time*/) {
             gizmo_single_component.is_local_space = false;
         }
 
-        button("Translate (1)", Control::KEY_1, ImGuizmo::OPERATION::TRANSLATE);
+        button("Translate (1)", Control::KEY_1, gizmo_single_component.translate_tool, ImGuizmo::OPERATION::TRANSLATE);
         ImGui::SameLine();
-        button("Rotate (2)", Control::KEY_2, ImGuizmo::OPERATION::ROTATE);
-        button("Scale (3)", Control::KEY_3, ImGuizmo::OPERATION::SCALE);
+        button("Rotate (2)", Control::KEY_2, gizmo_single_component.rotate_tool, ImGuizmo::OPERATION::ROTATE);
+        button("Scale (3)", Control::KEY_3, gizmo_single_component.scale_tool, ImGuizmo::OPERATION::SCALE);
         ImGui::SameLine();
-        button("Bounds (4)", Control::KEY_4, ImGuizmo::OPERATION::BOUNDS);
+        button("Bounds (4)", Control::KEY_4, gizmo_single_component.bounds_tool, ImGuizmo::OPERATION::BOUNDS);
     }
     ImGui::End();
 

@@ -3,6 +3,7 @@
 #include "core/render/ImGuizmo.h"
 
 #include <glm/mat4x4.hpp>
+#include <memory>
 
 namespace hg {
 
@@ -15,6 +16,13 @@ public:
     glm::mat4 transform;
 
     bool is_changing = false;
+
+    // Menu items.
+    std::shared_ptr<bool> switch_space;
+    std::shared_ptr<bool> translate_tool;
+    std::shared_ptr<bool> rotate_tool;
+    std::shared_ptr<bool> scale_tool;
+    std::shared_ptr<bool> bounds_tool;
 };
 
 } // namespace hg

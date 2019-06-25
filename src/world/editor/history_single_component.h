@@ -67,6 +67,10 @@ struct HistorySingleComponent final {
     std::vector<HistoryChange> redo;
 
     bool is_continuous = false;
+
+    // Menu items.
+    std::shared_ptr<bool> undo_action;
+    std::shared_ptr<bool> redo_action;
 };
 
 } // namespace hg

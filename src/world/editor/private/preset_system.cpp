@@ -1,3 +1,4 @@
+#include "core/base/split.h"
 #include "core/ecs/world.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
@@ -22,26 +23,6 @@ PresetSystem::PresetSystem(World& world) noexcept
 }
 
 void PresetSystem::update(float /*elapsed_time*/) {
-    auto split = [](const std::string& string, char delimiter) {
-        std::vector<std::string> result;
-
-        size_t last_position = 0;
-        for (size_t i = 0; i < string.size(); i++) {
-            if (string[i] == delimiter) {
-                if (last_position < i) {
-                    result.push_back(string.substr(last_position, i - last_position));
-                }
-                last_position = i + 1;
-            }
-        }
-
-        if (last_position < string.size()) {
-            result.push_back(string.substr(last_position, string.size() - last_position));
-        }
-
-        return result;
-    };
-
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
@@ -62,6 +43,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
         ImGui::PopStyleColor();
 
         std::vector<std::string> directories;
+        bool is_last_item_open = true;
 
         intptr_t idx = 0;
         for (auto& [preset_name, preset] : preset_single_component.presets) {
@@ -76,39 +58,45 @@ void PresetSystem::update(float /*elapsed_time*/) {
                     if (directories_it != directories.end()) {
                         if (*directories_it != *preset_path_it) {
                             for (auto it = directories_it; it != directories.end(); ++it) {
-                                ImGui::TreePop();
+                                if (std::next(it) != directories.end() || is_last_item_open) {
+                                    ImGui::TreePop();
+                                }
                             }
                             directories.erase(directories_it, directories.end());
                             directories_it = directories.end();
+                            is_last_item_open = true;
                         } else {
                             ++directories_it;
                             continue;
                         }
                     }
-                    if (std::next(preset_path_it) != preset_path.end()) {
-                        if (ImGui::TreeNode(preset_path_it->c_str())) {
+                    if (is_last_item_open) {
+                        if (std::next(preset_path_it) != preset_path.end()) {
                             directories.push_back(*preset_path_it);
                             directories_it = directories.end();
+
+                            is_last_item_open = ImGui::TreeNode(preset_path_it->c_str());
+                            if (!is_last_item_open) {
+                                break;
+                            }
                         } else {
-                            break;
-                        }
-                    } else {
-                        ImGui::TreeNodeEx(reinterpret_cast<void*>(++idx), ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf, "%s", preset_path_it->c_str());
-                        if (ImGui::IsItemClicked()) {
-                            if (ImGui::IsMouseDoubleClicked(0)) {
-                                auto* change = history_single_component.begin(world, "");
-                                if (change != nullptr) {
-                                    entt::entity entity = change->create_entity(world, ghc::filesystem::path(*preset_path_it).replace_extension("").string());
+                            ImGui::TreeNodeEx(reinterpret_cast<void *>(++idx), ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_Leaf, "%s", preset_path_it->c_str());
+                            if (ImGui::IsItemClicked()) {
+                                if (ImGui::IsMouseDoubleClicked(0)) {
+                                    auto *change = history_single_component.begin(world, "");
+                                    if (change != nullptr) {
+                                        entt::entity entity = change->create_entity(world, ghc::filesystem::path(*preset_path_it).replace_extension("").string());
 
-                                    assert(world.has<EditorComponent>(entity));
-                                    auto& editor_component = world.get<EditorComponent>(entity);
-                                    change->description = fmt::format("Create entity \"{}\"", editor_component.name);
+                                        assert(world.has<EditorComponent>(entity));
+                                        auto &editor_component = world.get<EditorComponent>(entity);
+                                        change->description = fmt::format("Create entity \"{}\"", editor_component.name);
 
-                                    for (entt::meta_any& component_prototype : preset) {
-                                        change->assign_component(world, entity, component_prototype);
+                                        for (entt::meta_any &component_prototype : preset) {
+                                            change->assign_component(world, entity, component_prototype);
+                                        }
+
+                                        selected_entity_single_component.select_entity(world, entity);
                                     }
-
-                                    selected_entity_single_component.select_entity(world, entity);
                                 }
                             }
                         }
@@ -117,7 +105,9 @@ void PresetSystem::update(float /*elapsed_time*/) {
             }
         }
         for (auto it = directories.begin(); it != directories.end(); ++it) {
-            ImGui::TreePop();
+            if (std::next(it) != directories.end() || is_last_item_open) {
+                ImGui::TreePop();
+            }
         }
 
         ImGui::EndChildFrame();

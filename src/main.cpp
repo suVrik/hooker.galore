@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
         std::vector<std::string> normal_system_order = {
                 "WindowSystem",
                 "ImguiFetchSystem",
+                "MenuSystem",
                 "EditorCameraSystem",
                 "CameraSystem",
                 "RenderFetchSystem",
@@ -40,7 +41,7 @@ int main(int argc, char* argv[]) {
                 "LightingPassSystem",
                 "OutlinePassSystem",
                 "DebugDrawPassSystem",
-                "EditorGridSystem",
+                "GridSystem",
                 "ImguiPassSystem",
                 "PickingPassSystem",
                 "RenderSystem",

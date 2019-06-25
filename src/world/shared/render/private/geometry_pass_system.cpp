@@ -131,6 +131,8 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     context.parallax_uniform          = geometry_pass_single_component.parallax_uniform;
     context.parallax_settings_uniform = geometry_pass_single_component.parallax_settings_uniform;
 
+    bgfx::touch(GEOMETRY_PASS);
+    
     m_group.each([&](entt::entity entity, ModelComponent& model_component, MaterialComponent& material_component, TransformComponent& transform_component) {
         if (material_component.material != nullptr && !model_component.model.children.empty()) {
             context.color_roughness   = material_component.material->color_roughness;

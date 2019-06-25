@@ -4,6 +4,7 @@
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/history_single_component.h"
+#include "world/editor/menu_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/outline_component.h"
@@ -21,7 +22,15 @@ namespace hg {
 
 EntitySelectionSystem::EntitySelectionSystem(World& world) noexcept
         : NormalSystem(world) {
-    world.set<SelectedEntitySingleComponent>();
+    auto& selected_entity_single_component = world.set<SelectedEntitySingleComponent>();
+    selected_entity_single_component.select_all_entities = std::make_shared<bool>(false);
+    selected_entity_single_component.clear_selected_entities = std::make_shared<bool>(false);
+    selected_entity_single_component.delete_selected_entities = std::make_shared<bool>(false);
+
+    auto& menu_single_component = world.ctx<MenuSingleComponent>();
+    menu_single_component.items.emplace("Edit/Select all entities", MenuSingleComponent::MenuItem(selected_entity_single_component.select_all_entities, "Ctrl+A"));
+    menu_single_component.items.emplace("Edit/Clear selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.clear_selected_entities, "Ctrl+D"));
+    menu_single_component.items.emplace("Edit/Delete selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.delete_selected_entities, "Del"));
 }
 
 void EntitySelectionSystem::update(float /*elapsed_time*/) {
@@ -148,7 +157,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         }
     }
 
-    if (normal_input_single_component.is_pressed(Control::KEY_DELETE) && !selected_entity_single_component.selected_entities.empty()) {
+    if ((*selected_entity_single_component.delete_selected_entities || normal_input_single_component.is_pressed(Control::KEY_DELETE)) && !selected_entity_single_component.selected_entities.empty()) {
         std::string description;
         if (selected_entity_single_component.selected_entities.size() == 1) {
             assert(world.has<EditorComponent>(selected_entity_single_component.selected_entities[0]));
@@ -171,6 +180,21 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
         }
     }
+    *selected_entity_single_component.delete_selected_entities = false;
+
+    if (*selected_entity_single_component.select_all_entities || ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) && normal_input_single_component.is_pressed(Control::KEY_A))) {
+        selected_entity_single_component.clear_selection(world);
+
+        world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
+            selected_entity_single_component.add_to_selection(world, entity);
+        });
+    }
+    *selected_entity_single_component.select_all_entities = false;
+
+    if (*selected_entity_single_component.clear_selected_entities || ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) && normal_input_single_component.is_pressed(Control::KEY_D))) {
+        selected_entity_single_component.clear_selection(world);
+    }
+    *selected_entity_single_component.clear_selected_entities = false;
 }
 
 } // namespace hg

@@ -1,6 +1,7 @@
 #include "core/ecs/world.h"
 #include "world/editor/history_single_component.h"
 #include "world/editor/history_system.h"
+#include "world/editor/menu_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 
 #include <imgui.h>
@@ -9,7 +10,13 @@ namespace hg {
 
 HistorySystem::HistorySystem(World& world) noexcept
         : NormalSystem(world) {
-    world.set<HistorySingleComponent>();
+    auto& history_single_component = world.set<HistorySingleComponent>();
+    history_single_component.undo_action = std::make_shared<bool>(false);
+    history_single_component.redo_action = std::make_shared<bool>(false);
+
+    auto& menu_single_component = world.ctx<MenuSingleComponent>();
+    menu_single_component.items.emplace("Edit/Undo", MenuSingleComponent::MenuItem(history_single_component.undo_action, "Ctrl+Z"));
+    menu_single_component.items.emplace("Edit/Redo", MenuSingleComponent::MenuItem(history_single_component.redo_action, "Ctrl+Shift+Z"));
 }
 
 void HistorySystem::update(float /*elapsed_time*/) {
@@ -46,17 +53,19 @@ void HistorySystem::update(float /*elapsed_time*/) {
     }
     ImGui::End();
 
-    if ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
-        (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
-        normal_input_single_component.is_pressed(Control::KEY_Z)) {
+    if (((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
+         (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
+         normal_input_single_component.is_pressed(Control::KEY_Z)) || *history_single_component.undo_action) {
         history_single_component.perform_undo(world);
     }
+    *history_single_component.undo_action = false;
 
-    if ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
-        (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
-        normal_input_single_component.is_pressed(Control::KEY_Z)) {
+    if (((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
+         (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
+         normal_input_single_component.is_pressed(Control::KEY_Z)) || *history_single_component.redo_action) {
         history_single_component.perform_redo(world);
     }
+    *history_single_component.redo_action = false;
 }
 
 } // namespace hg
