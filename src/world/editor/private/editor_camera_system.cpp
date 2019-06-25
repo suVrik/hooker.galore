@@ -62,7 +62,7 @@ void EditorCameraSystem::update(float elapsed_time) {
         }
 
         if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && !selected_entity_single_component.selected_entities.empty()) {
-            glm::vec3 middle_translation;
+            glm::vec3 middle_translation(0.f, 0.f, 0.f);
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
                 auto& object_transform_component = world.get<TransformComponent>(selected_entity);
                 middle_translation += object_transform_component.translation;

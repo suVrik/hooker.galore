@@ -147,11 +147,14 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
                             entt::entity new_entity = change->create_entity(world, editor_component.name);
                             world.each(selected_entity, [&](entt::meta_handle component_handle) {
-                                change->assign_component(world, new_entity, world.copy_component(component_handle));
+                                if (component_handle.type() != entt::resolve<EditorComponent>()) {
+                                    entt::meta_any component_copy = world.copy_component(component_handle);
+                                    change->assign_component(world, new_entity, component_copy);
+                                }
                             });
 
                             selected_entity_single_component.select_entity(world, new_entity);
-                            selected_entity = selected_entity_single_component.selected_entities[0];
+                            selected_entity = new_entity;
                         }
                     }
 
@@ -179,7 +182,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                 return;
             }
 
-            glm::vec3 middle_translation;
+            glm::vec3 middle_translation(0.f, 0.f, 0.f);
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
                 auto& object_transform_component = world.get<TransformComponent>(selected_entity);
                 middle_translation += object_transform_component.translation;
@@ -228,7 +231,10 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
                                 entt::entity new_entity = change->create_entity(world, original_editor_component.name);
                                 world.each(original_entity, [&](entt::meta_handle component_handle) {
-                                    change->assign_component(world, new_entity, world.copy_component(component_handle));
+                                    if (component_handle.type() != entt::resolve<EditorComponent>()) {
+                                        entt::meta_any component_copy = world.copy_component(component_handle);
+                                        change->assign_component(world, new_entity, component_copy);
+                                    }
                                 });
 
                                 new_selected_entities.push_back(new_entity);
