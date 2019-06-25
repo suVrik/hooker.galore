@@ -15,8 +15,8 @@ HistorySystem::HistorySystem(World& world) noexcept
     history_single_component.redo_action = std::make_shared<bool>(false);
 
     auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("Edit/Undo", MenuSingleComponent::MenuItem(history_single_component.undo_action, "Ctrl+Z"));
-    menu_single_component.items.emplace("Edit/Redo", MenuSingleComponent::MenuItem(history_single_component.redo_action, "Ctrl+Shift+Z"));
+    menu_single_component.items.emplace("1Edit/0Undo", MenuSingleComponent::MenuItem(history_single_component.undo_action, "Ctrl+Z"));
+    menu_single_component.items.emplace("1Edit/1Redo", MenuSingleComponent::MenuItem(history_single_component.redo_action, "Ctrl+Shift+Z"));
 }
 
 void HistorySystem::update(float /*elapsed_time*/) {
@@ -53,16 +53,14 @@ void HistorySystem::update(float /*elapsed_time*/) {
     }
     ImGui::End();
 
-    if (((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
-         (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
-         normal_input_single_component.is_pressed(Control::KEY_Z)) || *history_single_component.undo_action) {
+    if ((normal_input_single_component.is_down(Control::KEY_CTRL) && !normal_input_single_component.is_down(Control::KEY_SHIFT) && normal_input_single_component.is_pressed(Control::KEY_Z)) ||
+        *history_single_component.undo_action) {
         history_single_component.perform_undo(world);
     }
     *history_single_component.undo_action = false;
 
-    if (((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) &&
-         (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) &&
-         normal_input_single_component.is_pressed(Control::KEY_Z)) || *history_single_component.redo_action) {
+    if ((normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_SHIFT) && normal_input_single_component.is_pressed(Control::KEY_Z)) ||
+        *history_single_component.redo_action) {
         history_single_component.perform_redo(world);
     }
     *history_single_component.redo_action = false;

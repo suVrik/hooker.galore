@@ -12,7 +12,7 @@ GridSystem::GridSystem(World& world) noexcept
     grid_single_component.is_shown = std::make_shared<bool>(true);
 
     auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("View/Grid", grid_single_component.is_shown);
+    menu_single_component.items.emplace("2View/Grid", grid_single_component.is_shown);
 }
 
 void GridSystem::update(float /*elapsed_time*/) {

@@ -30,11 +30,11 @@ GizmoSystem::GizmoSystem(World& world) noexcept
     gizmo_single_component.bounds_tool = std::make_shared<bool>(false);
 
     auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("Tools/Switch space", MenuSingleComponent::MenuItem(gizmo_single_component.switch_space, "~"));
-    menu_single_component.items.emplace("Tools/Translate", MenuSingleComponent::MenuItem(gizmo_single_component.translate_tool, "1"));
-    menu_single_component.items.emplace("Tools/Rotate", MenuSingleComponent::MenuItem(gizmo_single_component.rotate_tool, "2"));
-    menu_single_component.items.emplace("Tools/Scale", MenuSingleComponent::MenuItem(gizmo_single_component.scale_tool, "3"));
-    menu_single_component.items.emplace("Tools/Bounds", MenuSingleComponent::MenuItem(gizmo_single_component.bounds_tool, "4"));
+    menu_single_component.items.emplace("5Tools/0Switch space", MenuSingleComponent::MenuItem(gizmo_single_component.switch_space, "~"));
+    menu_single_component.items.emplace("5Tools/1Translate", MenuSingleComponent::MenuItem(gizmo_single_component.translate_tool, "1"));
+    menu_single_component.items.emplace("5Tools/2Rotate", MenuSingleComponent::MenuItem(gizmo_single_component.rotate_tool, "2"));
+    menu_single_component.items.emplace("5Tools/3Scale", MenuSingleComponent::MenuItem(gizmo_single_component.scale_tool, "3"));
+    menu_single_component.items.emplace("5Tools/4Bounds", MenuSingleComponent::MenuItem(gizmo_single_component.bounds_tool, "4"));
 }
 
 void GizmoSystem::update(float /*elapsed_time*/) {
@@ -92,7 +92,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
     if (!selected_entity_single_component.selected_entities.empty()) {
         const bool was_using = ImGuizmo::IsUsing();
-        const bool is_snapping = normal_input_single_component.is_down(Control::KEY_LCTRL);
+        const bool is_snapping = normal_input_single_component.is_down(Control::KEY_CTRL);
 
         if (selected_entity_single_component.selected_entities.size() == 1) {
             entt::entity selected_entity = selected_entity_single_component.selected_entities[0];
@@ -156,7 +156,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
             if (ImGuizmo::IsUsing()) {
                 if (!was_using) {
-                    if (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                    if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
                         auto* change = history_single_component.begin(world, fmt::format("Clone entity \"{}\"", editor_component.name));
                         if (change != nullptr) {
                             selected_entity_single_component.clear_selection(world);
@@ -234,7 +234,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
             if (ImGuizmo::IsUsing()) {
                 if (!was_using) {
-                    if (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                    if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
                         auto* change = history_single_component.begin(world, "Clone entities");
                         if (change != nullptr) {
                             std::vector<entt::entity> old_selected_entities = selected_entity_single_component.selected_entities;

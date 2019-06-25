@@ -21,6 +21,15 @@ void MenuSystem::update(float /*elapsed_time*/) {
         for (auto& [path, menu_item] : menu_single_component.items) {
             std::vector<std::string> current_items = split(path, '/');
 
+            auto get_item_text = [](const std::string& full_text) {
+                for (auto it = full_text.begin(); it != full_text.end(); ++it) {
+                    if (!std::isdigit(*it)) {
+                        return full_text.substr(std::distance(full_text.begin(), it));
+                    }
+                }
+                return full_text;
+            };
+
             auto items_it = items.begin();
             for (auto current_items_it = current_items.begin(); current_items_it != current_items.end(); ++current_items_it) {
                 if (items_it != items.end()) {
@@ -43,12 +52,12 @@ void MenuSystem::update(float /*elapsed_time*/) {
                         items.push_back(*current_items_it);
                         items_it = items.end();
 
-                        is_last_item_open = ImGui::BeginMenu(current_items_it->c_str());
+                        is_last_item_open = ImGui::BeginMenu(get_item_text(*current_items_it).c_str());
                         if (!is_last_item_open) {
                             break;
                         }
                     } else {
-                        ImGui::MenuItem(current_items_it->c_str(), menu_item.shortcut.c_str(), menu_item.selected.get(), menu_item.enabled);
+                        ImGui::MenuItem(get_item_text(*current_items_it).c_str(), menu_item.shortcut.c_str(), menu_item.selected.get(), menu_item.enabled);
                     }
                 }
             }

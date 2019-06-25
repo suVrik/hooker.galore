@@ -32,7 +32,7 @@ EditorCameraSystem::EditorCameraSystem(World& world) noexcept
     editor_camera_component.reset_camera_position = std::make_shared<bool>(false);
 
     auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("View/Reset camera position", MenuSingleComponent::MenuItem(editor_camera_component.reset_camera_position, "Home"));
+    menu_single_component.items.emplace("2View/Reset camera position", MenuSingleComponent::MenuItem(editor_camera_component.reset_camera_position, "Home"));
 }
 
 void EditorCameraSystem::update(float elapsed_time) {
@@ -60,11 +60,11 @@ void EditorCameraSystem::update(float elapsed_time) {
         *editor_camera_component.reset_camera_position = false;
 
         float speed = CAMERA_SPEED * elapsed_time;
-        if (normal_input_single_component.is_down(Control::KEY_LSHIFT)) {
+        if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
             speed *= CAMERA_SPEED_INCREASE_FACTOR;
         }
 
-        if ((normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && !selected_entity_single_component.selected_entities.empty()) {
+        if ((normal_input_single_component.is_down(Control::KEY_ALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && !selected_entity_single_component.selected_entities.empty()) {
             glm::vec3 middle_translation(0.f, 0.f, 0.f);
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
                 auto& object_transform_component = world.get<TransformComponent>(selected_entity);
@@ -99,7 +99,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                 }
 
                 float distance = glm::length(vector1);
-                if (normal_input_single_component.is_down(Control::KEY_W) || normal_input_single_component.get_mouse_wheel() > 0) {
+                if ((!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_W)) || normal_input_single_component.get_mouse_wheel() > 0) {
                     distance = std::max(distance - speed, 0.1f);
                 }
                 if (normal_input_single_component.is_down(Control::KEY_S) || normal_input_single_component.get_mouse_wheel() < 0) {

@@ -80,6 +80,34 @@ void WindowSystem::update(float /*elapsed_time*/) {
                 break;
         }
     }
+
+#if defined(__APPLE__)
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_CTRL)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LGUI)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RGUI)];
+#else
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_CTRL)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LCTRL)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RCTRL)];
+#endif
+
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_SHIFT)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LSHIFT)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RSHIFT)];
+
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_ALT)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LALT)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RALT)];
+
+#if defined(__APPLE__)
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_GUI)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LCTRL)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RCTRL)];
+#else
+    normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_GUI)] =
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_LGUI)] ||
+            normal_input_single_component.m_keys[static_cast<size_t>(Control::KEY_RGUI)];
+#endif
 }
 
 void WindowSystem::handle_window_event(SDL_Event& event) {

@@ -249,6 +249,10 @@ enum class Control {
     KEY_APP2               = 284,
     KEY_AUDIOREWIND        = 285,
     KEY_AUDIOFASTFORWARD   = 286,
+    KEY_CTRL               = 337, // Control on Windows and Linux. Command on MacOS.
+    KEY_SHIFT              = 338,
+    KEY_ALT                = 339,
+    KEY_GUI                = 340, // GUI key on Windows and Linux. Control on MacOS.
     BUTTON_LEFT            = 512,
     BUTTON_MIDDLE          = 513,
     BUTTON_RIGHT           = 514,

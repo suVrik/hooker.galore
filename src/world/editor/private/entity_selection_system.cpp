@@ -28,9 +28,9 @@ EntitySelectionSystem::EntitySelectionSystem(World& world) noexcept
     selected_entity_single_component.delete_selected_entities = std::make_shared<bool>(false);
 
     auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("Edit/Select all entities", MenuSingleComponent::MenuItem(selected_entity_single_component.select_all_entities, "Ctrl+A"));
-    menu_single_component.items.emplace("Edit/Clear selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.clear_selected_entities, "Ctrl+D"));
-    menu_single_component.items.emplace("Edit/Delete selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.delete_selected_entities, "Del"));
+    menu_single_component.items.emplace("1Edit/2Select all entities", MenuSingleComponent::MenuItem(selected_entity_single_component.select_all_entities, "Ctrl+A"));
+    menu_single_component.items.emplace("1Edit/3Clear selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.clear_selected_entities, "Ctrl+D"));
+    menu_single_component.items.emplace("1Edit/4Delete selected entities", MenuSingleComponent::MenuItem(selected_entity_single_component.delete_selected_entities, "Del"));
 }
 
 void EntitySelectionSystem::update(float /*elapsed_time*/) {
@@ -70,7 +70,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                 }
                 ImGui::TreeNodeEx(reinterpret_cast<void*>(++index), flags, "%s", editor_component.name.c_str());
                 if (ImGui::IsItemClicked()) {
-                    if (normal_input_single_component.is_down(Control::KEY_LSHIFT) || normal_input_single_component.is_down(Control::KEY_RSHIFT)) {
+                    if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
                         selected_entity_single_component.add_to_selection(world, entity);
                     } else {
                         selected_entity_single_component.select_entity(world, entity);
@@ -109,14 +109,13 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                 }
             }
 
-            if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT) &&
-                !normal_input_single_component.is_down(Control::KEY_LALT) && !normal_input_single_component.is_down(Control::KEY_RALT)) {
+            if (!normal_input_single_component.is_down(Control::KEY_SHIFT) && !normal_input_single_component.is_down(Control::KEY_ALT)) {
                 selected_entity_single_component.clear_selection(world);
             }
 
             for (uint32_t selected_object : selected_entities) {
                 if (selected_object != 0 && guid_single_component.guid_to_entity.count(selected_object) > 0) {
-                    if (normal_input_single_component.is_down(Control::KEY_LALT) || normal_input_single_component.is_down(Control::KEY_RALT)) {
+                    if (normal_input_single_component.is_down(Control::KEY_ALT)) {
                         selected_entity_single_component.remove_from_selection(world, guid_single_component.guid_to_entity[selected_object]);
                     } else {
                         selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_object]);
@@ -125,8 +124,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
 
             if (selected_entities.empty()) {
-                if (!normal_input_single_component.is_down(Control::KEY_LSHIFT) && !normal_input_single_component.is_down(Control::KEY_RSHIFT) &&
-                    !normal_input_single_component.is_down(Control::KEY_LALT) && !normal_input_single_component.is_down(Control::KEY_RALT)) {
+                if (!normal_input_single_component.is_down(Control::KEY_SHIFT) && !normal_input_single_component.is_down(Control::KEY_ALT)) {
                     selected_entity_single_component.select_entity(world, entt::null);
                 }
             }
@@ -140,9 +138,15 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
 
         if (selected_entity_single_component.is_selecting) {
             ImDrawList* draw_list = ImGui::GetBackgroundDrawList();
-            draw_list->AddRect(ImVec2(float(selected_entity_single_component.selection_start_x), float(selected_entity_single_component.selection_start_y)),
-                               ImVec2(float(normal_input_single_component.get_mouse_x()), float(normal_input_single_component.get_mouse_y())),
-                               ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 0.f, 1.f)));
+            if (selected_entity_single_component.selection_start_x != normal_input_single_component.get_mouse_x() ||
+                selected_entity_single_component.selection_start_y != normal_input_single_component.get_mouse_y()) {
+                draw_list->AddRectFilled(ImVec2(float(selected_entity_single_component.selection_start_x), float(selected_entity_single_component.selection_start_y)),
+                                         ImVec2(float(normal_input_single_component.get_mouse_x()), float(normal_input_single_component.get_mouse_y())),
+                                         ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 0.f, 0.15f)));
+                draw_list->AddRect(ImVec2(float(selected_entity_single_component.selection_start_x), float(selected_entity_single_component.selection_start_y)),
+                                   ImVec2(float(normal_input_single_component.get_mouse_x()), float(normal_input_single_component.get_mouse_y())),
+                                   ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 0.f, 1.f)));
+            }
 
             if (normal_input_single_component.is_released(Control::BUTTON_LEFT)) {
                 picking_pass_single_component.perform_picking = true;
@@ -182,7 +186,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
     }
     *selected_entity_single_component.delete_selected_entities = false;
 
-    if (*selected_entity_single_component.select_all_entities || ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) && normal_input_single_component.is_pressed(Control::KEY_A))) {
+    if (*selected_entity_single_component.select_all_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_A))) {
         selected_entity_single_component.clear_selection(world);
 
         world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
@@ -191,7 +195,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
     }
     *selected_entity_single_component.select_all_entities = false;
 
-    if (*selected_entity_single_component.clear_selected_entities || ((normal_input_single_component.is_down(Control::KEY_LCTRL) || normal_input_single_component.is_down(Control::KEY_RCTRL)) && normal_input_single_component.is_pressed(Control::KEY_D))) {
+    if (*selected_entity_single_component.clear_selected_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_D))) {
         selected_entity_single_component.clear_selection(world);
     }
     *selected_entity_single_component.clear_selected_entities = false;
