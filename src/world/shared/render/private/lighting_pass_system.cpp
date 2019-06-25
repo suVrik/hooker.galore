@@ -51,6 +51,9 @@ LightingPassSystem::LightingPassSystem(World& world)
 
     skybox_single_component.texture_uniform  = bgfx::createUniform("s_skybox", bgfx::UniformType::Sampler);
     skybox_single_component.texture_irradiance_uniform = bgfx::createUniform("s_skybox_irradiance", bgfx::UniformType::Sampler);
+    skybox_single_component.texture_prefilter_uniform = bgfx::createUniform("s_skybox_prefilter", bgfx::UniformType::Sampler);
+    skybox_single_component.texture_lut_uniform = bgfx::createUniform("s_skybox_lut", bgfx::UniformType::Sampler);
+    skybox_single_component.mip_prefilter_max_uniform = bgfx::createUniform("u_mip_prefilter_max", bgfx::UniformType::Sampler);
     skybox_single_component.rotation_uniform = bgfx::createUniform("u_rotation", bgfx::UniformType::Mat4);
 
     bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);
@@ -103,8 +106,11 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
     bgfx::setTexture(3, skybox_single_component.texture_uniform,                skybox_single_component.texture);
     bgfx::setTexture(4, skybox_single_component.texture_irradiance_uniform,     skybox_single_component.texture_irradiance);
+    bgfx::setTexture(5, skybox_single_component.texture_prefilter_uniform,      skybox_single_component.texture_prefilter);
+    bgfx::setTexture(6, skybox_single_component.texture_lut_uniform,            skybox_single_component.texture_lut);
 
     bgfx::setUniform(skybox_single_component.rotation_uniform, &rotation);
+    bgfx::setUniform(skybox_single_component.mip_prefilter_max_uniform, &skybox_single_component.mip_prefilter_max);
 
     world.view<LightComponent, TransformComponent>().each([&](entt::entity, LightComponent& light_component, TransformComponent& transform_component) {
         const glm::vec4 light_position(transform_component.translation, 0.f);

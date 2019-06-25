@@ -10,10 +10,13 @@ SAMPLER2D(s_normal_metal_ao,     1);
 SAMPLER2D(s_depth,               2);
 SAMPLERCUBE(s_skybox,            3);
 SAMPLERCUBE(s_skybox_irradiance, 4);
+SAMPLERCUBE(s_skybox_prefilter,  5);
+SAMPLER2D(s_skybox_lut,          6);
 
 uniform vec4 u_light_position;
 uniform vec4 u_light_color;
 uniform mat4 u_rotation;
+uniform float u_mip_prefilter_max;
 
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
@@ -94,6 +97,7 @@ void main() {
         vec3 world_position = to_world_space_position(clip_position);
         vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
         vec3 camera_dir = normalize(camera_position.xyz - world_position);
+        vec3 reflect_dir = reflect(-camera_dir, normal);
 
         vec3 surface_reflect_zero = vec3(0.04, 0.04, 0.04);
         surface_reflect_zero = mix(surface_reflect_zero, color, metal);
@@ -124,7 +128,10 @@ void main() {
         vec3 kd = (1.0 - ks) * (1.0 - metal);
         vec3 irradiance = textureCube(s_skybox_irradiance, normal).xyz;
         vec3 diffuse = irradiance * color;
-        vec3 ambient = (kd * diffuse) * ao;
+        vec3 prefiltered_color = textureCubeLod(s_skybox_prefilter, reflect_dir, roughness * (u_mip_prefilter_max + 1.0)).xyz;
+        vec2 brdf = texture2D(s_skybox_lut, vec2(max(dot(normal, camera_dir), 0.0), roughness)).xy;
+        vec3 specular = prefiltered_color * (ks * brdf.x + brdf.y);
+        vec3 ambient = (kd * diffuse + specular) * ao;
 
         vec3 color_out = ambient + outgoing_radiance;
         color_out = color_out / (color_out + vec3(1.0, 1.0, 1.0));
