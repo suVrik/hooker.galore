@@ -88,9 +88,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     }
     ImGui::End();
 
-    ImGuizmo::Enable(!selected_entity_single_component.is_selecting);
-
-    if (!selected_entity_single_component.selected_entities.empty()) {
+    if (!selected_entity_single_component.is_selecting && !selected_entity_single_component.selected_entities.empty()) {
         const bool was_using = ImGuizmo::IsUsing();
         const bool is_snapping = normal_input_single_component.is_down(Control::KEY_CTRL);
 

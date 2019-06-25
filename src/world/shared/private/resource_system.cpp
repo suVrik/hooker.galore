@@ -259,6 +259,8 @@ ResourceSystem::ResourceSystem(World& world)
         catch (...) {
             auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
             bgfx::destroy(skybox_single_component.texture);
+
+            throw;
         }
     }
     catch (...) {
@@ -451,7 +453,7 @@ void ResourceSystem::load_skybox() const {
                 const uint32_t offset_in = (h * width + w) * 3 + c;
                 *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(data[offset_in]);
             }
-            const uint32_t offset_out = (h * width + w) * 4 + 4;
+            const uint32_t offset_out = (h * width + w) * 4 + 3;
             *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(1.f);
         }
     }
@@ -674,6 +676,9 @@ void ResourceSystem::load_model(Model& result, const std::string &path) const {
                 for (const int node_index : scene.nodes) {
                     Model::AABB node_bounds;
 
+                    if (node_index >= model.nodes.size()) {
+                        throw std::runtime_error("Invalid node index.");
+                    }
                     load_model_node(result.children.emplace_back(), node_bounds, model, model.nodes[node_index]);
 
                     result.bounds.min_x = std::min(result.bounds.min_x, node_bounds.min_x);
@@ -880,10 +885,10 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, Model::AABB&
 
             for (size_t i = 0; i < num_vertices; i++) {
                 const auto* const source_data = reinterpret_cast<const float*>(buffer_data + i * byte_stride);
-                vertex_data[i].tangent_x = source_data[0];
+                vertex_data[i].tangent_x = -source_data[0];
                 vertex_data[i].tangent_y = source_data[1];
-                vertex_data[i].tangent_z = -source_data[2];
-                vertex_data[i].tangent_w = -source_data[3];
+                vertex_data[i].tangent_z = source_data[2];
+                vertex_data[i].tangent_w = source_data[3];
             }
         } else if (attribute == "TEXCOORD_0") {
             if (accessor.type != TINYGLTF_TYPE_VEC2 ||
@@ -898,7 +903,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, Model::AABB&
                 if (byte_stride >= sizeof(float) * 2 && byte_stride * (num_vertices - 1) + sizeof(float) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const float *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = -texcoord_source_data[0];
+                        vertex_data[i].u = texcoord_source_data[0];
                         vertex_data[i].v = texcoord_source_data[1];
                     }
                 } else {
@@ -909,7 +914,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, Model::AABB&
                 if (byte_stride >= sizeof(uint8_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint8_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint8_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = -(texcoord_source_data[0] / 255.f);
+                        vertex_data[i].u = texcoord_source_data[0] / 255.f;
                         vertex_data[i].v = texcoord_source_data[1] / 255.f;
                     }
                 } else {
@@ -920,7 +925,7 @@ void ResourceSystem::load_model_primitive(Model::Primitive& result, Model::AABB&
                 if (byte_stride >= sizeof(uint16_t) * 2 && byte_stride * (num_vertices - 1) + sizeof(uint16_t) * 2 <= buffer_view.byteLength) {
                     for (size_t i = 0; i < num_vertices; i++) {
                         const auto *const texcoord_source_data = reinterpret_cast<const uint16_t *>(buffer_data + i * byte_stride);
-                        vertex_data[i].u = -(texcoord_source_data[0] / 65535.f);
+                        vertex_data[i].u = texcoord_source_data[0] / 65535.f;
                         vertex_data[i].v = texcoord_source_data[1] / 65535.f;
                     }
                 } else {

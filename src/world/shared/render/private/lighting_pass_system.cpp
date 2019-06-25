@@ -93,17 +93,13 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
-    glm::quat quat_rot = camera_single_component.rotation;
-    quat_rot.w = -quat_rot.w;
-    quat_rot.y = -quat_rot.y;
-    glm::mat4 rotation = glm::mat4_cast(quat_rot);
-
     bgfx::setTexture(0, lighting_pass_single_component.color_roughness_uniform, geometry_pass_single_component.color_roughness_texture);
     bgfx::setTexture(1, lighting_pass_single_component.normal_metal_ao_uniform, geometry_pass_single_component.normal_metal_ao_texture);
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
     bgfx::setTexture(3, skybox_single_component.texture_uniform,                skybox_single_component.texture);
     bgfx::setTexture(4, skybox_single_component.texture_irradiance_uniform,     skybox_single_component.texture_irradiance);
 
+    const glm::mat4 rotation = glm::mat4_cast(camera_single_component.rotation);
     bgfx::setUniform(skybox_single_component.rotation_uniform, &rotation);
 
     world.view<LightComponent, TransformComponent>().each([&](entt::entity, LightComponent& light_component, TransformComponent& transform_component) {

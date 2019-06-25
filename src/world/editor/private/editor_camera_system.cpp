@@ -82,7 +82,7 @@ void EditorCameraSystem::update(float elapsed_time) {
 
                     const float previous_yaw = editor_camera_component.yaw;
                     const float previous_pitch = editor_camera_component.pitch;
-                    editor_camera_component.yaw -= normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
+                    editor_camera_component.yaw += normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
                     editor_camera_component.pitch += normal_input_single_component.get_delta_mouse_y() * MOUSE_SENSITIVITY;
                     editor_camera_component.pitch = glm::clamp(editor_camera_component.pitch, -glm::half_pi<float>() * 15.f / 16.f, glm::half_pi<float>() * 15.f / 16.f);
                     delta_yaw = editor_camera_component.yaw - previous_yaw;
@@ -102,7 +102,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                 if ((!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_W)) || normal_input_single_component.get_mouse_wheel() > 0) {
                     distance = std::max(distance - speed, 0.1f);
                 }
-                if (normal_input_single_component.is_down(Control::KEY_S) || normal_input_single_component.get_mouse_wheel() < 0) {
+                if ((!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_S)) || normal_input_single_component.get_mouse_wheel() < 0) {
                     distance = distance + speed;
                 }
 
@@ -112,18 +112,18 @@ void EditorCameraSystem::update(float elapsed_time) {
             }
         } else {
             float delta_x = 0.f;
-            if (normal_input_single_component.is_down(Control::KEY_A)) {
+            if (!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_D)) {
                 delta_x = speed;
             }
-            if (normal_input_single_component.is_down(Control::KEY_D)) {
+            if (!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_A)) {
                 delta_x = -speed;
             }
 
             float delta_y = 0.f;
-            if (normal_input_single_component.is_down(Control::KEY_SPACE)) {
+            if (!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_SPACE)) {
                 delta_y = speed;
             }
-            if (normal_input_single_component.is_down(Control::KEY_C)) {
+            if (!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_C)) {
                 delta_y = -speed;
             }
 
@@ -132,17 +132,19 @@ void EditorCameraSystem::update(float elapsed_time) {
             }
 
             float delta_z = 0.f;
-            if (normal_input_single_component.is_down(Control::KEY_W) || normal_input_single_component.get_mouse_wheel() > 0) {
+            if ((!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_W)) ||
+                normal_input_single_component.get_mouse_wheel() > 0) {
                 delta_z = speed;
             }
-            if (normal_input_single_component.is_down(Control::KEY_S) || normal_input_single_component.get_mouse_wheel() < 0) {
+            if ((!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_S)) ||
+                normal_input_single_component.get_mouse_wheel() < 0) {
                 delta_z = -speed;
             }
 
             if (normal_input_single_component.is_down(Control::BUTTON_RIGHT)) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
 
-                editor_camera_component.yaw -= normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
+                editor_camera_component.yaw += normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
                 editor_camera_component.pitch += normal_input_single_component.get_delta_mouse_y() * MOUSE_SENSITIVITY;
                 editor_camera_component.pitch = glm::clamp(editor_camera_component.pitch, -glm::half_pi<float>() * 15.f / 16.f, glm::half_pi<float>() * 15.f / 16.f);
             } else {

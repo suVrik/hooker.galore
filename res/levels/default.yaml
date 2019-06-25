@@ -1387,14 +1387,14 @@ entities:
       guid: 66
   - TransformComponent:
       translation:
-        x: 2
-        y: 5
-        z: 2
+        x: 4
+        y: 4.5
+        z: 0
       rotation:
         x: 0
-        y: 0
+        y: 0.707
         z: 0
-        w: 1
+        w: -0.707
       scale:
         x: 1
         y: 1
@@ -1406,6 +1406,111 @@ entities:
     EditorComponent:
       name: duck
       guid: 67
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 5.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 3
+        y: 3
+        z: 3
+    ModelComponent:
+      path: flight_helmet.glb
+    MaterialComponent:
+      path: flight_helmet.yaml
+    EditorComponent:
+      name: flight_helmet
+      guid: 68
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 5.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 3
+        y: 3
+        z: 3
+    ModelComponent:
+      path: flight_helmet_1.glb
+    MaterialComponent:
+      path: flight_helmet_1.yaml
+    EditorComponent:
+      name: flight_helmet_1
+      guid: 69
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 5.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 3
+        y: 3
+        z: 3
+    ModelComponent:
+      path: flight_helmet_2.glb
+    MaterialComponent:
+      path: flight_helmet_2.yaml
+    EditorComponent:
+      name: flight_helmet_2
+      guid: 70
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 5.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 3
+        y: 3
+        z: 3
+    ModelComponent:
+      path: flight_helmet_3.glb
+    MaterialComponent:
+      path: flight_helmet_3.yaml
+    EditorComponent:
+      name: flight_helmet_3
+      guid: 71
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 5.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 3
+        y: 3
+        z: 3
+    ModelComponent:
+      path: flight_helmet_4.glb
+    MaterialComponent:
+      path: flight_helmet_4.yaml
+    EditorComponent:
+      name: flight_helmet_4
+      guid: 72
   - TransformComponent:
       translation:
         x: 0
@@ -1427,4 +1532,4 @@ entities:
         z: 150
     EditorComponent:
       name: LIGHT
-      guid: 68
+      guid: 73
