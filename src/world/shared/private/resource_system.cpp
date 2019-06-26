@@ -2,12 +2,12 @@
 #include "core/render/render_pass.h"
 #include "core/resource/material.h"
 #include "core/resource/texture.h"
-#include "shaders/skybox_prebake_pass/skybox_prebake_pass.fragment.h"
-#include "shaders/skybox_prebake_pass/skybox_prebake_pass.vertex.h"
-#include "shaders/skybox_prebake_pass/skybox_irradiance_prebake_pass.fragment.h"
-#include "shaders/skybox_prebake_pass/skybox_prefilter_prebake_pass.fragment.h"
 #include "shaders/skybox_brdf_prebake_pass/skybox_brdf_prebake_pass.fragment.h"
 #include "shaders/skybox_brdf_prebake_pass/skybox_brdf_prebake_pass.vertex.h"
+#include "shaders/skybox_prebake_pass/skybox_irradiance_prebake_pass.fragment.h"
+#include "shaders/skybox_prebake_pass/skybox_prebake_pass.fragment.h"
+#include "shaders/skybox_prebake_pass/skybox_prebake_pass.vertex.h"
+#include "shaders/skybox_prebake_pass/skybox_prefilter_prebake_pass.fragment.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
@@ -473,6 +473,7 @@ void ResourceSystem::load_skybox() const {
                 *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(data[offset_in]);
             }
 
+            const uint32_t offset_out = (i * width + j) * 4 + 3;
             *(uint16_t*)&mem16f->data[offset_out * sizeof(uint16_t)] = bx::halfFromFloat(1.f);
         }
     }
