@@ -53,7 +53,7 @@ LightingPassSystem::LightingPassSystem(World& world)
     skybox_single_component.texture_irradiance_uniform = bgfx::createUniform("s_skybox_irradiance", bgfx::UniformType::Sampler);
     skybox_single_component.texture_prefilter_uniform = bgfx::createUniform("s_skybox_prefilter", bgfx::UniformType::Sampler);
     skybox_single_component.texture_lut_uniform = bgfx::createUniform("s_skybox_lut", bgfx::UniformType::Sampler);
-    skybox_single_component.mip_prefilter_max_uniform = bgfx::createUniform("u_mip_prefilter_max", bgfx::UniformType::Sampler);
+    skybox_single_component.mip_prefilter_max_uniform = bgfx::createUniform("u_mip_prefilter_max", bgfx::UniformType::Vec4);
     skybox_single_component.rotation_uniform = bgfx::createUniform("u_rotation", bgfx::UniformType::Mat4);
 
     bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);

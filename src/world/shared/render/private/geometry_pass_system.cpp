@@ -183,8 +183,8 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
         bgfx::destroy(geometry_pass_single_component.gbuffer);
     }
 
-    geometry_pass_single_component.color_roughness_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
-    geometry_pass_single_component.normal_metal_ao_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
+    geometry_pass_single_component.color_roughness_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, ATTACHMENT_FLAGS);
+    geometry_pass_single_component.normal_metal_ao_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, ATTACHMENT_FLAGS);
     geometry_pass_single_component.depth_texture           = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
 
     const bgfx::TextureHandle attachments[] = {
