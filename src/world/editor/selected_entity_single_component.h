@@ -2,6 +2,8 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <memory>
+
 namespace hg {
 
 class World;
@@ -24,6 +26,11 @@ public:
     int32_t selection_end_y = 0;
 
     bool waiting_for_pick = false;
+
+    // Menu items.
+    std::shared_ptr<bool> select_all_entities;
+    std::shared_ptr<bool> clear_selected_entities;
+    std::shared_ptr<bool> delete_selected_entities;
 };
 
 } // namespace hg

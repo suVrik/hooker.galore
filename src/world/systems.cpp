@@ -1,9 +1,10 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_camera_system.h"
-#include "world/editor/editor_grid_system.h"
+#include "world/editor/grid_system.h"
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/gizmo_system.h"
 #include "world/editor/history_system.h"
+#include "world/editor/menu_system.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/property_editor_system.h"
 #include "world/shared/imgui_fetch_system.h"
@@ -28,7 +29,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(CameraSystem);
     REGISTER_SYSTEM(DebugDrawPassSystem);
     REGISTER_SYSTEM(EditorCameraSystem);
-    REGISTER_SYSTEM(EditorGridSystem);
+    REGISTER_SYSTEM(GridSystem);
     REGISTER_SYSTEM(EntitySelectionSystem);
     REGISTER_SYSTEM(GeometryPassSystem);
     REGISTER_SYSTEM(GizmoSystem);
@@ -36,6 +37,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(ImguiFetchSystem);
     REGISTER_SYSTEM(ImguiPassSystem);
     REGISTER_SYSTEM(LightingPassSystem);
+    REGISTER_SYSTEM(MenuSystem);
     REGISTER_SYSTEM(OutlinePassSystem);
     REGISTER_SYSTEM(PickingPassSystem);
     REGISTER_SYSTEM(PresetSystem);
