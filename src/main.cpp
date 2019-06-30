@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
                 "ResourceSystem",
                 "GeometryPassSystem",
                 "LightingPassSystem",
+                "SkyboxPassSystem",
                 "OutlinePassSystem",
                 "DebugDrawPassSystem",
                 "GridSystem",

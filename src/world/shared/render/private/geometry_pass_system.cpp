@@ -86,7 +86,7 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     geometry_pass_single_component.parallax_uniform          = bgfx::createUniform("s_parallax",          bgfx::UniformType::Sampler);
     geometry_pass_single_component.parallax_settings_uniform = bgfx::createUniform("u_parallax_settings", bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(GEOMETRY_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.f, 0);
+    bgfx::setViewClear(GEOMETRY_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0x000000FF, 1.f, 0);
     bgfx::setViewName(GEOMETRY_PASS, "geometry_pass");
 }
 
@@ -230,7 +230,10 @@ void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_Z | BGFX_STATE_WRITE_A | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
+            bgfx::setStencil(BGFX_STENCIL_TEST_ALWAYS | BGFX_STENCIL_FUNC_REF(1) | BGFX_STENCIL_FUNC_RMASK(0xFF) |
+                             BGFX_STENCIL_OP_FAIL_S_REPLACE | BGFX_STENCIL_OP_FAIL_Z_REPLACE | BGFX_STENCIL_OP_PASS_Z_REPLACE,
+                             BGFX_STENCIL_NONE);
+            bgfx::setState(BGFX_STATE_WRITE_MASK | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
 
             assert(bgfx::isValid(context.program));
             

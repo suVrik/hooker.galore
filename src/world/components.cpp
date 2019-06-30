@@ -26,6 +26,7 @@
 #include "world/shared/render/quad_single_component.h"
 #include "world/shared/render/render_single_component.h"
 #include "world/shared/render/skybox_single_component.h"
+#include "world/shared/render/skybox_pass_single_component.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
@@ -56,6 +57,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(RunningWorldSingleComponent);
     REGISTER_COMPONENT(SelectedEntitySingleComponent);
     REGISTER_COMPONENT(SkyboxSingleComponent);
+    REGISTER_COMPONENT(SkyboxPassSingleComponent);
     REGISTER_COMPONENT(TextureSingleComponent);
     REGISTER_COMPONENT(WindowSingleComponent);
 

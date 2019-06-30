@@ -18,6 +18,7 @@
 #include "world/shared/render/quad_system.h"
 #include "world/shared/render/render_fetch_system.h"
 #include "world/shared/render/render_system.h"
+#include "world/shared/render/skybox_pass_system.h"
 #include "world/shared/resource_system.h"
 #include "world/shared/window_system.h"
 
@@ -46,6 +47,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(RenderFetchSystem);
     REGISTER_SYSTEM(RenderSystem);
     REGISTER_SYSTEM(ResourceSystem);
+    REGISTER_SYSTEM(SkyboxPassSystem);
     REGISTER_SYSTEM(WindowSystem);
 }
 

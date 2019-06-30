@@ -13,8 +13,6 @@ vec2 sample_spherical_map(vec3 v) {
 
 void main() {
     vec2 uv = sample_spherical_map(normalize(v_position));
-    #if !(BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL)
     uv = vec2(1.0 - uv.x, uv.y);
-    #endif
     gl_FragColor = vec4(texture2D(s_texture, uv).xyz, 1.0);
 }

@@ -170,12 +170,12 @@ static const bgfx::VertexDecl SKYBOX_VERTEX_DECLARATION = [] {
 static glm::mat4 SKYBOX_PROJECTION = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 
 static glm::mat4 SKYBOX_VIEWS[] = {
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3(-1.f,  0.f,  0.f), glm::vec3(0.f, 1.f,  0.f)),
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 1.f,  0.f,  0.f), glm::vec3(0.f, 1.f,  0.f)),
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  1.f,  0.f), glm::vec3(0.f, 0.f, -1.f)),
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f,  0.f), glm::vec3(0.f, 0.f,  1.f)),
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f,  1.f), glm::vec3(0.f, 1.f,  0.f)),
-        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f, -1.f), glm::vec3(0.f, 1.f,  0.f))
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 1.f,  0.f,  0.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3(-1.f,  0.f,  0.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f,  0.f), glm::vec3(0.f,  0.f, -1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  1.f,  0.f), glm::vec3(0.f,  0.f,  1.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f,  1.f), glm::vec3(0.f, -1.f,  0.f)),
+        glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3( 0.f,  0.f, -1.f), glm::vec3(0.f, -1.f,  0.f))
 };
 
 static glm::mat4 SKYBOX_VIEWS_GLSL[] = {

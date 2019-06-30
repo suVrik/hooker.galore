@@ -74,4 +74,43 @@ vec3 importance_sample_ggx(vec2 xi, vec3 n, float roughness) {
 	return normalize(sample_vec);
 }
 
+float to_clip_space_depth(float depth) {
+#if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
+    // DirectX & Metal range for Z is [0, 1].
+    return depth;
+#else
+    // OpenGL range for Z is [-1, 1].
+    return depth * 2.0 - 1.0;
+#endif
+}
+
+vec3 to_clip_space_position(vec3 position) {
+#if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
+    // DirectX & Metal coordinate system starts at upper-left corner.
+    return vec3(position.x, -position.y, position.z);
+#else
+    // OpenGL coordinate system starts at lower-left corner.
+    return position;
+#endif
+}
+
+vec3 to_world_space_position(vec3 position) {
+    vec4 result = mul(u_invViewProj, vec4(position, 1.0));
+    return result.xyz / result.w;
+}
+
+vec2 to_uv(float u, float v) {
+#if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
+    // DirectX & Metal coordinate system starts at upper-left corner.
+    return vec2(u, v);
+#else
+    // OpenGL coordinate system starts at lower-left corner.
+    return vec2(u, 1.0 - v);
+#endif
+}
+
+vec2 to_uv(vec2 uv) {
+    return to_uv(uv.x, uv.y);
+}
+
 #endif // SHADER_UTILS_H_HEADER_GUARD
