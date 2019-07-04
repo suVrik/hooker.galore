@@ -104,8 +104,6 @@ DebugDrawPassSystem::~DebugDrawPassSystem() {
 }
 
 void DebugDrawPassSystem::update(float /*elapsed_time*/) {
-    assert(world.after("LightingPassSystem") && world.after("QuadSystem") && world.before("RenderSystem"));
-
     auto& debug_draw_single_component = world.ctx<DebugDrawPassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();

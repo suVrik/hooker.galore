@@ -113,8 +113,6 @@ GeometryPassSystem::~GeometryPassSystem() {
 }
 
 void GeometryPassSystem::update(float /*elapsed_time*/) {
-    assert(world.after("WindowSystem") && world.after("RenderFetchSystem") && world.before("RenderSystem"));
-
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();

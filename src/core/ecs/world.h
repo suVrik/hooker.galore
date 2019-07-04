@@ -2,12 +2,11 @@
 
 #include "core/ecs/system.h"
 
+#include <entt/entity/registry.hpp>
+#include <entt/meta/factory.hpp>
 #include <functional>
 #include <string>
 #include <vector>
-
-#include <entt/entity/registry.hpp>
-#include <entt/meta/factory.hpp>
 
 namespace hg {
 
@@ -89,10 +88,6 @@ public:
     bool update_normal(float elapsed_time) noexcept;
     void update_fixed(float elapsed_time) noexcept;
 
-    /** Check whether system is running before or after another system. */
-    bool before(const std::string& system_name) const noexcept;
-    bool after(const std::string& system_name) const noexcept;
-
 private:
     struct ComponentDescriptor final {
         entt::meta_any(*construct)();
@@ -115,7 +110,6 @@ private:
 
     std::unordered_map<std::string, SystemDescriptor> m_systems[2];
     std::vector<std::string> m_system_order[2];
-    std::string m_current_system;
 };
 
 /** Presence of this single component in world entity means the world may keep running. */

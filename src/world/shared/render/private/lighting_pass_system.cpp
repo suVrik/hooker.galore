@@ -88,8 +88,6 @@ LightingPassSystem::~LightingPassSystem() {
 }
 
 void LightingPassSystem::update(float /*elapsed_time*/) {
-    assert(world.after("WindowSystem") && world.after("RenderFetchSystem") && world.after("GeometryPassSystem") && world.after("QuadSystem") && world.before("RenderSystem"));
-
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();

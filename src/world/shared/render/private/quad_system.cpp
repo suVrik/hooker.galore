@@ -70,7 +70,6 @@ QuadSystem::~QuadSystem() {
 }
 
 void QuadSystem::update(float /*elapsed_time*/) {
-    assert(world.after("RenderFetchSystem"));
 }
 
 } // namespace hg

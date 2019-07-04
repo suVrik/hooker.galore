@@ -47,8 +47,6 @@ RenderFetchSystem::~RenderFetchSystem() {
 }
 
 void RenderFetchSystem::update(float /*elapsed_time*/) {
-    assert(world.after("WindowSystem"));
-
     auto& window_single_component = world.ctx<WindowSingleComponent>();
     if (window_single_component.resized) {
         bgfx::reset(window_single_component.width, window_single_component.height, BGFX_RESET_VSYNC);
