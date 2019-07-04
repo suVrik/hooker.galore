@@ -62,7 +62,7 @@ void main() {
     vec3 kd = (1.0 - ks) * (1.0 - metal);
     vec3 irradiance = textureCube(s_skybox_irradiance, normal).xyz;
     vec3 diffuse = irradiance * color;
-    vec3 prefiltered_color = textureCubeLod(s_skybox_prefilter, reflect_dir, roughness * u_mip_prefilter_max.x).xyz;
+    vec3 prefiltered_color = textureCubeLod(s_skybox_prefilter, reflect_dir, round(roughness * u_mip_prefilter_max.x + 0.01)).xyz;
     vec2 brdf = texture2D(s_skybox_lut, to_uv(max(dot(normal, camera_dir), 0.0), roughness)).xy;
     vec3 specular = prefiltered_color * (ks * brdf.x + brdf.y);
     vec3 ambient = (kd * diffuse + specular) * ao;
