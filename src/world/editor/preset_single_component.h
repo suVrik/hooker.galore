@@ -1,8 +1,8 @@
 #pragma once
 
 #include <entt/meta/factory.hpp>
-#include <string>
 #include <map>
+#include <string>
 
 namespace hg {
 

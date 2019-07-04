@@ -1,6 +1,6 @@
 #include "core/ecs/world.h"
-#include "world/shared/window_single_component.h"
 #include "world/shared/level_single_component.h"
+#include "world/shared/window_single_component.h"
 
 #include <chrono>
 #include <clara.hpp>

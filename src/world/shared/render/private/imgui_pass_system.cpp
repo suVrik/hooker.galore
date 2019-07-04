@@ -68,8 +68,6 @@ ImguiPassSystem::~ImguiPassSystem() {
 }
 
 void ImguiPassSystem::update(float /*elapsed_time*/) {
-    assert(world.after("WindowSystem") && world.after("ImguiFetchSystem") && world.before("RenderSystem"));
-
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 

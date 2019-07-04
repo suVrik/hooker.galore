@@ -10,7 +10,7 @@
 
 namespace hg {
 
-class GeometryPassSingleComponent;
+struct GeometryPassSingleComponent;
 
 /** `GeometryPassSystem` performs geometry pass for all objects.
     The result is stored in `GeometryPassSingleComponent`. */

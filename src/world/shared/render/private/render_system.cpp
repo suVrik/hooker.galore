@@ -12,7 +12,6 @@ RenderSystem::RenderSystem(World& world) noexcept
 }
 
 void RenderSystem::update(float /*elapsed_time*/) {
-    assert(world.after("RenderFetchSystem"));
     world.ctx<RenderSingleComponent>().current_frame = bgfx::frame();
 }
 

@@ -83,8 +83,6 @@ ImguiFetchSystem::~ImguiFetchSystem() {
 }
 
 void ImguiFetchSystem::update(float elapsed_time) {
-    assert(world.after("WindowSystem"));
-
     ImGuiIO& io = ImGui::GetIO();
 
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
