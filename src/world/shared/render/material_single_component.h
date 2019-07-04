@@ -14,9 +14,9 @@ class MaterialSingleComponent final {
 public:
     MaterialSingleComponent();
     MaterialSingleComponent(const MaterialSingleComponent& another) = delete;
-    MaterialSingleComponent(MaterialSingleComponent&& another) noexcept;
+    MaterialSingleComponent(MaterialSingleComponent&& another);
     MaterialSingleComponent& operator=(const MaterialSingleComponent& another) = delete;
-    MaterialSingleComponent& operator=(MaterialSingleComponent&& another) noexcept;
+    MaterialSingleComponent& operator=(MaterialSingleComponent&& another);
     ~MaterialSingleComponent();
 
     /** Return material with the specified name or nullptr if such material doesn't exists. */

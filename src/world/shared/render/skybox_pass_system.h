@@ -4,7 +4,7 @@
 
 namespace hg {
 
-class SkyboxPassSingleComponent;
+struct SkyboxPassSingleComponent;
 
 /** `SkyboxPassSystem` merges the skybox with the result of lighting pass. */
 class SkyboxPassSystem final : public NormalSystem {

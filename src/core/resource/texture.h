@@ -4,8 +4,8 @@
 
 namespace hg {
 
-/** `Texture` is an image with certain number of channels and size power of two. All `Texture` instances must be
-    destroyed before `RenderFetchSystem` destructor. */
+/** `Texture` is an image with certain number of channels and size power of two.
+    All `Texture` instances must be destroyed before `RenderFetchSystem` destructor. */
 class Texture final {
 public:
     Texture() = default;
@@ -16,9 +16,9 @@ public:
     Texture& operator=(Texture&& another) noexcept;
 
     bgfx::TextureHandle handle = BGFX_INVALID_HANDLE;
-    uint16_t width    = 0;
-    uint16_t height   = 0;
-    uint16_t channels = 0;
+    uint16_t width   = 0;
+    uint16_t height  = 0;
+    bool is_cube_map = false;
 };
 
 } // namespace hg

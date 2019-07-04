@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/render/ImGuizmo.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/entity_selection_system.h"
 #include "world/editor/guid_single_component.h"
@@ -16,6 +15,7 @@
 #include <fmt/format.h>
 #include <glm/common.hpp>
 #include <imgui.h>
+#include <ImGuizmo.h>
 #include <set>
 
 namespace hg {

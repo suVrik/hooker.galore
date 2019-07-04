@@ -1,2 +1,2 @@
-color_roughness: sphere/sphere_2_3_color_roughness.png
-normal_metal_ao: sphere/sphere_2_3_normal_metal_ao.png
+color_roughness: sphere/sphere_2_3_bcr.dds
+normal_metal_ao: sphere/sphere_2_3_nmao.dds

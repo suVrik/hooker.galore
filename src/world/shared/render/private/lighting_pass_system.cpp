@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/render/debug_draw.h"
 #include "core/render/render_pass.h"
 #include "shaders/lighting_pass/lighting_pass.fragment.h"
 #include "shaders/lighting_pass/lighting_pass.vertex.h"
@@ -9,12 +8,13 @@
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/skybox_single_component.h"
+#include "world/shared/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
+#include <debug_draw.hpp>
 #include <entt/entity/registry.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -37,7 +37,6 @@ LightingPassSystem::LightingPassSystem(World& world)
     using namespace lighting_pass_system_details;
 
     auto& lighting_pass_single_component = world.set<LightingPassSingleComponent>();
-    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
@@ -64,7 +63,6 @@ LightingPassSystem::LightingPassSystem(World& world)
 
 LightingPassSystem::~LightingPassSystem() {
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();
-    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
 
     auto destroy_valid = [](auto handle) {
         if (bgfx::isValid(handle)) {
@@ -96,11 +94,21 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
-    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
+    auto& texture_single_component = world.ctx<TextureSingleComponent>();
 
     if (window_single_component.resized) {
         reset(lighting_pass_single_component, window_single_component.width, window_single_component.height);
+    }
+
+    // TODO: Get actual skybox from level file or something.
+    const Texture& irradiance_texture = texture_single_component.get("house_irradiance.dds");
+    const Texture& prefilter_texture = texture_single_component.get("house_prefilter.dds");
+    const Texture& brdf_lut_texture = texture_single_component.get("brdf_lut.dds");
+
+    if (!irradiance_texture.is_cube_map || !prefilter_texture.is_cube_map) {
+        // Skybox textures are missing.
+        return;
     }
 
     bgfx::setViewTransform(LIGHTING_OFFSCREEN_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
@@ -111,11 +119,12 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::setTexture(0, lighting_pass_single_component.color_roughness_uniform, geometry_pass_single_component.color_roughness_texture);
     bgfx::setTexture(1, lighting_pass_single_component.normal_metal_ao_uniform, geometry_pass_single_component.normal_metal_ao_texture);
     bgfx::setTexture(2, lighting_pass_single_component.depth_uniform,           geometry_pass_single_component.depth_texture);
-    bgfx::setTexture(3, lighting_pass_single_component.skybox_texture_irradiance_uniform, skybox_single_component.texture_irradiance);
-    bgfx::setTexture(4, lighting_pass_single_component.skybox_texture_prefilter_uniform,  skybox_single_component.texture_prefilter);
-    bgfx::setTexture(5, lighting_pass_single_component.skybox_texture_lut_uniform,        skybox_single_component.texture_lut);
+    bgfx::setTexture(3, lighting_pass_single_component.skybox_texture_irradiance_uniform, irradiance_texture.handle);
+    bgfx::setTexture(4, lighting_pass_single_component.skybox_texture_prefilter_uniform,  prefilter_texture.handle);
+    bgfx::setTexture(5, lighting_pass_single_component.skybox_texture_lut_uniform,        brdf_lut_texture.handle, BGFX_SAMPLER_UVW_CLAMP);
 
-    bgfx::setUniform(lighting_pass_single_component.skybox_mip_prefilter_max_uniform, &skybox_single_component.mip_prefilter_max);
+    const glm::vec4 mip_prefilter_max(4.f, 0.f, 0.f, 0.f);
+    bgfx::setUniform(lighting_pass_single_component.skybox_mip_prefilter_max_uniform, &mip_prefilter_max);
 
     world.view<LightComponent, TransformComponent>().each([&](entt::entity, LightComponent& light_component, TransformComponent& transform_component) {
         const glm::vec4 light_position(transform_component.translation, 0.f);

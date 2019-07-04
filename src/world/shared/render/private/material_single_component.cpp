@@ -6,8 +6,8 @@
 namespace hg {
 
 MaterialSingleComponent::MaterialSingleComponent() = default;
-MaterialSingleComponent::MaterialSingleComponent(MaterialSingleComponent&& another) noexcept = default;
-MaterialSingleComponent& MaterialSingleComponent::operator=(MaterialSingleComponent&& another) noexcept = default;
+MaterialSingleComponent::MaterialSingleComponent(MaterialSingleComponent&& another) = default;
+MaterialSingleComponent& MaterialSingleComponent::operator=(MaterialSingleComponent&& another) = default;
 MaterialSingleComponent::~MaterialSingleComponent() = default;
 
 const Material* MaterialSingleComponent::get(const std::string& name) const noexcept {

@@ -10,7 +10,7 @@
 
 namespace hg {
 
-class OutlinePassSingleComponent;
+struct OutlinePassSingleComponent;
 
 /** `OutlinePassSystem` performs outline pass for all objects with `OutlineComponent` and presents it on the screen. */
 class OutlinePassSystem final : public NormalSystem {

@@ -44,8 +44,7 @@ private:
     std::string get_resource_directory() const;
 
     void load_textures() const;
-    void load_texture(Texture& texture, const std::string &path) const;
-    void load_skybox() const;
+    Texture load_texture(const std::string &path) const noexcept;
 
     void load_materials() const;
     void load_material(const TextureSingleComponent& texture_single_component, Material& result, const std::string &path) const;

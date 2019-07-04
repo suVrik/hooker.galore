@@ -14,9 +14,9 @@ class ModelSingleComponent final {
 public:
     ModelSingleComponent();
     ModelSingleComponent(const ModelSingleComponent& another) = delete;
-    ModelSingleComponent(ModelSingleComponent&& another) noexcept;
+    ModelSingleComponent(ModelSingleComponent&& another);
     ModelSingleComponent& operator=(const ModelSingleComponent& another) = delete;
-    ModelSingleComponent& operator=(ModelSingleComponent&& another) noexcept;
+    ModelSingleComponent& operator=(ModelSingleComponent&& another);
     ~ModelSingleComponent();
 
     /** Return model with the specified name or nullptr if such model doesn't exists. */

@@ -57,7 +57,7 @@ void main() {
 
     vec3 normal;
     normal.xy = 1.0 - normal_metal_ao.xy * 2.0;
-    normal.z = sqrt(1.0 - dot(normal.xy, normal.xy));
+    normal.z = sqrt(max(0.0, 1.0 - dot(normal.xy, normal.xy)));
     normal = normalize(mul(from_tangent_space_matrix, normal));
 
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);

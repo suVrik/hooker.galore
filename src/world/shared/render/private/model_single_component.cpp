@@ -6,8 +6,8 @@
 namespace hg {
 
 ModelSingleComponent::ModelSingleComponent() = default;
-ModelSingleComponent::ModelSingleComponent(ModelSingleComponent&& another) noexcept = default;
-ModelSingleComponent& ModelSingleComponent::operator=(ModelSingleComponent&& another) noexcept = default;
+ModelSingleComponent::ModelSingleComponent(ModelSingleComponent&& another) = default;
+ModelSingleComponent& ModelSingleComponent::operator=(ModelSingleComponent&& another) = default;
 ModelSingleComponent::~ModelSingleComponent() = default;
 
 

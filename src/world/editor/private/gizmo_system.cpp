@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/render/ImGuizmo.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/gizmo_single_component.h"
 #include "world/editor/gizmo_system.h"
@@ -14,9 +13,10 @@
 #include "world/shared/render/outline_component.h"
 #include "world/shared/transform_component.h"
 
-#include <imgui.h>
-#include <glm/gtc/type_ptr.hpp>
 #include <fmt/format.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace hg {
 

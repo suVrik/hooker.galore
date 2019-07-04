@@ -1,8 +1,9 @@
 #include "core/ecs/world.h"
-#include "core/render/debug_draw.h"
 #include "world/editor/grid_single_component.h"
 #include "world/editor/grid_system.h"
 #include "world/editor/menu_single_component.h"
+
+#include <debug_draw.hpp>
 
 namespace hg {
 

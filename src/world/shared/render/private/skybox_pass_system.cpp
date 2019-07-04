@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/render/debug_draw.h"
 #include "core/render/render_pass.h"
 #include "shaders/skybox_pass/skybox_pass.fragment.h"
 #include "shaders/skybox_pass/skybox_pass.vertex.h"
@@ -7,9 +6,9 @@
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/light_component.h"
 #include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/skybox_pass_system.h"
 #include "world/shared/render/skybox_pass_single_component.h"
-#include "world/shared/render/skybox_single_component.h"
+#include "world/shared/render/skybox_pass_system.h"
+#include "world/shared/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
@@ -85,11 +84,17 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
     auto& skybox_pass_single_component = world.ctx<SkyboxPassSingleComponent>();
-    auto& skybox_single_component = world.ctx<SkyboxSingleComponent>();
+    auto& texture_single_component = world.ctx<TextureSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (window_single_component.resized) {
         reset(skybox_pass_single_component, window_single_component.width, window_single_component.height);
+    }
+
+    const Texture& skybox_texture = texture_single_component.get("house.dds");
+    if (!skybox_texture.is_cube_map) {
+        // Skybox texture are missing.
+        return;
     }
 
     bgfx::setViewTransform(SKYBOX_OFFSCREEN_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
@@ -98,7 +103,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
     bgfx::setTexture(0, skybox_pass_single_component.depth_uniform,          geometry_pass_single_component.depth_texture);
-    bgfx::setTexture(1, skybox_pass_single_component.skybox_texture_uniform, skybox_single_component.texture);
+    bgfx::setTexture(1, skybox_pass_single_component.skybox_texture_uniform, skybox_texture.handle);
 
     const glm::mat4 rotation = glm::mat4_cast(camera_single_component.rotation);
     bgfx::setUniform(skybox_pass_single_component.rotation_uniform, &rotation);

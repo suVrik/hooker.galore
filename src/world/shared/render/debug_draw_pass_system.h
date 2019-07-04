@@ -1,11 +1,12 @@
 #pragma once
 
 #include "core/ecs/system.h"
-#include "core/render/debug_draw.h"
+
+#include <debug_draw.hpp>
 
 namespace hg {
 
-class DebugDrawPassSingleComponent;
+struct DebugDrawPassSingleComponent;
 
 /** `DebugDrawSystem` performs debug draw. Debug draw API is available via dd:: namespace. */
 class DebugDrawPassSystem final : public NormalSystem, public dd::RenderInterface {
