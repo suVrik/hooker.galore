@@ -42,19 +42,15 @@ function(build_shaders TYPE GLOB_PATTERN INCLUDE_DIRECTORY)
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux --profile 150 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -p spirv -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_spv
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform windows -p ${t}s_3_0 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_dx9
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform windows -p ${t}s_4_0 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_dx11
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform osx -p metal -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_mtl
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
@@ -70,11 +66,9 @@ function(build_shaders TYPE GLOB_PATTERN INCLUDE_DIRECTORY)
                     COMMAND echo \"\" >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux --profile 150 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
                     COMMAND cat \"${output_temp}\" >> \"${output}\"
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo \"\" >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -p spirv -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_spv
                     COMMAND cat \"${output_temp}\" >> \"${output}\"
-                    COMMAND ${CMAKE_COMMAND} -E remove -f "\"${output_temp}\""
                     COMMAND echo \"\" >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform osx -p metal -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_mtl
                     COMMAND cat \"${output_temp}\" >> \"${output}\"
