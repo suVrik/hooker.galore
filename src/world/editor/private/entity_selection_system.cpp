@@ -46,7 +46,6 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         return a.name < b.name;
     });
 
-    ImGui::SetNextWindowDockID(ImGui::GetID("Main"), ImGuiCond_FirstUseEver);
     if (ImGui::Begin("Level")) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));

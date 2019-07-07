@@ -5,6 +5,7 @@
 #include "world/shared/window_single_component.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <ImGuizmo.h>
 #include <SDL2/SDL_clipboard.h>
 #include <SDL2/SDL_mouse.h>
@@ -155,11 +156,31 @@ void ImguiFetchSystem::update(float elapsed_time) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
     const ImGuiWindowFlags flags = ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoDocking |
-                                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar |
                                    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Main", nullptr, flags);
     ImGui::PopStyleVar(3);
-    ImGui::DockSpace(ImGui::GetID("Main"), ImVec2(0.f, 0.f), ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
+
+    const ImGuiID dock_space_id = ImGui::GetID("Main");
+    if (ImGui::DockBuilderGetNode(dock_space_id) == nullptr) {
+        ImGui::DockBuilderRemoveNode(dock_space_id);
+        ImGui::DockBuilderAddNode(dock_space_id, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(dock_space_id, viewport->Size);
+
+        ImGuiID dock_main_id = dock_space_id;
+
+        ImGuiID dock_id_right_top = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.3f, nullptr, &dock_main_id);
+        ImGuiID dock_id_right_middle = ImGui::DockBuilderSplitNode(dock_id_right_top, ImGuiDir_Down, 0.8f, nullptr, &dock_id_right_top);
+        ImGuiID dock_id_right_bottom = ImGui::DockBuilderSplitNode(dock_id_right_middle, ImGuiDir_Down, 0.5f, nullptr, &dock_id_right_middle);
+
+        ImGui::DockBuilderDockWindow("Tool", dock_id_right_top);
+        ImGui::DockBuilderDockWindow("Presets", dock_id_right_middle);
+        ImGui::DockBuilderDockWindow("Property Editor", dock_id_right_bottom);
+
+        ImGui::DockBuilderFinish(dock_space_id);
+    }
+
+    ImGui::DockSpace(dock_space_id, ImVec2(0.f, 0.f), ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode);
     ImGui::End();
 }
 
