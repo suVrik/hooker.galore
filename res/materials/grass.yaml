@@ -1,5 +1,0 @@
-color_roughness: grass_bcr.dds
-normal_metal_ao: grass_nmao.dds
-parallax: grass_h.dds
-parallax_scale: 0.05
-parallax_steps: 25

@@ -12,14 +12,15 @@ namespace hg {
 
 class System;
 
-/** World is an extension over rtt::registry that allows to work with components without knowing their compile time
+/** `World` is an extension over `rtt::registry` that allows to work with components without knowing their compile time
     type and allows to manage and run ECS systems. */
 class World final : public entt::registry {
 public:
     World();
     ~World();
 
-    /** Register component type `T` so methods expecting `entt::meta_type` can be applied to components of this type. */
+    /** Register component type `T` so methods expecting `entt::meta_type` and `entt::meta_handle` can be applied to
+        components of this type. */
     template <typename T>
     void register_component() noexcept;
 
@@ -32,35 +33,28 @@ public:
     /** Return name of specified component. */
     const char* get_component_name(entt::meta_type component) const noexcept;
 
-    /** Perform `entt::registry::assign` on earlier registered component. Default constructor is used.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::assign` on earlier registered component. Default constructor is used. */
     entt::meta_handle assign(entt::entity entity, entt::meta_type component) noexcept;
 
-    /** Perform `entt::registry::assign` on earlier registered component. Copy constructor is used.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::assign` on earlier registered component. Copy constructor is used. */
     entt::meta_handle assign(entt::entity entity, const entt::meta_handle& component) noexcept;
 
-    /** Perform `entt::registry::replace` on earlier registered component. Copy constructor is used.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::replace` on earlier registered component. Copy constructor is used. */
     entt::meta_handle replace(entt::entity entity, const entt::meta_handle& component) noexcept;
 
-    /** Perform `entt::registry::remove` on earlier registered component.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::remove` on earlier registered component. */
     void remove(entt::entity entity, entt::meta_type component_type) noexcept;
 
-    /** Perform `entt::registry::has` on earlier registered component.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::has` on earlier registered component. */
     bool has(entt::entity entity, entt::meta_type component) const noexcept;
 
-    /** Perform `entt::registry::try_get` on earlier registered component.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::try_get` on earlier registered component. */
     entt::meta_handle get(entt::entity entity, entt::meta_type component) const noexcept;
 
-    /** Perform `entt::registry::get_or_assign` on earlier registered component. Default constructor is used.
-        Undefined behavior if `component` is not a registered type. */
+    /** Perform `entt::registry::get_or_assign` on earlier registered component. Default constructor is used. */
     entt::meta_handle get_or_assign(entt::entity entity, entt::meta_type component) noexcept;
 
-    /** Iterate over all components of specified `entity`. */
+    /** Iterate over all registered components of specified `entity`. */
     template <typename T>
     void each(entt::entity entity, T callback) const noexcept;
 

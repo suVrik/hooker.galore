@@ -15,6 +15,9 @@ public:
     /** Return texture with the specified name or default texture if such texture doesn't exist. */
     const Texture& get(const std::string& name) const noexcept;
 
+    /** Return texture with the specified name or nullptr if such texture doesn't exist. */
+    const Texture* get_if(const std::string& name) const noexcept;
+
 private:
     std::unordered_map<std::string, Texture> m_textures;
     Texture m_default_texture;

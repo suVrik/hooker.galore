@@ -16,7 +16,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_0.yaml
+      material: sphere/sphere_0_0
     EditorComponent:
       name: sphere_0_0
       guid: 1
@@ -37,7 +37,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_1.yaml
+      material: sphere/sphere_0_1
     EditorComponent:
       name: sphere_0_1
       guid: 2
@@ -58,7 +58,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_2.yaml
+      material: sphere/sphere_0_2
     EditorComponent:
       name: sphere_0_2
       guid: 3
@@ -79,7 +79,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_3.yaml
+      material: sphere/sphere_0_3
     EditorComponent:
       name: sphere_0_3
       guid: 4
@@ -100,7 +100,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_4.yaml
+      material: sphere/sphere_0_4
     EditorComponent:
       name: sphere_0_4
       guid: 5
@@ -121,7 +121,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_5.yaml
+      material: sphere/sphere_0_5
     EditorComponent:
       name: sphere_0_5
       guid: 6
@@ -142,7 +142,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_6.yaml
+      material: sphere/sphere_0_6
     EditorComponent:
       name: sphere_0_6
       guid: 7
@@ -163,7 +163,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_0_7.yaml
+      material: sphere/sphere_0_7
     EditorComponent:
       name: sphere_0_7
       guid: 8
@@ -184,7 +184,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_0.yaml
+      material: sphere/sphere_1_0
     EditorComponent:
       name: sphere_1_0
       guid: 9
@@ -205,7 +205,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_1.yaml
+      material: sphere/sphere_1_1
     EditorComponent:
       name: sphere_1_1
       guid: 10
@@ -226,7 +226,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_2.yaml
+      material: sphere/sphere_1_2
     EditorComponent:
       name: sphere_1_2
       guid: 11
@@ -247,7 +247,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_3.yaml
+      material: sphere/sphere_1_3
     EditorComponent:
       name: sphere_1_3
       guid: 12
@@ -268,7 +268,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_4.yaml
+      material: sphere/sphere_1_4
     EditorComponent:
       name: sphere_1_4
       guid: 13
@@ -289,7 +289,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_5.yaml
+      material: sphere/sphere_1_5
     EditorComponent:
       name: sphere_1_5
       guid: 14
@@ -310,7 +310,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_6.yaml
+      material: sphere/sphere_1_6
     EditorComponent:
       name: sphere_1_6
       guid: 15
@@ -331,7 +331,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_1_7.yaml
+      material: sphere/sphere_1_7
     EditorComponent:
       name: sphere_1_7
       guid: 16
@@ -352,7 +352,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_0.yaml
+      material: sphere/sphere_2_0
     EditorComponent:
       name: sphere_2_0
       guid: 17
@@ -373,7 +373,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_1.yaml
+      material: sphere/sphere_2_1
     EditorComponent:
       name: sphere_2_1
       guid: 18
@@ -394,7 +394,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_2.yaml
+      material: sphere/sphere_2_2
     EditorComponent:
       name: sphere_2_2
       guid: 19
@@ -415,7 +415,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_3.yaml
+      material: sphere/sphere_2_3
     EditorComponent:
       name: sphere_2_3
       guid: 20
@@ -436,7 +436,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_4.yaml
+      material: sphere/sphere_2_4
     EditorComponent:
       name: sphere_2_4
       guid: 21
@@ -457,7 +457,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_5.yaml
+      material: sphere/sphere_2_5
     EditorComponent:
       name: sphere_2_5
       guid: 22
@@ -478,7 +478,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_6.yaml
+      material: sphere/sphere_2_6
     EditorComponent:
       name: sphere_2_6
       guid: 23
@@ -499,7 +499,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_2_7.yaml
+      material: sphere/sphere_2_7
     EditorComponent:
       name: sphere_2_7
       guid: 24
@@ -520,7 +520,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_0.yaml
+      material: sphere/sphere_3_0
     EditorComponent:
       name: sphere_3_0
       guid: 25
@@ -541,7 +541,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_1.yaml
+      material: sphere/sphere_3_1
     EditorComponent:
       name: sphere_3_1
       guid: 26
@@ -562,7 +562,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_2.yaml
+      material: sphere/sphere_3_2
     EditorComponent:
       name: sphere_3_2
       guid: 27
@@ -583,7 +583,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_3.yaml
+      material: sphere/sphere_3_3
     EditorComponent:
       name: sphere_3_3
       guid: 28
@@ -604,7 +604,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_4.yaml
+      material: sphere/sphere_3_4
     EditorComponent:
       name: sphere_3_4
       guid: 29
@@ -625,7 +625,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_5.yaml
+      material: sphere/sphere_3_5
     EditorComponent:
       name: sphere_3_5
       guid: 30
@@ -646,7 +646,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_6.yaml
+      material: sphere/sphere_3_6
     EditorComponent:
       name: sphere_3_6
       guid: 31
@@ -667,7 +667,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_3_7.yaml
+      material: sphere/sphere_3_7
     EditorComponent:
       name: sphere_3_7
       guid: 32
@@ -688,7 +688,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_0.yaml
+      material: sphere/sphere_4_0
     EditorComponent:
       name: sphere_4_0
       guid: 33
@@ -709,7 +709,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_1.yaml
+      material: sphere/sphere_4_1
     EditorComponent:
       name: sphere_4_1
       guid: 34
@@ -730,7 +730,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_2.yaml
+      material: sphere/sphere_4_2
     EditorComponent:
       name: sphere_4_2
       guid: 35
@@ -751,7 +751,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_3.yaml
+      material: sphere/sphere_4_3
     EditorComponent:
       name: sphere_4_3
       guid: 36
@@ -772,7 +772,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_4.yaml
+      material: sphere/sphere_4_4
     EditorComponent:
       name: sphere_4_4
       guid: 37
@@ -793,7 +793,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_5.yaml
+      material: sphere/sphere_4_5
     EditorComponent:
       name: sphere_4_5
       guid: 38
@@ -814,7 +814,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_6.yaml
+      material: sphere/sphere_4_6
     EditorComponent:
       name: sphere_4_6
       guid: 39
@@ -835,7 +835,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_4_7.yaml
+      material: sphere/sphere_4_7
     EditorComponent:
       name: sphere_4_7
       guid: 40
@@ -856,7 +856,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_0.yaml
+      material: sphere/sphere_5_0
     EditorComponent:
       name: sphere_5_0
       guid: 41
@@ -877,7 +877,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_1.yaml
+      material: sphere/sphere_5_1
     EditorComponent:
       name: sphere_5_1
       guid: 42
@@ -898,7 +898,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_2.yaml
+      material: sphere/sphere_5_2
     EditorComponent:
       name: sphere_5_2
       guid: 43
@@ -919,7 +919,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_3.yaml
+      material: sphere/sphere_5_3
     EditorComponent:
       name: sphere_5_3
       guid: 44
@@ -940,7 +940,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_4.yaml
+      material: sphere/sphere_5_4
     EditorComponent:
       name: sphere_5_4
       guid: 45
@@ -961,7 +961,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_5.yaml
+      material: sphere/sphere_5_5
     EditorComponent:
       name: sphere_5_5
       guid: 46
@@ -982,7 +982,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_6.yaml
+      material: sphere/sphere_5_6
     EditorComponent:
       name: sphere_5_6
       guid: 47
@@ -1003,7 +1003,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_5_7.yaml
+      material: sphere/sphere_5_7
     EditorComponent:
       name: sphere_5_7
       guid: 48
@@ -1024,7 +1024,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_0.yaml
+      material: sphere/sphere_6_0
     EditorComponent:
       name: sphere_6_0
       guid: 49
@@ -1045,7 +1045,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_1.yaml
+      material: sphere/sphere_6_1
     EditorComponent:
       name: sphere_6_1
       guid: 50
@@ -1066,7 +1066,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_2.yaml
+      material: sphere/sphere_6_2
     EditorComponent:
       name: sphere_6_2
       guid: 51
@@ -1087,7 +1087,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_3.yaml
+      material: sphere/sphere_6_3
     EditorComponent:
       name: sphere_6_3
       guid: 52
@@ -1108,7 +1108,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_4.yaml
+      material: sphere/sphere_6_4
     EditorComponent:
       name: sphere_6_4
       guid: 53
@@ -1129,7 +1129,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_5.yaml
+      material: sphere/sphere_6_5
     EditorComponent:
       name: sphere_6_5
       guid: 54
@@ -1150,7 +1150,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_6.yaml
+      material: sphere/sphere_6_6
     EditorComponent:
       name: sphere_6_6
       guid: 55
@@ -1171,7 +1171,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_6_7.yaml
+      material: sphere/sphere_6_7
     EditorComponent:
       name: sphere_6_7
       guid: 56
@@ -1192,7 +1192,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_0.yaml
+      material: sphere/sphere_7_0
     EditorComponent:
       name: sphere_7_0
       guid: 57
@@ -1213,7 +1213,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_1.yaml
+      material: sphere/sphere_7_1
     EditorComponent:
       name: sphere_7_1
       guid: 58
@@ -1234,7 +1234,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_2.yaml
+      material: sphere/sphere_7_2
     EditorComponent:
       name: sphere_7_2
       guid: 59
@@ -1255,7 +1255,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_3.yaml
+      material: sphere/sphere_7_3
     EditorComponent:
       name: sphere_7_3
       guid: 60
@@ -1276,7 +1276,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_4.yaml
+      material: sphere/sphere_7_4
     EditorComponent:
       name: sphere_7_4
       guid: 61
@@ -1297,7 +1297,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_5.yaml
+      material: sphere/sphere_7_5
     EditorComponent:
       name: sphere_7_5
       guid: 62
@@ -1318,7 +1318,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_6.yaml
+      material: sphere/sphere_7_6
     EditorComponent:
       name: sphere_7_6
       guid: 63
@@ -1339,7 +1339,7 @@ entities:
     ModelComponent:
       path: sphere.glb
     MaterialComponent:
-      path: sphere/sphere_7_7.yaml
+      material: sphere/sphere_7_7
     EditorComponent:
       name: sphere_7_7
       guid: 64
@@ -1360,7 +1360,7 @@ entities:
     ModelComponent:
       path: blockout.glb
     MaterialComponent:
-      path: grass.yaml
+      material: grass
     EditorComponent:
       name: grass-cube
       guid: 65
@@ -1381,7 +1381,7 @@ entities:
     ModelComponent:
       path: blockout.glb
     MaterialComponent:
-      path: parallax.yaml
+      material: parallax
     EditorComponent:
       name: parallax-cube
       guid: 66
@@ -1402,7 +1402,7 @@ entities:
     ModelComponent:
       path: duck.glb
     MaterialComponent:
-      path: sphere/sphere_0_0.yaml
+      material: sphere/sphere_0_0
     EditorComponent:
       name: duck
       guid: 67
@@ -1423,7 +1423,7 @@ entities:
     ModelComponent:
       path: flight_helmet.glb
     MaterialComponent:
-      path: flight_helmet.yaml
+      material: flight_helmet
     EditorComponent:
       name: flight_helmet
       guid: 68
@@ -1444,7 +1444,7 @@ entities:
     ModelComponent:
       path: flight_helmet_1.glb
     MaterialComponent:
-      path: flight_helmet_1.yaml
+      material: flight_helmet_1
     EditorComponent:
       name: flight_helmet_1
       guid: 69
@@ -1465,7 +1465,7 @@ entities:
     ModelComponent:
       path: flight_helmet_2.glb
     MaterialComponent:
-      path: flight_helmet_2.yaml
+      material: flight_helmet_2
     EditorComponent:
       name: flight_helmet_2
       guid: 70
@@ -1486,7 +1486,7 @@ entities:
     ModelComponent:
       path: flight_helmet_3.glb
     MaterialComponent:
-      path: flight_helmet_3.yaml
+      material: flight_helmet_3
     EditorComponent:
       name: flight_helmet_3
       guid: 71
@@ -1507,7 +1507,7 @@ entities:
     ModelComponent:
       path: flight_helmet_4.glb
     MaterialComponent:
-      path: flight_helmet_4.yaml
+      material: flight_helmet_4
     EditorComponent:
       name: flight_helmet_4
       guid: 72

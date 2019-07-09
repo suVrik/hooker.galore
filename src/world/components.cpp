@@ -17,7 +17,6 @@
 #include "world/shared/render/light_component.h"
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/material_component.h"
-#include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
 #include "world/shared/render/outline_component.h"
@@ -44,7 +43,6 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(ImguiSingleComponent);
     REGISTER_COMPONENT(LevelSingleComponent);
     REGISTER_COMPONENT(LightingPassSingleComponent);
-    REGISTER_COMPONENT(MaterialSingleComponent);
     REGISTER_COMPONENT(ModelSingleComponent);
     REGISTER_COMPONENT(NameSingleComponent);
     REGISTER_COMPONENT(NormalInputSingleComponent);

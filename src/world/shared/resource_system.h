@@ -46,9 +46,6 @@ private:
     void load_textures() const;
     Texture load_texture(const std::string &path) const noexcept;
 
-    void load_materials() const;
-    void load_material(const TextureSingleComponent& texture_single_component, Material& result, const std::string &path) const;
-
     void load_models() const;
     void load_model(Model& result, const std::string &path) const;
     void load_model_node(Model::Node& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const;

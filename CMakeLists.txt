@@ -137,12 +137,10 @@ deploy_resources("level" "${CMAKE_SOURCE_DIR}/res/levels/" "*.yaml" "${output_re
 deploy_resources("model" "${CMAKE_SOURCE_DIR}/res/models/" "*.glb" "${output_resources_directory}/models/")
 deploy_resources("preset" "${CMAKE_SOURCE_DIR}/res/presets/" "*.yaml" "${output_resources_directory}/presets/")
 deploy_resources("texture" "${CMAKE_SOURCE_DIR}/res/textures/" "*.dds" "${output_resources_directory}/textures/")
-deploy_resources("material" "${CMAKE_SOURCE_DIR}/res/materials/" "*.yaml" "${output_resources_directory}/materials/")
 add_dependencies(hooker_galore
         deploy_levels
         deploy_models
         deploy_presets
-        deploy_materials
 )
 
 # Deploy shared libraries.

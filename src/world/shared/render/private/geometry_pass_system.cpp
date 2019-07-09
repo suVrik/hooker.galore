@@ -1,6 +1,5 @@
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
-#include "core/resource/material.h"
 #include "core/resource/texture.h"
 #include "shaders/geometry_blockout_pass/geometry_blockout_pass.vertex.h"
 #include "shaders/geometry_no_parallax_pass/geometry_no_parallax_pass.fragment.h"
@@ -132,11 +131,11 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     bgfx::touch(GEOMETRY_PASS);
     
     m_group.each([&](entt::entity entity, ModelComponent& model_component, MaterialComponent& material_component, TransformComponent& transform_component) {
-        if (material_component.material != nullptr && !model_component.model.children.empty()) {
-            context.color_roughness   = material_component.material->color_roughness;
-            context.normal_metal_ao   = material_component.material->normal_metal_ao;
-            context.parallax          = material_component.material->parallax;
-            context.parallax_settings = glm::vec4(material_component.material->parallax_scale, material_component.material->parallax_steps, 1.f / material_component.material->parallax_steps, 0.f);
+        if (material_component.color_roughness != nullptr && material_component.normal_metal_ao != nullptr && !model_component.model.children.empty()) {
+            context.color_roughness   = material_component.color_roughness;
+            context.normal_metal_ao   = material_component.normal_metal_ao;
+            context.parallax          = material_component.parallax;
+            context.parallax_settings = glm::vec4(material_component.parallax_scale, material_component.parallax_steps, 1.f / material_component.parallax_steps, 0.f);
 
             glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
             transform = transform * glm::mat4_cast(transform_component.rotation);

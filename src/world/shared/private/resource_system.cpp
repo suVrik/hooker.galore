@@ -1,6 +1,5 @@
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
-#include "core/resource/material.h"
 #include "core/resource/texture.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
@@ -8,7 +7,6 @@
 #include "world/shared/level_single_component.h"
 #include "world/shared/name_single_component.h"
 #include "world/shared/render/material_component.h"
-#include "world/shared/render/material_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
 #include "world/shared/render/texture_single_component.h"
@@ -140,7 +138,6 @@ ResourceSystem::ResourceSystem(World& world)
     load_textures();
 
     try {
-        load_materials();
         load_models();
 
         try {
@@ -203,23 +200,18 @@ void ResourceSystem::update(float /*elapsed_time*/) {
     m_model_observer.each(model_updated);
     m_model_update_observer.each(model_updated);
 
-    auto& material_single_component = world.ctx<MaterialSingleComponent>();
+    auto& texture_single_component = world.ctx<TextureSingleComponent>();
 
     auto material_updated = [&](const entt::entity entity) {
         auto& material_component = world.get<MaterialComponent>(entity);
-        if (!material_component.path.empty()) {
-            const Material* original_material = material_single_component.get(material_component.path);
-            if (original_material != nullptr) {
-                material_component.material = original_material;
-            } else {
-                const Material* blockout_material = material_single_component.get("blockout_gray.yaml");
-                assert(blockout_material != nullptr);
-
-                if (blockout_material != nullptr) {
-                    material_component.path = "blockout_gray.yaml";
-                    material_component.material = blockout_material;
-                }
-            }
+        if (!material_component.material.empty()) {
+            material_component.color_roughness = &texture_single_component.get(material_component.material + "_bcr.dds");
+            material_component.normal_metal_ao = &texture_single_component.get(material_component.material + "_nmao.dds");
+            material_component.parallax = texture_single_component.get_if(material_component.material + "_h.dds");
+        } else {
+            material_component.color_roughness = nullptr;
+            material_component.normal_metal_ao = nullptr;
+            material_component.parallax = nullptr;
         }
     };
 
@@ -291,89 +283,6 @@ Texture ResourceSystem::load_texture(const std::string &path) const noexcept {
         bx::close(&file_reader);
     }
     return result;
-}
-
-void ResourceSystem::load_materials() const {
-    auto& material_single_component = world.set<MaterialSingleComponent>();
-    auto& texture_single_component = world.ctx<TextureSingleComponent>();
-    std::mutex material_single_component_mutex;
-
-    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "materials";
-    resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const ghc::filesystem::path& file) {
-        std::unique_ptr<Material> material = std::make_unique<Material>();
-        const std::string name = file.lexically_relative(directory).lexically_normal().string();
-
-        load_material(texture_single_component, *material, file.string());
-
-        std::lock_guard<std::mutex> guard(material_single_component_mutex);
-        material_single_component.m_materials.emplace(name, std::move(material));
-    });
-}
-
-void ResourceSystem::load_material(const TextureSingleComponent& texture_single_component, Material& result, const std::string &path) const {
-    try {
-        std::ifstream stream(path);
-        if (!stream.is_open()) {
-            throw std::runtime_error("Failed to open a file.");
-        }
-
-        YAML::Node node = YAML::Load(stream);
-        if (!node.IsMap()) {
-            throw std::runtime_error("Root node must be a map.");
-        }
-
-        YAML::Node color_roughness = node["color_roughness"];
-        if (!color_roughness) {
-            throw std::runtime_error("Field \"color_roughness\" is missing.");
-        }
-
-        const auto color_roughness_path = color_roughness.as<std::string>("");
-        result.color_roughness = &texture_single_component.get(color_roughness_path);
-        if (result.color_roughness == nullptr) {
-            throw std::runtime_error(fmt::format("Specified texture \"{}\" doesn't exist.", color_roughness_path));
-        }
-
-        YAML::Node normal_metal_ao = node["normal_metal_ao"];
-        if (!normal_metal_ao) {
-            throw std::runtime_error("Field \"normal_metal_ao\" is missing.");
-        }
-
-        const auto normal_metal_ao_path = normal_metal_ao.as<std::string>("");
-        result.normal_metal_ao = &texture_single_component.get(normal_metal_ao_path);
-        if (result.normal_metal_ao == nullptr) {
-            throw std::runtime_error(fmt::format("Specified texture \"{}\" doesn't exist.", normal_metal_ao_path));
-        }
-
-        YAML::Node parallax = node["parallax"];
-        if (parallax) {
-            const auto parallax_path = parallax.as<std::string>("");
-            result.parallax = &texture_single_component.get(parallax_path);
-            if (result.parallax == nullptr) {
-                throw std::runtime_error(fmt::format("Specified texture \"{}\" doesn't exist.", parallax_path));
-            }
-
-            YAML::Node parallax_scale = node["parallax_scale"];
-            if (!parallax_scale) {
-                throw std::runtime_error("Field \"parallax_scale\" is missing.");
-            }
-            result.parallax_scale = parallax_scale.as<float>(0.f);
-            if (result.parallax_scale <= -glm::epsilon<float>() || result.parallax_scale >= 1.f + glm::epsilon<float>()) {
-                throw std::runtime_error("Invalid \"parallax_scale\" value.");
-            }
-
-            YAML::Node parallax_steps = node["parallax_steps"];
-            if (!parallax_steps) {
-                throw std::runtime_error("Field \"parallax_steps\" is missing.");
-            }
-            result.parallax_steps = parallax_steps.as<float>(0.f);
-            if (result.parallax_steps <= -glm::epsilon<float>() || result.parallax_steps >= 32.f + glm::epsilon<float>()) {
-                throw std::runtime_error("Invalid \"parallax_steps\" value.");
-            }
-        }
-    }
-    catch (const std::runtime_error& error) {
-        throw std::runtime_error(fmt::format("Failed to load material \"{}\".\nDetails: {}", path, error.what()));
-    }
 }
 
 void ResourceSystem::load_models() const  {
