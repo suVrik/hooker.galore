@@ -1,5 +1,5 @@
 $input a_position, a_normal, a_tangent, a_texcoord0
-$output v_normal, v_tangent, v_bitangent, v_texcoord0, v_position
+$output v_normal, v_tangent, v_bitangent, v_texcoord0
 
 #include <bgfx_shader.sh>
 
@@ -7,7 +7,6 @@ void main() {
     v_normal    = normalize(mul(u_model[0], vec4(a_normal.xyz,  0.0)).xyz);
     v_tangent   = normalize(mul(u_model[0], vec4(a_tangent.xyz, 0.0)).xyz);
     v_bitangent = cross(v_normal, v_tangent) * a_tangent.w;
-    v_position  = mul(u_model[0], vec4(a_position, 1.0)).xyz;
 
     #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
     // DirectX & Metal treats vec3 as row vectors.

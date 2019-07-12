@@ -15,5 +15,5 @@ TransformComponent:
 ModelComponent:
   path: blockout.glb
 MaterialComponent:
-  material: blockout_orange.yaml
+  material: blockout_orange
 BlockoutComponent:

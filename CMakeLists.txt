@@ -66,18 +66,14 @@ elseif(APPLE)
 elseif(UNIX)
     set(OpenGL_GL_PREFERENCE GLVND)
     find_package(OpenGL REQUIRED)
-    target_link_libraries(hooker_galore PRIVATE ${OPENGL_LIBRARIES})
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/lib/libSDL2main.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/lib/libSDL2.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbgfx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbimg.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libbx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/libastc-codec.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Linux/libyaml-cpp.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Linux/libfmt.a")
-    target_link_libraries(hooker_galore PRIVATE ${CMAKE_DL_LIBS})
-    target_link_libraries(hooker_galore PRIVATE pthread)
-    target_link_libraries(hooker_galore PRIVATE X11)
+    target_link_libraries(hooker_galore PRIVATE X11 pthread ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})
 endif()
 
 # Link against static runtime library.
@@ -98,7 +94,7 @@ endif()
 
 # Set up shared libraries location directory for MacOS and Linux.
 
-if(APPLE)
+if(UNIX)
     set_property(TARGET hooker_galore PROPERTY SKIP_BUILD_RPATH "ON")
 
     if(APPLE)

@@ -28,7 +28,7 @@ static const bgfx::EmbeddedShader GEOMETRY_PASS_SHADER[] = {
 
 static const bgfx::EmbeddedShader GEOMETRY_BLOCKOUT_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER(geometry_blockout_pass_vertex),
-        BGFX_EMBEDDED_SHADER(geometry_pass_fragment),
+        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_fragment),
         BGFX_EMBEDDED_SHADER_END()
 };
 
@@ -77,7 +77,7 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     geometry_pass_single_component.geometry_no_parallax_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_blockout_pass_vertex");
-    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_pass_fragment");
+    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_no_parallax_pass_fragment");
     geometry_pass_single_component.geometry_blockout_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     geometry_pass_single_component.color_roughness_uniform   = bgfx::createUniform("s_color_roughness",   bgfx::UniformType::Sampler);
@@ -154,8 +154,6 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
                     }
                 }
             } else {
-                assert(context.parallax != nullptr && "Parallax material must be specified for Block-Out objects.");
-
                 context.program = geometry_pass_single_component.geometry_blockout_pass_program;
                 for (const Model::Node& node : model_component.model.children) {
                     draw_node(context, node, transform);
