@@ -1,7 +1,6 @@
 $input v_texcoord0
 
 #include <bgfx_shader.sh>
-#include <shaderlib.sh>
 #include <shader_utils.sh>
 
 SAMPLER2D(s_depth,    0);
@@ -16,6 +15,5 @@ void main() {
     mat4 mtx = mul(u_rotation, u_invProj);
     clip_position = normalize(mul(mtx, vec4(clip_position, 1.0)).xyz);
     vec3 color_out = textureCube(s_skybox, clip_position).xyz;
-    color_out = toReinhard(color_out);
     gl_FragColor = vec4(color_out, 1.0);
 }

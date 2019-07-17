@@ -41,12 +41,10 @@ Model::Primitive& Model::Primitive::operator=(Primitive&& another) noexcept {
 Model::Primitive::~Primitive() {
     if (bgfx::isValid(index_buffer)) {
         bgfx::destroy(index_buffer);
-        index_buffer = BGFX_INVALID_HANDLE;
     }
 
     if (bgfx::isValid(vertex_buffer)) {
         bgfx::destroy(vertex_buffer);
-        index_buffer = BGFX_INVALID_HANDLE;
     }
 }
 

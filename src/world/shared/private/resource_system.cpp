@@ -120,9 +120,9 @@ void iterate_recursive_parallel(const ghc::filesystem::path& directory, const st
 
 void destroy_model_node(Model::Node& node) noexcept {
     for (Model::Node& child_node : node.children) {
-        delete child_node.mesh;
         destroy_model_node(child_node);
     }
+    delete node.mesh;
 }
 
 static const uint8_t RED_TEXTURE[4] = { 0xFF, 0x00, 0x00, 0xFF };
@@ -166,6 +166,7 @@ ResourceSystem::ResourceSystem(World& world)
 ResourceSystem::~ResourceSystem() {
     auto& texture_single_component = world.ctx<TextureSingleComponent>();
     texture_single_component.m_textures.clear();
+    texture_single_component.m_default_texture.~Texture();
     texture_single_component.m_default_texture = Texture();
 
     auto& model_single_component = world.ctx<ModelSingleComponent>();

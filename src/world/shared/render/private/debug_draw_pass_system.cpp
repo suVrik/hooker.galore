@@ -11,7 +11,6 @@
 #include "world/shared/render/quad_single_component.h"
 #include "world/shared/window_single_component.h"
 
-#include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
 #include <chrono>
 #include <glm/gtc/type_ptr.hpp>
@@ -94,20 +93,20 @@ DebugDrawPassSystem::~DebugDrawPassSystem() {
         }
     };
 
-    destroy_valid(debug_draw_single_component.color_texture);
     destroy_valid(debug_draw_single_component.buffer);
+    destroy_valid(debug_draw_single_component.color_texture);
     destroy_valid(debug_draw_single_component.solid_program);
-    destroy_valid(debug_draw_single_component.textured_program);
     destroy_valid(debug_draw_single_component.texture_uniform);
+    destroy_valid(debug_draw_single_component.textured_program);
 
     dd::shutdown();
 }
 
 void DebugDrawPassSystem::update(float /*elapsed_time*/) {
-    auto& debug_draw_single_component = world.ctx<DebugDrawPassSingleComponent>();
-    auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
+    auto& debug_draw_single_component = world.ctx<DebugDrawPassSingleComponent>();
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
+    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (window_single_component.resized) {
         reset(debug_draw_single_component, window_single_component.width, window_single_component.height);

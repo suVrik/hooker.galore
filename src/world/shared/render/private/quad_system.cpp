@@ -47,7 +47,6 @@ QuadSystem::QuadSystem(World& world)
     quad_single_component.vertex_buffer = bgfx::createVertexBuffer(bgfx::makeRef(QUAD_VERTICES, sizeof(QUAD_VERTICES)), QUAD_VERTEX_DECLARATION);
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
-
     bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(QUAD_PASS_SHADER, type, "quad_pass_vertex");
     bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(QUAD_PASS_SHADER, type, "quad_pass_fragment");
     quad_single_component.program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
@@ -56,17 +55,15 @@ QuadSystem::QuadSystem(World& world)
 QuadSystem::~QuadSystem() {
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
 
-    if (bgfx::isValid(quad_single_component.vertex_buffer)) {
-        bgfx::destroy(quad_single_component.vertex_buffer);
-    }
+    auto destroy_valid = [](auto handle) {
+        if (bgfx::isValid(handle)) {
+            bgfx::destroy(handle);
+        }
+    };
 
-    if (bgfx::isValid(quad_single_component.index_buffer)) {
-        bgfx::destroy(quad_single_component.index_buffer);
-    }
-
-    if (bgfx::isValid(quad_single_component.program)) {
-        bgfx::destroy(quad_single_component.program);
-    }
+    destroy_valid(quad_single_component.index_buffer);
+    destroy_valid(quad_single_component.program);
+    destroy_valid(quad_single_component.vertex_buffer);
 }
 
 void QuadSystem::update(float /*elapsed_time*/) {

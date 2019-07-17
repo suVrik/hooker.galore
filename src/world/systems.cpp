@@ -8,9 +8,11 @@
 #include "world/editor/preset_system.h"
 #include "world/editor/property_editor_system.h"
 #include "world/shared/imgui_fetch_system.h"
+#include "world/shared/render/aa_pass_system.h"
 #include "world/shared/render/camera_system.h"
 #include "world/shared/render/debug_draw_pass_system.h"
 #include "world/shared/render/geometry_pass_system.h"
+#include "world/shared/render/hdr_pass_system.h"
 #include "world/shared/render/imgui_pass_system.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/outline_pass_system.h"
@@ -27,6 +29,7 @@
 namespace hg {
 
 void register_systems(World& world) noexcept {
+    REGISTER_SYSTEM(AAPassSystem);
     REGISTER_SYSTEM(CameraSystem);
     REGISTER_SYSTEM(DebugDrawPassSystem);
     REGISTER_SYSTEM(EditorCameraSystem);
@@ -34,6 +37,7 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(EntitySelectionSystem);
     REGISTER_SYSTEM(GeometryPassSystem);
     REGISTER_SYSTEM(GizmoSystem);
+    REGISTER_SYSTEM(HDRPassSystem);
     REGISTER_SYSTEM(HistorySystem);
     REGISTER_SYSTEM(ImguiFetchSystem);
     REGISTER_SYSTEM(ImguiPassSystem);

@@ -2,11 +2,9 @@
 #include "world/editor/editor_component.h"
 #include "world/editor/gizmo_single_component.h"
 #include "world/editor/gizmo_system.h"
-#include "world/editor/guid_single_component.h"
 #include "world/editor/history_single_component.h"
 #include "world/editor/menu_single_component.h"
 #include "world/editor/selected_entity_single_component.h"
-#include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/model_component.h"
@@ -40,9 +38,7 @@ GizmoSystem::GizmoSystem(World& world) noexcept
 void GizmoSystem::update(float /*elapsed_time*/) {
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& gizmo_single_component = world.ctx<GizmoSingleComponent>();
-    auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& history_single_component = world.ctx<HistorySingleComponent>();
-    auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 

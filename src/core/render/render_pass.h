@@ -7,9 +7,10 @@ namespace hg {
 /** `RenderPass` enumeration specifies render pass order. */
 enum RenderPass : bgfx::ViewId {
     GEOMETRY_PASS = 0,
-    LIGHTING_OFFSCREEN_PASS,
-    SKYBOX_OFFSCREEN_PASS,
-    SKYBOX_ONSCREEN_PASS,
+    LIGHTING_PASS,
+    SKYBOX_PASS,
+    AA_PASS,
+    HDR_PASS,
     OUTLINE_PASS,
     OUTLINE_BLUR_PASS,
     DEBUG_DRAW_OFFSCREEN_PASS,

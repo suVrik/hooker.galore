@@ -68,6 +68,5 @@ void main() {
     vec3 ambient = (kd * diffuse + specular) * ao;
 
     vec3 color_out = ambient + outgoing_radiance;
-    color_out = toReinhard(color_out);
     gl_FragColor = vec4(color_out, 1.0);
 }

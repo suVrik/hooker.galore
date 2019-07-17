@@ -9,10 +9,9 @@ struct QuadSingleComponent final {
     static constexpr uint32_t NUM_VERTICES = 4;
     static constexpr uint32_t NUM_INDICES  = 6;
 
-    bgfx::ProgramHandle program = BGFX_INVALID_HANDLE;
-
-    bgfx::VertexBufferHandle vertex_buffer = BGFX_INVALID_HANDLE;
     bgfx::IndexBufferHandle index_buffer   = BGFX_INVALID_HANDLE;
+    bgfx::ProgramHandle program            = BGFX_INVALID_HANDLE;
+    bgfx::VertexBufferHandle vertex_buffer = BGFX_INVALID_HANDLE;
 };
 
 } // namespace hg

@@ -40,6 +40,8 @@ int main(int argc, char* argv[]) {
                 "GeometryPassSystem",
                 "LightingPassSystem",
                 "SkyboxPassSystem",
+                "AAPassSystem",
+                "HDRPassSystem",
                 "OutlinePassSystem",
                 "DebugDrawPassSystem",
                 "GridSystem",

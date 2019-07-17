@@ -40,7 +40,7 @@ function(build_shaders TYPE GLOB_PATTERN INCLUDE_DIRECTORY)
                     COMMAND type nul > ${output}
                     COMMAND echo \#include ^<cstdint^>>>\"${output}\"
                     COMMAND echo. >> \"${output}\"
-                    COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux --profile 150 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
+                    COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
                     COMMAND copy /b \"${output}\"+\"${output_temp}\" \"${output}\" 1>NUL
                     COMMAND echo. >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -p spirv -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_spv
@@ -64,7 +64,7 @@ function(build_shaders TYPE GLOB_PATTERN INCLUDE_DIRECTORY)
                     COMMAND cp /dev/null ${output}
                     COMMAND echo \"\#include <cstdint>\" >> \"${output}\"
                     COMMAND echo \"\" >> \"${output}\"
-                    COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux --profile 150 -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
+                    COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_glsl
                     COMMAND cat \"${output_temp}\" >> \"${output}\"
                     COMMAND echo \"\" >> \"${output}\"
                     COMMAND ${shader_compiler} -i "\"${INCLUDE_DIRECTORY}\"" --type ${TYPE} --platform linux -p spirv -f "\"${input}\"" -o "\"${output_temp}\"" --bin2c ${variable_name}_spv

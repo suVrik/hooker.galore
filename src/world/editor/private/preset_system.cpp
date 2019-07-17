@@ -1,12 +1,10 @@
 #include "core/base/split.h"
 #include "core/ecs/world.h"
 #include "world/editor/editor_component.h"
-#include "world/editor/guid_single_component.h"
 #include "world/editor/history_single_component.h"
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/selected_entity_single_component.h"
-#include "world/shared/name_single_component.h"
 #include "world/shared/render/outline_component.h"
 
 #include <algorithm>
@@ -23,9 +21,7 @@ PresetSystem::PresetSystem(World& world) noexcept
 }
 
 void PresetSystem::update(float /*elapsed_time*/) {
-    auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& history_single_component = world.ctx<HistorySingleComponent>();
-    auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 

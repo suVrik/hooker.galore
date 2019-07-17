@@ -56,15 +56,16 @@ ImguiPassSystem::ImguiPassSystem(World& world) noexcept
 
 ImguiPassSystem::~ImguiPassSystem() {
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();
-    if (bgfx::isValid(imgui_context_single_component.font_texture_handle)) {
-        bgfx::destroy(imgui_context_single_component.font_texture_handle);
-    }
-    if (bgfx::isValid(imgui_context_single_component.font_uniform_handle)) {
-        bgfx::destroy(imgui_context_single_component.font_uniform_handle);
-    }
-    if (bgfx::isValid(imgui_context_single_component.program_handle)) {
-        bgfx::destroy(imgui_context_single_component.program_handle);
-    }
+
+    auto destroy_valid = [](auto handle) {
+        if (bgfx::isValid(handle)) {
+            bgfx::destroy(handle);
+        }
+    };
+
+    destroy_valid(imgui_context_single_component.font_texture_handle);
+    destroy_valid(imgui_context_single_component.font_uniform_handle);
+    destroy_valid(imgui_context_single_component.program_handle);
 }
 
 void ImguiPassSystem::update(float /*elapsed_time*/) {

@@ -59,10 +59,10 @@ PickingPassSystem::~PickingPassSystem() {
         }
     };
 
-    destroy_valid(picking_pass_single_component.program);
-    destroy_valid(picking_pass_single_component.object_index_uniform);
-    destroy_valid(picking_pass_single_component.color_texture);
     destroy_valid(picking_pass_single_component.buffer);
+    destroy_valid(picking_pass_single_component.color_texture);
+    destroy_valid(picking_pass_single_component.object_index_uniform);
+    destroy_valid(picking_pass_single_component.program);
 }
 
 void PickingPassSystem::update(float /*elapsed_time*/) {

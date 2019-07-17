@@ -12,10 +12,8 @@
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
-#include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
 #include <debug_draw.hpp>
-#include <entt/entity/registry.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace hg {
@@ -57,8 +55,8 @@ LightingPassSystem::LightingPassSystem(World& world)
 
     reset(lighting_pass_single_component, window_single_component.width, window_single_component.height);
 
-    bgfx::setViewClear(LIGHTING_OFFSCREEN_PASS, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
-    bgfx::setViewName(LIGHTING_OFFSCREEN_PASS, "lighting_offscreen_pass");
+    bgfx::setViewClear(LIGHTING_PASS, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+    bgfx::setViewName(LIGHTING_PASS, "lighting_pass");
 }
 
 LightingPassSystem::~LightingPassSystem() {
@@ -70,21 +68,20 @@ LightingPassSystem::~LightingPassSystem() {
         }
     };
 
-    destroy_valid(lighting_pass_single_component.texture_uniform);
-    destroy_valid(lighting_pass_single_component.color_texture);
     destroy_valid(lighting_pass_single_component.buffer);
-
-    destroy_valid(lighting_pass_single_component.lighting_pass_program);
     destroy_valid(lighting_pass_single_component.color_roughness_uniform);
-    destroy_valid(lighting_pass_single_component.normal_metal_ao_uniform);
+    destroy_valid(lighting_pass_single_component.color_texture);
     destroy_valid(lighting_pass_single_component.depth_uniform);
-    destroy_valid(lighting_pass_single_component.light_position_uniform);
     destroy_valid(lighting_pass_single_component.light_color_uniform);
+    destroy_valid(lighting_pass_single_component.light_position_uniform);
+    destroy_valid(lighting_pass_single_component.lighting_pass_program);
+    destroy_valid(lighting_pass_single_component.normal_metal_ao_uniform);
+    destroy_valid(lighting_pass_single_component.texture_uniform);
 
-    destroy_valid(lighting_pass_single_component.skybox_texture_irradiance_uniform);
-    destroy_valid(lighting_pass_single_component.skybox_texture_prefilter_uniform);
-    destroy_valid(lighting_pass_single_component.skybox_texture_lut_uniform);
     destroy_valid(lighting_pass_single_component.skybox_mip_prefilter_max_uniform);
+    destroy_valid(lighting_pass_single_component.skybox_texture_irradiance_uniform);
+    destroy_valid(lighting_pass_single_component.skybox_texture_lut_uniform);
+    destroy_valid(lighting_pass_single_component.skybox_texture_prefilter_uniform);
 }
 
 void LightingPassSystem::update(float /*elapsed_time*/) {
@@ -92,8 +89,8 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& lighting_pass_single_component = world.ctx<LightingPassSingleComponent>();
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
-    auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& texture_single_component = world.ctx<TextureSingleComponent>();
+    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (window_single_component.resized) {
         reset(lighting_pass_single_component, window_single_component.width, window_single_component.height);
@@ -109,7 +106,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
         return;
     }
 
-    bgfx::setViewTransform(LIGHTING_OFFSCREEN_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
+    bgfx::setViewTransform(LIGHTING_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
 
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
@@ -137,7 +134,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
                      BGFX_STENCIL_NONE);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
 
-    bgfx::submit(LIGHTING_OFFSCREEN_PASS, lighting_pass_single_component.lighting_pass_program);
+    bgfx::submit(LIGHTING_PASS, lighting_pass_single_component.lighting_pass_program);
 }
 
 void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single_component, uint16_t width, uint16_t height) const noexcept {
@@ -151,7 +148,7 @@ void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single
         bgfx::destroy(lighting_pass_single_component.buffer);
     }
 
-    lighting_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
+    lighting_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, ATTACHMENT_FLAGS);
 
     const bgfx::TextureHandle attachments[] = {
             lighting_pass_single_component.color_texture,
@@ -160,8 +157,8 @@ void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single
 
     lighting_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
 
-    bgfx::setViewFrameBuffer(LIGHTING_OFFSCREEN_PASS, lighting_pass_single_component.buffer);
-    bgfx::setViewRect(LIGHTING_OFFSCREEN_PASS, 0, 0, width, height);
+    bgfx::setViewFrameBuffer(LIGHTING_PASS, lighting_pass_single_component.buffer);
+    bgfx::setViewRect(LIGHTING_PASS, 0, 0, width, height);
 }
 
 } // namespace hg

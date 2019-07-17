@@ -4,7 +4,7 @@
 
 namespace hg {
 
-class LightingPassSingleComponent;
+struct LightingPassSingleComponent;
 
 /** `LightingPassSystem` performs lighting pass after geometry pass. */
 class LightingPassSystem final : public NormalSystem {

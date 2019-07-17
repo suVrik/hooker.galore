@@ -98,23 +98,20 @@ GeometryPassSystem::~GeometryPassSystem() {
         }
     };
 
-    destroy_valid(geometry_pass_single_component.color_roughness_texture);
-    destroy_valid(geometry_pass_single_component.normal_metal_ao_texture);
-    destroy_valid(geometry_pass_single_component.depth_texture);
-    destroy_valid(geometry_pass_single_component.gbuffer);
-    destroy_valid(geometry_pass_single_component.geometry_pass_program);
-    destroy_valid(geometry_pass_single_component.geometry_no_parallax_pass_program);
-    destroy_valid(geometry_pass_single_component.geometry_blockout_pass_program);
     destroy_valid(geometry_pass_single_component.color_roughness_uniform);
+    destroy_valid(geometry_pass_single_component.gbuffer);
+    destroy_valid(geometry_pass_single_component.geometry_blockout_pass_program);
+    destroy_valid(geometry_pass_single_component.geometry_no_parallax_pass_program);
+    destroy_valid(geometry_pass_single_component.geometry_pass_program);
     destroy_valid(geometry_pass_single_component.normal_metal_ao_uniform);
-    destroy_valid(geometry_pass_single_component.parallax_uniform);
     destroy_valid(geometry_pass_single_component.parallax_settings_uniform);
+    destroy_valid(geometry_pass_single_component.parallax_uniform);
 }
 
 void GeometryPassSystem::update(float /*elapsed_time*/) {
+    auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& geometry_pass_single_component = world.ctx<GeometryPassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
-    auto& camera_single_component = world.ctx<CameraSingleComponent>();
 
     if (window_single_component.resized) {
         reset(geometry_pass_single_component, window_single_component.width, window_single_component.height);
@@ -166,14 +163,6 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
 void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single_component, uint16_t width, uint16_t height) const noexcept {
     using namespace geometry_pass_system_details;
 
-    if (bgfx::isValid(geometry_pass_single_component.color_roughness_texture)) {
-        bgfx::destroy(geometry_pass_single_component.color_roughness_texture);
-    }
-
-    if (bgfx::isValid(geometry_pass_single_component.normal_metal_ao_texture)) {
-        bgfx::destroy(geometry_pass_single_component.normal_metal_ao_texture);
-    }
-
     if (bgfx::isValid(geometry_pass_single_component.gbuffer)) {
         bgfx::destroy(geometry_pass_single_component.gbuffer);
     }
@@ -188,7 +177,7 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
             geometry_pass_single_component.depth_texture
     };
 
-    geometry_pass_single_component.gbuffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
+    geometry_pass_single_component.gbuffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
 
     bgfx::setViewFrameBuffer(GEOMETRY_PASS, geometry_pass_single_component.gbuffer);
     bgfx::setViewRect(GEOMETRY_PASS, 0, 0, width, height);

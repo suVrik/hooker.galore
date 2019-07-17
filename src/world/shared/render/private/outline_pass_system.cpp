@@ -72,17 +72,18 @@ OutlinePassSystem::~OutlinePassSystem() {
         }
     };
 
-    destroy_valid(outline_pass_single_component.outline_pass_program);
+    destroy_valid(outline_pass_single_component.buffer);
     destroy_valid(outline_pass_single_component.outline_blur_pass_program);
-    destroy_valid(outline_pass_single_component.texture_uniform);
     destroy_valid(outline_pass_single_component.outline_color_uniform);
+    destroy_valid(outline_pass_single_component.outline_pass_program);
+    destroy_valid(outline_pass_single_component.texture_uniform);
 }
 
 void OutlinePassSystem::update(float /*elapsed_time*/) {
-    auto& outline_pass_single_component = world.ctx<OutlinePassSingleComponent>();
-    auto& window_single_component = world.ctx<WindowSingleComponent>();
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
+    auto& outline_pass_single_component = world.ctx<OutlinePassSingleComponent>();
     auto& quad_single_component = world.ctx<QuadSingleComponent>();
+    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (window_single_component.resized) {
         reset(outline_pass_single_component, window_single_component.width, window_single_component.height);

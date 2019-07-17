@@ -1,5 +1,6 @@
 .idea
 .vscode
+.DS_Store
 *.pyc
 cmake-build-debug
 cmake-build-release

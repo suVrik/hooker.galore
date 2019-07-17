@@ -28,7 +28,7 @@ static const bgfx::EmbeddedShader SKYBOX_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER_END()
 };
 
-static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
+static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
 
 } // namespace skybox_pass_system_details
 
@@ -51,11 +51,8 @@ SkyboxPassSystem::SkyboxPassSystem(World& world)
 
     reset(skybox_pass_single_component, window_single_component.width, window_single_component.height);
 
-    bgfx::setViewClear(SKYBOX_OFFSCREEN_PASS, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
-    bgfx::setViewName(SKYBOX_OFFSCREEN_PASS, "skybox_offscreen_pass");
-
-    bgfx::setViewClear(SKYBOX_ONSCREEN_PASS,  BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0x000000FF, 1.f, 0);
-    bgfx::setViewName(SKYBOX_ONSCREEN_PASS, "skybox_onscreen_pass");
+    bgfx::setViewClear(SKYBOX_PASS, BGFX_CLEAR_COLOR, 0x000000FF, 1.f, 0);
+    bgfx::setViewName(SKYBOX_PASS, "skybox_pass");
 }
 
 SkyboxPassSystem::~SkyboxPassSystem() {
@@ -67,13 +64,13 @@ SkyboxPassSystem::~SkyboxPassSystem() {
         }
     };
 
-    destroy_valid(skybox_pass_single_component.skybox_pass_program);
-    destroy_valid(skybox_pass_single_component.color_texture);
     destroy_valid(skybox_pass_single_component.buffer);
-    destroy_valid(skybox_pass_single_component.texture_uniform);
-    destroy_valid(skybox_pass_single_component.skybox_texture_uniform);
+    destroy_valid(skybox_pass_single_component.color_texture);
     destroy_valid(skybox_pass_single_component.depth_uniform);
     destroy_valid(skybox_pass_single_component.rotation_uniform);
+    destroy_valid(skybox_pass_single_component.skybox_pass_program);
+    destroy_valid(skybox_pass_single_component.skybox_texture_uniform);
+    destroy_valid(skybox_pass_single_component.texture_uniform);
 }
 
 void SkyboxPassSystem::update(float /*elapsed_time*/) {
@@ -95,7 +92,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
         return;
     }
 
-    bgfx::setViewTransform(SKYBOX_OFFSCREEN_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
+    bgfx::setViewTransform(SKYBOX_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
 
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
@@ -111,17 +108,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
                      BGFX_STENCIL_NONE);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
 
-    bgfx::submit(SKYBOX_OFFSCREEN_PASS, skybox_pass_single_component.skybox_pass_program);
-
-    bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
-    bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
-
-    bgfx::setTexture(0, skybox_pass_single_component.texture_uniform, skybox_pass_single_component.color_texture);
-
-    bgfx::setStencil(BGFX_STENCIL_NONE, BGFX_STENCIL_NONE);
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CW);
-
-    bgfx::submit(SKYBOX_ONSCREEN_PASS, quad_single_component.program);
+    bgfx::submit(SKYBOX_PASS, skybox_pass_single_component.skybox_pass_program);
 
     bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
     bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
@@ -131,7 +118,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
     bgfx::setStencil(BGFX_STENCIL_NONE, BGFX_STENCIL_NONE);
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW | BGFX_STATE_BLEND_ALPHA);
 
-    bgfx::submit(SKYBOX_ONSCREEN_PASS, quad_single_component.program);
+    bgfx::submit(SKYBOX_PASS, quad_single_component.program);
 }
 
 void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_component, uint16_t width, uint16_t height) const noexcept {
@@ -154,10 +141,8 @@ void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_compo
 
     skybox_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
 
-    bgfx::setViewFrameBuffer(SKYBOX_OFFSCREEN_PASS, skybox_pass_single_component.buffer);
-    bgfx::setViewRect(SKYBOX_OFFSCREEN_PASS, 0, 0, width, height);
-
-    bgfx::setViewRect(SKYBOX_ONSCREEN_PASS, 0, 0, width, height);
+    bgfx::setViewFrameBuffer(SKYBOX_PASS, skybox_pass_single_component.buffer);
+    bgfx::setViewRect(SKYBOX_PASS, 0, 0, width, height);
 }
 
 } // namespace hg

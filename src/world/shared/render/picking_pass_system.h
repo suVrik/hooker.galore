@@ -5,7 +5,7 @@
 
 namespace hg {
 
-class PickingPassSingleComponent;
+struct PickingPassSingleComponent;
 
 /** `PickingPassSystem` performs picking pass for all objects when `perform_picking` is set to true and saves it into
     a texture stored in `PickingPassSingleComponent`. */
