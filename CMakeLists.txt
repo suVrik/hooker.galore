@@ -11,15 +11,28 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/lib/imgui/")
 add_subdirectory("${CMAKE_SOURCE_DIR}/lib/debug-draw/")
 add_subdirectory("${CMAKE_SOURCE_DIR}/lib/tiny-gltf/")
 
-# Deploy the executable into binary directory.
+# Select C++ version and set up visual studio solution properties.
 
 set(CMAKE_CXX_STANDARD 17)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT hooker_galore)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(PREDEFINED_TARGETS_FOLDER "CustomTargets")
 
 # Compile executable sources.
 
-file(GLOB_RECURSE HOOKER_GALORE_SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE HOOKER_GALORE_SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.h" "${CMAKE_SOURCE_DIR}/src/*.sc" "${CMAKE_SOURCE_DIR}/src/*.sh")
 add_executable(hooker_galore ${HOOKER_GALORE_SOURCES})
+
+# Use filesystem hierarchy in Visual Studio project.
+
+if(WIN32)
+	foreach(FILE ${HOOKER_GALORE_SOURCES}) 
+		get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
+		string(REPLACE "${CMAKE_SOURCE_DIR}/src" "" GROUP "${PARENT_DIR}")
+		string(REPLACE "/" "\\" GROUP "${GROUP}")
+		source_group("Sources${GROUP}" FILES "${FILE}")
+	endforeach()
+endif()
 
 # Include thirdparty libraries.
 
@@ -123,8 +136,8 @@ build_textures("cube" "${CMAKE_SOURCE_DIR}/res/textures/" "*.hdr" "${output_text
 add_dependencies(hooker_galore
         build_base_color_roughness_maps
         build_normal_metal_ambient_occlusion_maps
-        build_cube_maps
         build_height_maps
+        build_cube_maps
 )
 
 # Deploy other resources.
@@ -137,6 +150,7 @@ add_dependencies(hooker_galore
         deploy_levels
         deploy_models
         deploy_presets
+        deploy_textures
 )
 
 # Deploy shared libraries.
@@ -148,3 +162,22 @@ deploy_shared_library("sdl2"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so"
 )
 add_dependencies(hooker_galore deploy_sdl2)
+
+# Hide all the deploy targets into a "Deploy" directory in Visual Studio.
+
+set_target_properties(imgui
+        debug-draw
+        tiny-gltf
+        build_fragment_shaders
+        build_vertex_shaders
+        build_base_color_roughness_maps
+        build_normal_metal_ambient_occlusion_maps
+        build_height_maps
+        build_cube_maps
+        deploy_levels
+        deploy_models
+        deploy_presets
+        deploy_textures
+        deploy_sdl2
+        PROPERTIES FOLDER "BuildAndDeploy"
+)
