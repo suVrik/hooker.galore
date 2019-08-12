@@ -106,7 +106,7 @@ private:
     std::vector<std::string> m_system_order[2];
 };
 
-/** Presence of this single component in world entity means the world may keep running. */
+/** Presence of this single component means the world may keep running. */
 struct RunningWorldSingleComponent final {
     bool dummy = false;
 };

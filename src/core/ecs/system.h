@@ -7,7 +7,7 @@ class World;
 /** `System` is a base class for user defined systems. */
 class System {
 public:
-    /** Construct system in specified world. */
+    /** Construct `System` in specified world. */
     explicit System(World& world) noexcept;
     virtual ~System() = 0;
 
@@ -26,7 +26,7 @@ public:
     ~NormalSystem() override;
 };
 
-/** `FixedSystem` is are executed every tick. */
+/** `FixedSystem` is executed every tick. */
 class FixedSystem : public System {
 public:
     /** Construct `FixedSystem` in specified world. */

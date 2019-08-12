@@ -8,16 +8,6 @@ void register_components(World& world) noexcept;
 void register_systems(World& world) noexcept;
 
 template <typename T>
-void World::each(entt::entity entity, T callback) const noexcept {
-    for (const auto& [type, descriptor] : m_components) {
-        const entt::meta_handle component_handle = get(entity, type);
-        if (component_handle) {
-            callback(component_handle);
-        }
-    }
-}
-
-template <typename T>
 void World::register_component() noexcept {
     ComponentDescriptor descriptor{};
 
@@ -43,16 +33,19 @@ void World::register_component() noexcept {
     };
 
     descriptor.assign_default = [](World* world, entt::entity entity) -> entt::meta_handle {
-        static_assert(std::is_default_constructible_v<T>, "Specified component is not default constructible.");
-
-        return entt::meta_handle(world->assign<T>(entity));
+		if constexpr (std::is_default_constructible_v<T>) {
+			return entt::meta_handle(world->assign<T>(entity));
+		} else {
+			assert(false && "Specified component type is not default constructible.");
+			return entt::meta_handle();
+		}
     };
 
     descriptor.assign_copy = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
         if constexpr (std::is_copy_constructible_v<T>) {
             return entt::meta_handle(world->assign<T>(entity, *component.try_cast<T>()));
         } else {
-            assert(false && "Specified type is not copy constructible.");
+            assert(false && "Specified component type is not copy constructible.");
             return entt::meta_handle();
         }
     };
@@ -61,7 +54,7 @@ void World::register_component() noexcept {
         if constexpr (std::is_copy_constructible_v<T>) {
             return entt::meta_handle(world->replace<T>(entity, *component.try_cast<T>()));
         } else {
-            assert(false && "Specified type is not copy constructible.");
+            assert(false && "Specified component type is not copy constructible.");
             return entt::meta_handle();
         }
     };
@@ -83,6 +76,16 @@ void World::register_component() noexcept {
     };
 
     m_components.emplace(entt::resolve<T>(), descriptor);
+}
+
+template <typename T>
+void World::each(entt::entity entity, T callback) const noexcept {
+	for (const auto& [type, descriptor] : m_components) {
+		const entt::meta_handle component_handle = get(entity, type);
+		if (component_handle) {
+			callback(component_handle);
+		}
+	}
 }
 
 template <typename T>
