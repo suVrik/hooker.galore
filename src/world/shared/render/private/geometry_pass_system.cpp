@@ -168,8 +168,13 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
     }
 
     geometry_pass_single_component.color_roughness_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, ATTACHMENT_FLAGS);
+	bgfx::setName(geometry_pass_single_component.color_roughness_texture, "geometry_pass_output_bcr");
+
     geometry_pass_single_component.normal_metal_ao_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::RGBA16F, ATTACHMENT_FLAGS);
+	bgfx::setName(geometry_pass_single_component.normal_metal_ao_texture, "geometry_pass_output_nmao");
+
     geometry_pass_single_component.depth_texture           = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
+	bgfx::setName(geometry_pass_single_component.depth_texture, "geometry_pass_output_depth");
 
     const bgfx::TextureHandle attachments[] = {
             geometry_pass_single_component.color_roughness_texture,
