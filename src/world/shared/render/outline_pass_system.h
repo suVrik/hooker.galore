@@ -21,7 +21,7 @@ public:
 
 private:
     void reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const noexcept;
-    void draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform) const noexcept;
+    void draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const noexcept;
 
     entt::basic_group<entt::entity, entt::exclude_t<>, entt::get_t<ModelComponent, TransformComponent>, OutlineComponent> m_group;
 };

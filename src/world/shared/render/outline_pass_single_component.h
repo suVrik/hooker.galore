@@ -13,9 +13,11 @@ struct OutlinePassSingleComponent final {
     bgfx::ProgramHandle outline_pass_program      = BGFX_INVALID_HANDLE;
 
     bgfx::TextureHandle color_texture = BGFX_INVALID_HANDLE;
+    bgfx::TextureHandle depth_texture = BGFX_INVALID_HANDLE;
 
     bgfx::UniformHandle outline_color_uniform = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle texture_uniform       = BGFX_INVALID_HANDLE;
+    bgfx::UniformHandle group_index_uniform   = BGFX_INVALID_HANDLE;
 
     glm::vec4 outline_color = glm::vec4(1.f, 1.f, 0.f, 1.f);
 };

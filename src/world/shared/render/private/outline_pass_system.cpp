@@ -55,8 +55,9 @@ OutlinePassSystem::OutlinePassSystem(World& world) noexcept
 
     outline_pass_single_component.texture_uniform       = bgfx::createUniform("s_texture",       bgfx::UniformType::Sampler);
     outline_pass_single_component.outline_color_uniform = bgfx::createUniform("u_outline_color", bgfx::UniformType::Vec4);
+    outline_pass_single_component.group_index_uniform   = bgfx::createUniform("u_group_index",   bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(OUTLINE_PASS, BGFX_CLEAR_COLOR, 0x00000000, 1.f, 0);
+    bgfx::setViewClear(OUTLINE_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.f, 0);
     bgfx::setViewName(OUTLINE_PASS, "outline_pass");
 
     bgfx::setViewClear(OUTLINE_BLUR_PASS, BGFX_CLEAR_NONE, 0x000000FF, 1.f, 0);
@@ -99,7 +100,7 @@ void OutlinePassSystem::update(float /*elapsed_time*/) {
         transform = glm::scale(transform, transform_component.scale);
 
         for (const Model::Node& node : model_component.model.children) {
-            draw_node(outline_pass_single_component, node, transform);
+            draw_node(outline_pass_single_component, node, transform, outline_component.group_index);
         }
     });
 
@@ -122,7 +123,13 @@ void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_co
     }
 
     outline_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
-    outline_pass_single_component.buffer = bgfx::createFrameBuffer(1, &outline_pass_single_component.color_texture, true);
+    outline_pass_single_component.depth_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
+
+	const bgfx::TextureHandle attachments[] = {
+			outline_pass_single_component.color_texture,
+			outline_pass_single_component.depth_texture
+	};
+    outline_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
 
     bgfx::setViewFrameBuffer(OUTLINE_PASS, outline_pass_single_component.buffer);
     bgfx::setViewRect(OUTLINE_PASS, 0, 0, width, height);
@@ -130,7 +137,7 @@ void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_co
     bgfx::setViewRect(OUTLINE_BLUR_PASS, 0, 0, width, height);
 }
 
-void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform) const noexcept {
+void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const noexcept {
     glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
     local_transform = local_transform * glm::mat4_cast(node.rotation);
     local_transform = glm::scale(local_transform, node.scale);
@@ -145,9 +152,16 @@ void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass
             bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, primitive.num_vertices);
             bgfx::setIndexBuffer(primitive.index_buffer, 0, primitive.num_indices);
 
+			glm::vec4 uniform_value;
+			uniform_value.x = ((group_index >> 16) & 0xFF) / 255.f;
+			uniform_value.y = ((group_index >> 8) & 0xFF) / 255.f;
+			uniform_value.z = (group_index & 0xFF) / 255.f;
+			uniform_value.w = 1.f;
+			bgfx::setUniform(outline_pass_single_component.group_index_uniform, glm::value_ptr(uniform_value));
+
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CCW);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CCW);
 
             assert(bgfx::isValid(outline_pass_single_component.outline_pass_program));
 
@@ -156,7 +170,7 @@ void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass
     }
 
     for (const Model::Node& child_node : node.children) {
-        draw_node(outline_pass_single_component, child_node, world_transform);
+        draw_node(outline_pass_single_component, child_node, world_transform, group_index);
     }
 }
 
