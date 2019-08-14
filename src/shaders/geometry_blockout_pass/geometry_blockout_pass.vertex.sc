@@ -21,17 +21,17 @@ void main() {
     float scale_z = length(model_matrix[2].xyz);
 
     if (a_normal.x == 1.0) {
-        v_texcoord0 = vec2(a_texcoord0.x * scale_z, a_texcoord0.y * scale_y);
+        v_texcoord0 = vec2(a_texcoord0.x * scale_z, (a_texcoord0.y - 1.0) * scale_y);
     } else if (a_normal.x == -1.0) {
-        v_texcoord0 = vec2((a_texcoord0.x + 1.0) * scale_z, a_texcoord0.y * scale_y);
+        v_texcoord0 = vec2((a_texcoord0.x - 1.0) * scale_z, (a_texcoord0.y - 1.0) * scale_y);
     } else if (a_normal.y == 1.0) {
-        v_texcoord0 = vec2(a_texcoord0.x * scale_x, (a_texcoord0.y - 1.0) * scale_z);
+        v_texcoord0 = vec2((a_texcoord0.x - 1.0) * scale_x, (a_texcoord0.y - 1.0) * scale_z);
     } else if (a_normal.y == -1.0) {
-        v_texcoord0 = vec2((a_texcoord0.x + 1.0) * scale_x, (a_texcoord0.y - 1.0) * scale_z);
+        v_texcoord0 = vec2(a_texcoord0.x * scale_x, (a_texcoord0.y - 1.0) * scale_z);
     } else if (a_normal.z == 1.0) {
-        v_texcoord0 = vec2((a_texcoord0.x + 1.0) * scale_x, a_texcoord0.y * scale_y);
+        v_texcoord0 = vec2(a_texcoord0.x * scale_x, (a_texcoord0.y - 1.0) * scale_y);
     } else {
-        v_texcoord0 = vec2(a_texcoord0.x * scale_x, a_texcoord0.y * scale_y);
+        v_texcoord0 = vec2((a_texcoord0.x - 1.0) * scale_x, (a_texcoord0.y - 1.0) * scale_y);
     }
 
     gl_Position = mul(u_modelViewProj, vec4(a_position, 1.0));
