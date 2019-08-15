@@ -177,7 +177,7 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
     bgfx::setName(geometry_pass_single_component.depth_texture, "geometry_pass_output_depth");
 
     geometry_pass_single_component.depth_stencil_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
-    bgfx::setName(geometry_pass_single_component.depth_texture, "geometry_pass_output_depth_stencil");
+    bgfx::setName(geometry_pass_single_component.depth_stencil_texture, "geometry_pass_output_depth_stencil");
 
     const bgfx::TextureHandle attachments[] = {
             geometry_pass_single_component.color_roughness_texture,

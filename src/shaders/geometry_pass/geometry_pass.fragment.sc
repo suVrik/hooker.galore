@@ -1,7 +1,8 @@
-$input v_normal, v_tangent, v_bitangent, v_texcoord0, v_position, v_depth
+$input v_normal, v_tangent, v_bitangent, v_texcoord0, v_pos_world, v_position
 
 #include <bgfx_shader.sh>
 #include <shaderlib.sh>
+#include <shader_utils.sh>
 
 SAMPLER2D(s_color_roughness, 0);
 SAMPLER2D(s_normal_metal_ao, 1);
@@ -49,7 +50,7 @@ void main() {
     #endif
 
     vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-    vec3 tangent_view_direction = mul(to_tangent_space_matrix, camera_position.xyz - v_position);
+    vec3 tangent_view_direction = mul(to_tangent_space_matrix, camera_position.xyz - v_pos_world);
     vec3 normalized_tangent_view_direction = normalize(tangent_view_direction);
     vec2 parallax_texcoord = parallax_uv(v_texcoord0, normalized_tangent_view_direction);
 
@@ -60,7 +61,9 @@ void main() {
     normal.z = sqrt(max(0.0, 1.0 - dot(normal.xy, normal.xy)));
     normal = normalize(mul(from_tangent_space_matrix, normal));
 
+    float depth_out = to_texture_depth(v_position.z / v_position.w);
+
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);
     gl_FragData[1] = vec4(encodeNormalOctahedron(normal), normal_metal_ao.zw);
-    gl_FragData[2] = vec4(v_depth, 0.0, 0.0, 1.0);
+    gl_FragData[2] = vec4(depth_out, 0.0, 0.0, 1.0);
 }

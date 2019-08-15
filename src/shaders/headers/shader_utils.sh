@@ -74,6 +74,16 @@ vec3 importance_sample_ggx(vec2 xi, vec3 n, float roughness) {
 	return normalize(sample_vec);
 }
 
+float to_texture_depth(float depth) {
+#if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
+    // DirectX & Metal range for Z is [0, 1].
+    return depth;
+#else
+    // OpenGL range for Z is [-1, 1].
+    return depth * 0.5 + 0.5;
+#endif
+}
+
 float to_clip_space_depth(float depth) {
 #if BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL
     // DirectX & Metal range for Z is [0, 1].
