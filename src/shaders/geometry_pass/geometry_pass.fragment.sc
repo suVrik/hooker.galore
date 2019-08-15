@@ -1,4 +1,4 @@
-$input v_normal, v_tangent, v_bitangent, v_texcoord0, v_position
+$input v_normal, v_tangent, v_bitangent, v_texcoord0, v_position, v_depth
 
 #include <bgfx_shader.sh>
 #include <shaderlib.sh>
@@ -62,4 +62,5 @@ void main() {
 
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);
     gl_FragData[1] = vec4(encodeNormalOctahedron(normal), normal_metal_ao.zw);
+    gl_FragData[2] = vec4(v_depth, 0.0, 0.0, 1.0);
 }

@@ -14,6 +14,7 @@ struct GeometryPassSingleComponent final {
 
     bgfx::TextureHandle color_roughness_texture = BGFX_INVALID_HANDLE;
     bgfx::TextureHandle depth_texture           = BGFX_INVALID_HANDLE;
+    bgfx::TextureHandle depth_stencil_texture   = BGFX_INVALID_HANDLE;
     bgfx::TextureHandle normal_metal_ao_texture = BGFX_INVALID_HANDLE;
 
     bgfx::UniformHandle color_roughness_uniform   = BGFX_INVALID_HANDLE;

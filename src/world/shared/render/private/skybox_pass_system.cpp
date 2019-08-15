@@ -136,7 +136,7 @@ void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_compo
 
     const bgfx::TextureHandle attachments[] = {
             skybox_pass_single_component.color_texture,
-            world.ctx<GeometryPassSingleComponent>().depth_texture
+            world.ctx<GeometryPassSingleComponent>().depth_stencil_texture
     };
 
     skybox_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
