@@ -9,7 +9,7 @@ void SelectedEntitySingleComponent::select_entity(World& world, entt::entity ent
     if (world.valid(entity)) {
         selected_entities.push_back(entity);
         auto& outline_component = world.assign<OutlineComponent>(entity);
-		outline_component.group_index = entity;
+        outline_component.group_index = entity;
     }
 }
 
@@ -17,8 +17,8 @@ void SelectedEntitySingleComponent::add_to_selection(World& world, entt::entity 
     if (std::find(selected_entities.begin(), selected_entities.end(), entity) == selected_entities.end()) {
         if (world.valid(entity)) {
             selected_entities.push_back(entity);
-			auto& outline_component = world.assign<OutlineComponent>(entity);
-			outline_component.group_index = entity;
+            auto& outline_component = world.assign<OutlineComponent>(entity);
+            outline_component.group_index = entity;
         }
     }
 }

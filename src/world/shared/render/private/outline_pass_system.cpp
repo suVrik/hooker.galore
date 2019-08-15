@@ -125,10 +125,10 @@ void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_co
     outline_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
     outline_pass_single_component.depth_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
 
-	const bgfx::TextureHandle attachments[] = {
-			outline_pass_single_component.color_texture,
-			outline_pass_single_component.depth_texture
-	};
+    const bgfx::TextureHandle attachments[] = {
+            outline_pass_single_component.color_texture,
+            outline_pass_single_component.depth_texture
+    };
     outline_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
 
     bgfx::setViewFrameBuffer(OUTLINE_PASS, outline_pass_single_component.buffer);
@@ -152,12 +152,12 @@ void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass
             bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, primitive.num_vertices);
             bgfx::setIndexBuffer(primitive.index_buffer, 0, primitive.num_indices);
 
-			glm::vec4 uniform_value;
-			uniform_value.x = ((group_index >> 16) & 0xFF) / 255.f;
-			uniform_value.y = ((group_index >> 8) & 0xFF) / 255.f;
-			uniform_value.z = (group_index & 0xFF) / 255.f;
-			uniform_value.w = 1.f;
-			bgfx::setUniform(outline_pass_single_component.group_index_uniform, glm::value_ptr(uniform_value));
+            glm::vec4 uniform_value;
+            uniform_value.x = ((group_index >> 16) & 0xFF) / 255.f;
+            uniform_value.y = ((group_index >> 8) & 0xFF) / 255.f;
+            uniform_value.z = (group_index & 0xFF) / 255.f;
+            uniform_value.w = 1.f;
+            bgfx::setUniform(outline_pass_single_component.group_index_uniform, glm::value_ptr(uniform_value));
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 

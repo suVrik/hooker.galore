@@ -26,12 +26,12 @@ add_executable(hooker_galore ${HOOKER_GALORE_SOURCES})
 # Use filesystem hierarchy in Visual Studio project.
 
 if(WIN32)
-	foreach(FILE ${HOOKER_GALORE_SOURCES}) 
-		get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
-		string(REPLACE "${CMAKE_SOURCE_DIR}/src" "" GROUP "${PARENT_DIR}")
-		string(REPLACE "/" "\\" GROUP "${GROUP}")
-		source_group("Sources${GROUP}" FILES "${FILE}")
-	endforeach()
+    foreach(FILE ${HOOKER_GALORE_SOURCES}) 
+        get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
+        string(REPLACE "${CMAKE_SOURCE_DIR}/src" "" GROUP "${PARENT_DIR}")
+        string(REPLACE "/" "\\" GROUP "${GROUP}")
+        source_group("Sources${GROUP}" FILES "${FILE}")
+    endforeach()
 endif()
 
 # Include thirdparty libraries.

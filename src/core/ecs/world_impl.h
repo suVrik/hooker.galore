@@ -33,12 +33,12 @@ void World::register_component() noexcept {
     };
 
     descriptor.assign_default = [](World* world, entt::entity entity) -> entt::meta_handle {
-		if constexpr (std::is_default_constructible_v<T>) {
-			return entt::meta_handle(world->assign<T>(entity));
-		} else {
-			assert(false && "Specified component type is not default constructible.");
-			return entt::meta_handle();
-		}
+        if constexpr (std::is_default_constructible_v<T>) {
+            return entt::meta_handle(world->assign<T>(entity));
+        } else {
+            assert(false && "Specified component type is not default constructible.");
+            return entt::meta_handle();
+        }
     };
 
     descriptor.assign_copy = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
@@ -80,12 +80,12 @@ void World::register_component() noexcept {
 
 template <typename T>
 void World::each(entt::entity entity, T callback) const noexcept {
-	for (const auto& [type, descriptor] : m_components) {
-		const entt::meta_handle component_handle = get(entity, type);
-		if (component_handle) {
-			callback(component_handle);
-		}
-	}
+    for (const auto& [type, descriptor] : m_components) {
+        const entt::meta_handle component_handle = get(entity, type);
+        if (component_handle) {
+            callback(component_handle);
+        }
+    }
 }
 
 template <typename T>
