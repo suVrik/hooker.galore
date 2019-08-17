@@ -5,7 +5,9 @@
 #include "world/editor/preset_single_component.h"
 #include "world/editor/preset_system.h"
 #include "world/editor/selected_entity_single_component.h"
+#include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/outline_component.h"
+#include "world/shared/transform_component.h"
 
 #include <algorithm>
 #include <fmt/format.h>
@@ -21,6 +23,7 @@ PresetSystem::PresetSystem(World& world) noexcept
 }
 
 void PresetSystem::update(float /*elapsed_time*/) {
+    auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
@@ -86,8 +89,15 @@ void PresetSystem::update(float /*elapsed_time*/) {
                                         auto &editor_component = world.get<EditorComponent>(entity);
                                         change->description = fmt::format("Create entity \"{}\"", editor_component.name);
 
-                                        for (entt::meta_any &component_prototype : preset) {
+                                        for (entt::meta_any& component_prototype : preset) {
                                             change->assign_component(world, entity, component_prototype);
+                                        }
+
+                                        if (auto* transform_component = world.try_get<TransformComponent>(entity); transform_component != nullptr) {
+                                            TransformComponent changed_transform_component = *transform_component;
+                                            changed_transform_component.translation = camera_single_component.translation + camera_single_component.rotation * glm::vec3(0.f, 0.f, 5.f);
+                                            entt::meta_any any_changed_transform_component(changed_transform_component);
+                                            change->replace_component(world, entity, any_changed_transform_component);
                                         }
 
                                         selected_entity_single_component.select_entity(world, entity);
