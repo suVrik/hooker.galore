@@ -3,7 +3,11 @@ project(debug-draw)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(debug-draw STATIC "${CMAKE_CURRENT_SOURCE_DIR}/source/debug_draw.cpp")
+add_library(debug-draw STATIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/debug_draw.hpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/debug_draw_impl.hpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/debug_draw.cpp"
+)
 
 target_include_directories(debug-draw PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 target_include_directories(debug-draw PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../glm/include/")

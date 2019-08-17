@@ -4,16 +4,21 @@ project(imgui)
 set(CMAKE_CXX_STANDARD 11)
 
 add_library(imgui STATIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/imgui.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/imgui_internal.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/ImGuizmo.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/imstb_textedit.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/imgui.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/imgui_demo.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/imgui_draw.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/imgui_widgets.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/source/ImGuizmo.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/imstb_rectpack.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/imstb_truetype.h"
 )
 
 target_include_directories(imgui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 target_compile_definitions(imgui PUBLIC IMGUI_DISABLE_INCLUDE_IMCONFIG_H)
-
 
 if(WIN32)
     set(cxx_compiler_flags

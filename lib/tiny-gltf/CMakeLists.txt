@@ -3,7 +3,11 @@ project(tiny-gltf)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_library(tiny-gltf STATIC "${CMAKE_CURRENT_SOURCE_DIR}/source/tiny_gltf.cpp")
+add_library(tiny-gltf STATIC
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/json.hpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/tiny_gltf.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/source/tiny_gltf.cpp"
+)
 
 target_include_directories(tiny-gltf PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
