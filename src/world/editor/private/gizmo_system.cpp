@@ -42,7 +42,7 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
-    if (ImGui::Begin("Tool")) {
+    if (ImGui::Begin("Gizmo", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         const ImVec2 window_size = ImGui::GetWindowSize();
 
         auto button = [&](const char* title, Control shortcut, std::shared_ptr<bool>& flag, ImGuizmo::OPERATION operation) {

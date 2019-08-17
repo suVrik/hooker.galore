@@ -27,7 +27,7 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
     auto& name_single_component = world.ctx<NameSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
-    if (ImGui::Begin("Property Editor")) {
+    if (ImGui::Begin("Property Editor", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         if (selected_entity_single_component.selected_entities.size() == 1) {
             entt::entity entity = selected_entity_single_component.selected_entities[0];
             assert(world.valid(entity));

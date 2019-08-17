@@ -46,7 +46,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         return a.name < b.name;
     });
 
-    if (ImGui::Begin("Level")) {
+    if (ImGui::Begin("Level", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
         ImGui::Separator();

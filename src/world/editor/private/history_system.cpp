@@ -23,7 +23,7 @@ void HistorySystem::update(float /*elapsed_time*/) {
     auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
 
-    if (ImGui::Begin("History")) {
+    if (ImGui::Begin("History", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         int32_t rewind_offset = 0;
         for (size_t i = 1; i <= HistorySingleComponent::HISTORY_BUFFER_SIZE; i++) {
             const size_t index = (history_single_component.undo_position + i) % HistorySingleComponent::HISTORY_BUFFER_SIZE;

@@ -25,7 +25,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
-    if (ImGui::Begin("Presets")) {
+    if (ImGui::Begin("Presets", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
         ImGui::Separator();

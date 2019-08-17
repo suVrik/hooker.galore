@@ -173,9 +173,11 @@ void ImguiFetchSystem::update(float elapsed_time) {
         ImGuiID dock_id_right_middle = ImGui::DockBuilderSplitNode(dock_id_right_top, ImGuiDir_Down, 0.8f, nullptr, &dock_id_right_top);
         ImGuiID dock_id_right_bottom = ImGui::DockBuilderSplitNode(dock_id_right_middle, ImGuiDir_Down, 0.5f, nullptr, &dock_id_right_middle);
 
-        ImGui::DockBuilderDockWindow("Tool", dock_id_right_top);
+        ImGui::DockBuilderDockWindow("Gizmo", dock_id_right_top);
         ImGui::DockBuilderDockWindow("Presets", dock_id_right_middle);
+        ImGui::DockBuilderDockWindow("Level", dock_id_right_middle);
         ImGui::DockBuilderDockWindow("Property Editor", dock_id_right_bottom);
+        ImGui::DockBuilderDockWindow("History", dock_id_right_bottom);
 
         ImGui::DockBuilderFinish(dock_space_id);
     }
