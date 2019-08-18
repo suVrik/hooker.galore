@@ -116,66 +116,96 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
             }
             ImGui::SameLine();
             if (ImGui::Button("Save As Preset")) {
-                // TODO: Save as Preset functionality.
+                ImGui::OpenPopup("Save As Preset?");
             }
 
             if (ImGui::BeginPopupModal("Add Component?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-                if (!selected_entity_single_component.selected_component_to_add || world.has(entity, selected_entity_single_component.selected_component_to_add)) {
+                auto is_valid_component_type = [&](entt::meta_type component_type) {
+                    return component_type && !world.has(entity, component_type);
+                };
+
+                if (!is_valid_component_type(selected_entity_single_component.selected_component_to_add)) {
                     selected_entity_single_component.selected_component_to_add = entt::meta_type();
                     world.each_type([&](entt::meta_type component_type) {
-                        if (!selected_entity_single_component.selected_component_to_add || world.has(entity, selected_entity_single_component.selected_component_to_add)) {
-                            if (!world.has(entity, component_type)) {
-                                entt::meta_prop component_name_property = component_type.prop("name"_hs);
-                                if (component_name_property && component_name_property.value().can_cast<const char*>()) {
-                                    selected_entity_single_component.selected_component_to_add = component_type;
-                                }
+                        if (!is_valid_component_type(selected_entity_single_component.selected_component_to_add) && is_valid_component_type(component_type)) {
+                            entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                            if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                                selected_entity_single_component.selected_component_to_add = component_type;
                             }
                         }
                     });
                 }
 
-                entt::meta_prop selected_component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
-                if (selected_component_name_property && selected_component_name_property.value().can_cast<const char*>()) {
-                    const char* const selected_component_name = selected_component_name_property.value().cast<const char*>();
-                    if (ImGui::BeginCombo("Components", selected_component_name)) {
-                        world.each_type([&](entt::meta_type component_type) {
-                            if (!world.has(entity, component_type)) {
-                                entt::meta_prop component_name_property = component_type.prop("name"_hs);
-                                if (component_name_property && component_name_property.value().can_cast<const char*>()) {
-                                    const std::string component_name = component_name_property.value().cast<const char*>();
-                                    if (ImGui::Selectable(component_name.c_str(), component_type == selected_entity_single_component.selected_component_to_add)) {
-                                        selected_entity_single_component.selected_component_to_add = component_type;
+                if (is_valid_component_type(selected_entity_single_component.selected_component_to_add)) {
+                    entt::meta_prop selected_component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
+                    if (selected_component_name_property && selected_component_name_property.value().can_cast<const char*>()) {
+                        const char* const selected_component_name = selected_component_name_property.value().cast<const char*>();
+                        if (ImGui::BeginCombo("Components", selected_component_name)) {
+                            world.each_type([&](entt::meta_type component_type) {
+                                if (is_valid_component_type(component_type)) {
+                                    entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                                    if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                                        const std::string component_name = component_name_property.value().cast<const char*>();
+                                        if (ImGui::Selectable(component_name.c_str(), component_type == selected_entity_single_component.selected_component_to_add)) {
+                                            selected_entity_single_component.selected_component_to_add = component_type;
+                                        }
                                     }
                                 }
-                            }
-                        });
-                        ImGui::EndCombo();
+                            });
+                            ImGui::EndCombo();
+                        }
                     }
                 }
 
                 ImGui::Spacing();
                 ImGui::Indent(125.f);
+                
                 if (ImGui::Button("Cancel")) {
                     selected_entity_single_component.selected_component_to_add = entt::meta_type();
                     ImGui::CloseCurrentPopup();
                 }
-                ImGui::SameLine();
-                if (ImGui::Button("Add Component")) {
-                    entt::meta_prop component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
-                    assert(component_name_property && component_name_property.value().can_cast<const char*>());
-                    
-                    const std::string component_name = component_name_property.value().cast<const char*>();
 
-                    auto* const change = history_single_component.begin(world, fmt::format("Add component \"{}\"", component_name));
-                    if (change != nullptr) {
-                        entt::meta_any component = world.construct_component(selected_entity_single_component.selected_component_to_add);
-                        if (component) {
-                            change->assign_component(world, entity, component);
+                if (is_valid_component_type(selected_entity_single_component.selected_component_to_add)) {
+                    ImGui::SameLine();
+                    if (ImGui::Button("Add Component")) {
+                        entt::meta_prop component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
+                        assert(component_name_property && component_name_property.value().can_cast<const char*>());
+
+                        const std::string component_name = component_name_property.value().cast<const char*>();
+
+                        auto* const change = history_single_component.begin(world, fmt::format("Add component \"{}\"", component_name));
+                        if (change != nullptr) {
+                            entt::meta_any component = world.construct_component(selected_entity_single_component.selected_component_to_add);
+                            if (component) {
+                                change->assign_component(world, entity, component);
+                            }
                         }
+
+                        selected_entity_single_component.selected_component_to_add = entt::meta_type();
+                        ImGui::CloseCurrentPopup();
                     }
+                }
 
-                    selected_entity_single_component.selected_component_to_add = entt::meta_type();
+                ImGui::EndPopup();
+            }
 
+            if (ImGui::BeginPopupModal("Save As Preset?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                // TODO: Implement proper saving.
+
+                static char TEMP[256] = {};
+                if (ImGui::InputText("Name", TEMP, sizeof(TEMP))) {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::Spacing();
+                ImGui::Indent(100.f);
+
+                if (ImGui::Button("Cancel")) {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Save Preset")) {
                     ImGui::CloseCurrentPopup();
                 }
 
