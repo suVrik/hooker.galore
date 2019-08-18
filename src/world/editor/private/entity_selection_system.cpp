@@ -11,11 +11,12 @@
 #include "world/shared/render/render_single_component.h"
 #include "world/shared/window_single_component.h"
 
+#include <ImGuizmo.h>
+#include <SDL2/SDL_timer.h>
 #include <algorithm>
 #include <fmt/format.h>
 #include <glm/common.hpp>
 #include <imgui.h>
-#include <ImGuizmo.h>
 #include <set>
 
 namespace hg {
@@ -89,73 +90,47 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             const bgfx::RendererType::Enum renderer_type = bgfx::getRendererType();
             if (renderer_type == bgfx::RendererType::OpenGL || renderer_type == bgfx::RendererType::OpenGLES) {
                 // OpenGL coordinate system starts at lower-left corner.
-                selected_entity_single_component.selection_start_y = window_single_component.height - selected_entity_single_component.selection_start_y;
-                selected_entity_single_component.selection_end_y = window_single_component.height - selected_entity_single_component.selection_end_y;
+                selected_entity_single_component.selection_y = window_single_component.height - selected_entity_single_component.selection_y;
             }
 
-            const int32_t selection_start_x = glm::clamp(std::min(selected_entity_single_component.selection_start_x, selected_entity_single_component.selection_end_x), 0, std::max(int32_t(window_single_component.width), 1) - 1);
-            const int32_t selection_start_y = glm::clamp(std::min(selected_entity_single_component.selection_start_y, selected_entity_single_component.selection_end_y), 0, std::max(int32_t(window_single_component.height), 1) - 1);
-            const int32_t selection_end_x = glm::clamp(std::max(selected_entity_single_component.selection_start_x, selected_entity_single_component.selection_end_x), 0, std::max(int32_t(window_single_component.width), 1) - 1);
-            const int32_t selection_end_y = glm::clamp(std::max(selected_entity_single_component.selection_start_y, selected_entity_single_component.selection_end_y), 0, std::max(int32_t(window_single_component.height), 1) - 1);
+            const int32_t selection_x = glm::clamp(selected_entity_single_component.selection_x, 0, std::max(int32_t(window_single_component.width), 1) - 1);
+            const int32_t selection_y = glm::clamp(selected_entity_single_component.selection_y, 0, std::max(int32_t(window_single_component.height), 1) - 1);
 
-            std::set<uint32_t> selected_entities;
-            for (int32_t y = selection_start_y; y <= selection_end_y; y++) {
-                for (int32_t x = selection_start_x; x <= selection_end_x; x++) {
-                    const size_t offset = size_t(window_single_component.width * y + x) * 4;
-                    if (offset + sizeof(uint32_t) <= picking_pass_single_component.target_data.size()) {
-                        selected_entities.insert(*reinterpret_cast<uint32_t*>(picking_pass_single_component.target_data.data() + offset) & 0x00FFFFFF);
-                    }
-                }
+            uint32_t selected_entity = 0;
+            const size_t offset = size_t(window_single_component.width * selection_y + selection_x) * 4;
+            if (offset + sizeof(uint32_t) <= picking_pass_single_component.target_data.size()) {
+                selected_entity = *reinterpret_cast<uint32_t*>(picking_pass_single_component.target_data.data() + offset) & 0x00FFFFFF;
             }
 
             if (!normal_input_single_component.is_down(Control::KEY_SHIFT) && !normal_input_single_component.is_down(Control::KEY_ALT)) {
                 selected_entity_single_component.clear_selection(world);
             }
 
-            for (uint32_t selected_object : selected_entities) {
-                if (selected_object != 0 && guid_single_component.guid_to_entity.count(selected_object) > 0) {
+            if (selected_entity != 0) {
+                if (guid_single_component.guid_to_entity.count(selected_entity) > 0) {
                     if (normal_input_single_component.is_down(Control::KEY_ALT)) {
-                        selected_entity_single_component.remove_from_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                        selected_entity_single_component.remove_from_selection(world, guid_single_component.guid_to_entity[selected_entity]);
                     } else {
-                        selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_object]);
+                        selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_entity]);
                     }
                 }
-            }
-
-            if (selected_entities.empty()) {
+            } else {
                 if (!normal_input_single_component.is_down(Control::KEY_SHIFT) && !normal_input_single_component.is_down(Control::KEY_ALT)) {
                     selected_entity_single_component.select_entity(world, entt::null);
                 }
             }
         }
     } else {
+        const int32_t mouse_x = normal_input_single_component.get_mouse_x();
+        const int32_t mouse_y = normal_input_single_component.get_mouse_y();
         if (normal_input_single_component.is_pressed(Control::BUTTON_LEFT)) {
-            selected_entity_single_component.is_selecting = true;
-            selected_entity_single_component.selection_start_x = normal_input_single_component.get_mouse_x();
-            selected_entity_single_component.selection_start_y = normal_input_single_component.get_mouse_y();
-        }
-
-        if (selected_entity_single_component.is_selecting) {
-            ImDrawList* draw_list = ImGui::GetBackgroundDrawList();
-            if (selected_entity_single_component.selection_start_x != normal_input_single_component.get_mouse_x() ||
-                selected_entity_single_component.selection_start_y != normal_input_single_component.get_mouse_y()) {
-                draw_list->AddRectFilled(ImVec2(float(selected_entity_single_component.selection_start_x), float(selected_entity_single_component.selection_start_y)),
-                                         ImVec2(float(normal_input_single_component.get_mouse_x()), float(normal_input_single_component.get_mouse_y())),
-                                         ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 0.f, 0.15f)));
-                draw_list->AddRect(ImVec2(float(selected_entity_single_component.selection_start_x), float(selected_entity_single_component.selection_start_y)),
-                                   ImVec2(float(normal_input_single_component.get_mouse_x()), float(normal_input_single_component.get_mouse_y())),
-                                   ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 0.f, 1.f)));
-            }
-
-            if (normal_input_single_component.is_released(Control::BUTTON_LEFT)) {
+            selected_entity_single_component.selection_x = mouse_x;
+            selected_entity_single_component.selection_y = mouse_y;
+            selected_entity_single_component.selection_time = SDL_GetTicks();
+        } else if (normal_input_single_component.is_released(Control::BUTTON_LEFT)) {
+            if (SDL_GetTicks() - selected_entity_single_component.selection_time < 200) {
                 picking_pass_single_component.perform_picking = true;
                 selected_entity_single_component.waiting_for_pick = true;
-                selected_entity_single_component.selection_end_x = normal_input_single_component.get_mouse_x();
-                selected_entity_single_component.selection_end_y = normal_input_single_component.get_mouse_y();
-            }
-
-            if (!normal_input_single_component.is_down(Control::BUTTON_LEFT)) {
-                selected_entity_single_component.is_selecting = false;
             }
         }
     }
