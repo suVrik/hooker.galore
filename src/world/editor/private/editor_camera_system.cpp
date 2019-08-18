@@ -84,7 +84,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                     editor_camera_component.press_time = SDL_GetTicks();
                 }
 
-                if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 100 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
+                if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 50 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
                     SDL_SetRelativeMouseMode(SDL_TRUE);
 
                     const float previous_yaw = editor_camera_component.yaw;
@@ -152,7 +152,7 @@ void EditorCameraSystem::update(float elapsed_time) {
                 editor_camera_component.press_time = SDL_GetTicks();
             }
 
-            if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 100 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
+            if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 50 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
 
                 editor_camera_component.yaw += normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;
