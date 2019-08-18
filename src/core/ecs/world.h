@@ -24,6 +24,10 @@ public:
     template <typename T>
     void register_component() noexcept;
 
+    /** Iterate over all registered components. */
+    template <typename T>
+    void each_type(T callback) const noexcept;
+
     /** Construct specified component using default constructor. */
     entt::meta_any construct_component(entt::meta_type component) const noexcept;
 

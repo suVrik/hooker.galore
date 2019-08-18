@@ -235,7 +235,7 @@ entt::meta_handle HistorySingleComponent::HistoryChange::replace_component(World
     assert(world.has<EditorComponent>(entity));
     assert(world.has(entity, original.type()));
 
-    HISTORY_LOG("Replace component from entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
+    HISTORY_LOG("Replace component \"%s\" from entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
 
     HistoryAction& action = actions.emplace_back();
     action.action_type = ActionType::REPLACE_COMPONENT;
@@ -243,6 +243,21 @@ entt::meta_handle HistorySingleComponent::HistoryChange::replace_component(World
     action.components.push_back(world.copy_component(world.get(entity, original.type())));
 
     return world.replace(entity, original);
+}
+
+void HistorySingleComponent::HistoryChange::remove_component(World& world, entt::entity entity, const entt::meta_type& component_type) noexcept {
+    assert(world.valid(entity));
+    assert(world.has<EditorComponent>(entity));
+    assert(world.has(entity, component_type));
+
+    HISTORY_LOG("Remove component \"%s\" from entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
+
+    HistoryAction& action = actions.emplace_back();
+    action.action_type = ActionType::REMOVE_COMPONENT;
+    action.entity_guid = world.get<EditorComponent>(entity).guid;
+    action.components.push_back(world.copy_component(world.get(entity, component_type)));
+
+    world.remove(entity, component_type);
 }
 
 HistorySingleComponent::HistoryChange* HistorySingleComponent::begin(World& world, const std::string& description) noexcept {

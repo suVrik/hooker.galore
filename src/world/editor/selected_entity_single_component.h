@@ -16,11 +16,15 @@ public:
     void remove_from_selection(World& world, entt::entity entity) noexcept;
     void clear_selection(World& world) noexcept;
 
+    // Entity selection system.
     std::vector<entt::entity> selected_entities;
     int32_t selection_x     = 0;
     int32_t selection_y     = 0;
     uint32_t selection_time = 0;
     bool waiting_for_pick   = false;
+
+    // Property editor system.
+    entt::meta_type selected_component_to_add;
 
     // Menu items.
     std::shared_ptr<bool> select_all_entities;

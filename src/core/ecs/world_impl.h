@@ -79,6 +79,13 @@ void World::register_component() noexcept {
 }
 
 template <typename T>
+void World::each_type(T callback) const noexcept {
+    for (const auto& [type, descriptor] : m_components) {
+        callback(type);
+    }
+}
+
+template <typename T>
 void World::each(entt::entity entity, T callback) const noexcept {
     for (const auto& [type, descriptor] : m_components) {
         const entt::meta_handle component_handle = get(entity, type);

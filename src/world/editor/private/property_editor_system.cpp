@@ -32,65 +32,155 @@ void PropertyEditorSystem::update(float /*elapsed_time*/) {
             entt::entity entity = selected_entity_single_component.selected_entities[0];
             assert(world.valid(entity));
 
-            uint32_t index = 0;
-            world.each(entity, [&](entt::meta_handle component_handle) {
-                entt::meta_type component_type = component_handle.type();
-                if (component_type) {
-                    entt::meta_prop ignore_property = component_handle.type().prop("ignore"_hs);
-                    if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-                        std::string component_name;
+            const ImVec2 window_size = ImGui::GetWindowSize();
+            if (ImGui::BeginChildFrame(ImGui::GetID("property_editor_child"), ImVec2(0.f, window_size.y - 60.f), ImGuiWindowFlags_NoBackground)) {
+                uint32_t index = 0;
+                world.each(entity, [&](entt::meta_handle component_handle) {
+                    entt::meta_type component_type = component_handle.type();
+                    if (component_type) {
+                        entt::meta_prop ignore_property = component_handle.type().prop("ignore"_hs);
+                        if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
+                            std::string component_name;
 
-                        entt::meta_prop component_name_property = component_type.prop("name"_hs);
-                        if (component_name_property && component_name_property.value().can_cast<const char*>()) {
-                            component_name = component_name_property.value().cast<const char*>();
-                        } else {
-                            component_name = "Undefined-" + std::to_string(++index);
-                        }
-
-                        if (ImGui::TreeNode(component_name.c_str())) {
-                            entt::meta_any component_copy = world.copy_component(component_handle);
-                            assert(component_copy);
-
-                            uint32_t old_guid = 0;
-                            std::string old_name;
-                            if (component_type == entt::resolve<EditorComponent>()) {
-                                auto& editor_component = component_copy.cast<EditorComponent>();
-                                old_guid = editor_component.guid;
-                                old_name = editor_component.name;
+                            entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                            if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                                component_name = component_name_property.value().cast<const char*>();
+                            } else {
+                                component_name = "Undefined-" + std::to_string(++index);
                             }
 
-                            if (list_properties(component_copy)) {
+                            const bool is_tree_node_open = ImGui::TreeNode(component_name.c_str());
+
+                            if (component_type != entt::resolve<EditorComponent>()) {
+                                if (ImGui::BeginPopupContextItem(component_name.c_str())) {
+                                    const std::string title(fmt::format("Remove component \"{}\"", component_name));
+                                    if (ImGui::Selectable(title.c_str())) {
+                                        auto* const change = history_single_component.begin(world, title);
+                                        if (change != nullptr) {
+                                            change->remove_component(world, entity, component_type);
+                                        }
+                                    }
+                                    ImGui::EndPopup();
+                                }
+                            }
+
+                            if (is_tree_node_open) {
+                                entt::meta_any component_copy = world.copy_component(component_handle);
+                                assert(component_copy);
+
+                                uint32_t old_guid = 0;
+                                std::string old_name;
                                 if (component_type == entt::resolve<EditorComponent>()) {
                                     auto& editor_component = component_copy.cast<EditorComponent>();
+                                    old_guid = editor_component.guid;
+                                    old_name = editor_component.name;
+                                }
 
-                                    if (editor_component.guid != old_guid) {
-                                        guid_single_component.guid_to_entity.erase(old_guid);
-                                        if (guid_single_component.guid_to_entity.count(editor_component.guid & 0x00FFFFFF) > 0) {
-                                            editor_component.guid = guid_single_component.acquire_unique_guid(entity);
+                                if (list_properties(component_copy)) {
+                                    if (component_type == entt::resolve<EditorComponent>()) {
+                                        auto& editor_component = component_copy.cast<EditorComponent>();
+
+                                        if (editor_component.guid != old_guid) {
+                                            guid_single_component.guid_to_entity.erase(old_guid);
+                                            if (guid_single_component.guid_to_entity.count(editor_component.guid & 0x00FFFFFF) > 0) {
+                                                editor_component.guid = guid_single_component.acquire_unique_guid(entity);
+                                            }
+                                        }
+
+                                        if (editor_component.name != old_name) {
+                                            name_single_component.name_to_entity.erase(old_name);
+                                            if (editor_component.name.empty()) {
+                                                editor_component.name = "undefined";
+                                            }
+                                            if (name_single_component.name_to_entity.count(editor_component.name) > 0) {
+                                                editor_component.name = name_single_component.acquire_unique_name(entity, editor_component.name);
+                                            }
                                         }
                                     }
 
-                                    if (editor_component.name != old_name) {
-                                        name_single_component.name_to_entity.erase(old_name);
-                                        if (editor_component.name.empty()) {
-                                            editor_component.name = "undefined";
-                                        }
-                                        if (name_single_component.name_to_entity.count(editor_component.name) > 0) {
-                                            editor_component.name = name_single_component.acquire_unique_name(entity, editor_component.name);
-                                        }
+                                    auto* const change = history_single_component.begin(world, fmt::format("Change component \"{}\"", component_name));
+                                    if (change != nullptr) {
+                                        change->replace_component(world, entity, component_copy);
                                     }
                                 }
-
-                                auto* change = history_single_component.begin(world, fmt::format("Change component \"{}\"", component_name));
-                                if (change != nullptr) {
-                                    change->replace_component(world, entity, component_copy);
-                                }
+                                ImGui::TreePop();
                             }
-                            ImGui::TreePop();
                         }
                     }
+                });
+            }
+            ImGui::EndChildFrame();
+
+            if (ImGui::Button("Add Component")) {
+                ImGui::OpenPopup("Add Component?");
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Save As Preset")) {
+                // TODO: Save as Preset functionality.
+            }
+
+            if (ImGui::BeginPopupModal("Add Component?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                if (!selected_entity_single_component.selected_component_to_add || world.has(entity, selected_entity_single_component.selected_component_to_add)) {
+                    selected_entity_single_component.selected_component_to_add = entt::meta_type();
+                    world.each_type([&](entt::meta_type component_type) {
+                        if (!selected_entity_single_component.selected_component_to_add || world.has(entity, selected_entity_single_component.selected_component_to_add)) {
+                            if (!world.has(entity, component_type)) {
+                                entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                                if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                                    selected_entity_single_component.selected_component_to_add = component_type;
+                                }
+                            }
+                        }
+                    });
                 }
-            });
+
+                entt::meta_prop selected_component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
+                if (selected_component_name_property && selected_component_name_property.value().can_cast<const char*>()) {
+                    const char* const selected_component_name = selected_component_name_property.value().cast<const char*>();
+                    if (ImGui::BeginCombo("Components", selected_component_name)) {
+                        world.each_type([&](entt::meta_type component_type) {
+                            if (!world.has(entity, component_type)) {
+                                entt::meta_prop component_name_property = component_type.prop("name"_hs);
+                                if (component_name_property && component_name_property.value().can_cast<const char*>()) {
+                                    const std::string component_name = component_name_property.value().cast<const char*>();
+                                    if (ImGui::Selectable(component_name.c_str(), component_type == selected_entity_single_component.selected_component_to_add)) {
+                                        selected_entity_single_component.selected_component_to_add = component_type;
+                                    }
+                                }
+                            }
+                        });
+                        ImGui::EndCombo();
+                    }
+                }
+
+                ImGui::Spacing();
+                ImGui::Indent(125.f);
+                if (ImGui::Button("Cancel")) {
+                    selected_entity_single_component.selected_component_to_add = entt::meta_type();
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Add Component")) {
+                    entt::meta_prop component_name_property = selected_entity_single_component.selected_component_to_add.prop("name"_hs);
+                    assert(component_name_property && component_name_property.value().can_cast<const char*>());
+                    
+                    const std::string component_name = component_name_property.value().cast<const char*>();
+
+                    auto* const change = history_single_component.begin(world, fmt::format("Add component \"{}\"", component_name));
+                    if (change != nullptr) {
+                        entt::meta_any component = world.construct_component(selected_entity_single_component.selected_component_to_add);
+                        if (component) {
+                            change->assign_component(world, entity, component);
+                        }
+                    }
+
+                    selected_entity_single_component.selected_component_to_add = entt::meta_type();
+
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
         } else {
             if (!selected_entity_single_component.selected_entities.empty()) {
                 // TODO: Edit properties of many entities at the same time.

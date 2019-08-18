@@ -96,100 +96,103 @@ void GizmoSystem::update(float /*elapsed_time*/) {
         if (selected_entity_single_component.selected_entities.size() == 1) {
             entt::entity selected_entity = selected_entity_single_component.selected_entities[0];
             assert(world.valid(selected_entity));
+            assert(world.has<EditorComponent>(selected_entity));
 
             auto& editor_component = world.get<EditorComponent>(selected_entity);
-            auto& transform_component = world.get<TransformComponent>(selected_entity);
 
-            glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
-            transform = transform * glm::mat4_cast(transform_component.rotation);
-            transform = glm::scale(transform, transform_component.scale);
+            const auto* const transform_component = world.try_get<TransformComponent>(selected_entity);
+            if (transform_component != nullptr) {
+                glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component->translation);
+                transform = transform * glm::mat4_cast(transform_component->rotation);
+                transform = glm::scale(transform, transform_component->scale);
 
-            float* snap = nullptr;
-            if (is_snapping) {
-                static float SNAP[3] = { 45.f, 45.f, 45.f };
-                if (gizmo_single_component.operation == ImGuizmo::OPERATION::TRANSLATE) {
-                    SNAP[0] = 1.f;
-                    SNAP[1] = 1.f;
-                    SNAP[2] = 1.f;
-                } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::SCALE) {
-                    if (!was_using) {
-                        SNAP[0] = 1.f / transform_component.scale.x;
-                        SNAP[1] = 1.f / transform_component.scale.y;
-                        SNAP[2] = 1.f / transform_component.scale.z;
-                    }
-                } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::ROTATE) {
-                    SNAP[0] = 45.f;
-                }
-                snap = SNAP;
-            }
-
-            float* local_bounds = nullptr;
-            float* bounds_snap = nullptr;
-            if (gizmo_single_component.operation == ImGuizmo::OPERATION::BOUNDS) {
-                if (auto *model_component = world.try_get<ModelComponent>(selected_entity); model_component != nullptr) {
-                    local_bounds = reinterpret_cast<float *>(&model_component->model.bounds);
-                }
-
+                float* snap = nullptr;
                 if (is_snapping) {
-                    static float BOUNDS_SNAP[3];
-                    if (!was_using) {
-                        BOUNDS_SNAP[0] = 1.f / transform_component.scale.x;
-                        BOUNDS_SNAP[1] = 1.f / transform_component.scale.y;
-                        BOUNDS_SNAP[2] = 1.f / transform_component.scale.z;
+                    static float SNAP[3] = { 45.f, 45.f, 45.f };
+                    if (gizmo_single_component.operation == ImGuizmo::OPERATION::TRANSLATE) {
+                        SNAP[0] = 1.f;
+                        SNAP[1] = 1.f;
+                        SNAP[2] = 1.f;
+                    } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::SCALE) {
+                        if (!was_using) {
+                            SNAP[0] = 1.f / transform_component->scale.x;
+                            SNAP[1] = 1.f / transform_component->scale.y;
+                            SNAP[2] = 1.f / transform_component->scale.z;
+                        }
+                    } else if (gizmo_single_component.operation == ImGuizmo::OPERATION::ROTATE) {
+                        SNAP[0] = 45.f;
                     }
-                    bounds_snap = BOUNDS_SNAP;
+                    snap = SNAP;
                 }
-            }
 
-            ImGuizmo::MODE mode = gizmo_single_component.is_local_space ? ImGuizmo::MODE::LOCAL : ImGuizmo::MODE::WORLD;
-            if (gizmo_single_component.operation == ImGuizmo::SCALE) {
-                mode = ImGuizmo::LOCAL;
-            }
+                float* local_bounds = nullptr;
+                float* bounds_snap = nullptr;
+                if (gizmo_single_component.operation == ImGuizmo::OPERATION::BOUNDS) {
+                    if (auto* model_component = world.try_get<ModelComponent>(selected_entity); model_component != nullptr) {
+                        local_bounds = reinterpret_cast<float*>(&model_component->model.bounds);
+                    }
 
-            ImGuiIO& io = ImGui::GetIO();
-            ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-            ImGuizmo::Manipulate(glm::value_ptr(camera_single_component.view_matrix),
-                                 glm::value_ptr(camera_single_component.projection_matrix),
-                                 gizmo_single_component.operation, mode,
-                                 glm::value_ptr(transform), nullptr, snap, local_bounds, bounds_snap);
+                    if (is_snapping) {
+                        static float BOUNDS_SNAP[3];
+                        if (!was_using) {
+                            BOUNDS_SNAP[0] = 1.f / transform_component->scale.x;
+                            BOUNDS_SNAP[1] = 1.f / transform_component->scale.y;
+                            BOUNDS_SNAP[2] = 1.f / transform_component->scale.z;
+                        }
+                        bounds_snap = BOUNDS_SNAP;
+                    }
+                }
 
-            if (ImGuizmo::IsUsing()) {
-                if (!was_using) {
-                    if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
-                        auto* change = history_single_component.begin(world, fmt::format("Clone entity \"{}\"", editor_component.name));
+                ImGuizmo::MODE mode = gizmo_single_component.is_local_space ? ImGuizmo::MODE::LOCAL : ImGuizmo::MODE::WORLD;
+                if (gizmo_single_component.operation == ImGuizmo::SCALE) {
+                    mode = ImGuizmo::LOCAL;
+                }
+
+                ImGuiIO& io = ImGui::GetIO();
+                ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+                ImGuizmo::Manipulate(glm::value_ptr(camera_single_component.view_matrix),
+                    glm::value_ptr(camera_single_component.projection_matrix),
+                    gizmo_single_component.operation, mode,
+                    glm::value_ptr(transform), nullptr, snap, local_bounds, bounds_snap);
+
+                if (ImGuizmo::IsUsing()) {
+                    if (!was_using) {
+                        if (normal_input_single_component.is_down(Control::KEY_SHIFT)) {
+                            auto* change = history_single_component.begin(world, fmt::format("Clone entity \"{}\"", editor_component.name));
+                            if (change != nullptr) {
+                                selected_entity_single_component.clear_selection(world);
+
+                                entt::entity new_entity = change->create_entity(world, editor_component.name);
+                                world.each(selected_entity, [&](entt::meta_handle component_handle) {
+                                    if (component_handle.type() != entt::resolve<EditorComponent>()) {
+                                        entt::meta_any component_copy = world.copy_component(component_handle);
+                                        change->assign_component(world, new_entity, component_copy);
+                                    }
+                                });
+
+                                selected_entity_single_component.select_entity(world, new_entity);
+                                selected_entity = new_entity;
+                            }
+                        }
+
+                        HistorySingleComponent::HistoryChange* change = history_single_component.begin_continuous(world, fmt::format("Transform entity \"{}\"", editor_component.name));
                         if (change != nullptr) {
-                            selected_entity_single_component.clear_selection(world);
-
-                            entt::entity new_entity = change->create_entity(world, editor_component.name);
-                            world.each(selected_entity, [&](entt::meta_handle component_handle) {
-                                if (component_handle.type() != entt::resolve<EditorComponent>()) {
-                                    entt::meta_any component_copy = world.copy_component(component_handle);
-                                    change->assign_component(world, new_entity, component_copy);
-                                }
-                            });
-
-                            selected_entity_single_component.select_entity(world, new_entity);
-                            selected_entity = new_entity;
+                            entt::meta_any changed_transform_component(world.get<TransformComponent>(selected_entity));
+                            change->replace_component(world, selected_entity, changed_transform_component);
+                            gizmo_single_component.is_changing = true;
                         }
                     }
 
-                    HistorySingleComponent::HistoryChange* change = history_single_component.begin_continuous(world, fmt::format("Transform entity \"{}\"", editor_component.name));
-                    if (change != nullptr) {
-                        entt::meta_any changed_transform_component(world.get<TransformComponent>(selected_entity));
-                        change->replace_component(world, selected_entity, changed_transform_component);
-                        gizmo_single_component.is_changing = true;
+                    if (gizmo_single_component.is_changing) {
+                        auto& changed_transform_component = world.get<TransformComponent>(selected_entity);
+
+                        changed_transform_component.translation = glm::vec3(transform[3].x, transform[3].y, transform[3].z);
+                        changed_transform_component.scale = glm::vec3(std::max(0.05f, glm::length(transform[0])), std::max(0.05f, glm::length(transform[1])), std::max(0.05f, glm::length(transform[2])));
+                        transform[0] /= glm::length(transform[0]);
+                        transform[1] /= glm::length(transform[1]);
+                        transform[2] /= glm::length(transform[2]);
+                        changed_transform_component.rotation = glm::quat(transform);
                     }
-                }
-
-                if (gizmo_single_component.is_changing) {
-                    auto& changed_transform_component = world.get<TransformComponent>(selected_entity);
-
-                    changed_transform_component.translation = glm::vec3(transform[3].x, transform[3].y, transform[3].z);
-                    changed_transform_component.scale = glm::vec3(std::max(0.05f, glm::length(transform[0])), std::max(0.05f, glm::length(transform[1])), std::max(0.05f, glm::length(transform[2])));
-                    transform[0] /= glm::length(transform[0]);
-                    transform[1] /= glm::length(transform[1]);
-                    transform[2] /= glm::length(transform[2]);
-                    changed_transform_component.rotation = glm::quat(transform);
                 }
             }
         } else {
@@ -199,8 +202,10 @@ void GizmoSystem::update(float /*elapsed_time*/) {
 
             glm::vec3 middle_translation(0.f, 0.f, 0.f);
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
-                auto& object_transform_component = world.get<TransformComponent>(selected_entity);
-                middle_translation += object_transform_component.translation;
+                auto* const object_transform_component = world.try_get<TransformComponent>(selected_entity);
+                if (object_transform_component != nullptr) {
+                    middle_translation += object_transform_component->translation;
+                }
             }
             middle_translation /= selected_entity_single_component.selected_entities.size();
 
@@ -264,8 +269,11 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                     HistorySingleComponent::HistoryChange* change = history_single_component.begin_continuous(world, "Transform entities");
                     if (change != nullptr) {
                         for (entt::entity entity : selected_entity_single_component.selected_entities) {
-                            entt::meta_any transform_component(world.get<TransformComponent>(entity));
-                            change->replace_component(world, entity, transform_component);
+                            auto* const transform_component = world.try_get<TransformComponent>(entity);
+                            if (transform_component != nullptr) {
+                                entt::meta_any any_transform_component(*transform_component);
+                                change->replace_component(world, entity, any_transform_component);
+                            }
                         }
                         gizmo_single_component.is_changing = true;
                     }
@@ -278,14 +286,16 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                     glm::quat delta_rotation(delta_transform);
 
                     for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
-                        auto& changed_transform_component = world.get<TransformComponent>(selected_entity);
-                        if (gizmo_single_component.operation == ImGuizmo::TRANSLATE) {
-                            changed_transform_component.translation += delta_translation;
-                        } else {
-                            const glm::vec3 origin_translation = changed_transform_component.translation - middle_translation;
-                            const glm::vec3 new_origin_translation = delta_rotation * origin_translation;
-                            changed_transform_component.translation = middle_translation + new_origin_translation;
-                            changed_transform_component.rotation = delta_rotation * changed_transform_component.rotation;
+                        auto* const changed_transform_component = world.try_get<TransformComponent>(selected_entity);
+                        if (changed_transform_component != nullptr) {
+                            if (gizmo_single_component.operation == ImGuizmo::TRANSLATE) {
+                                changed_transform_component->translation += delta_translation;
+                            } else {
+                                const glm::vec3 origin_translation = changed_transform_component->translation - middle_translation;
+                                const glm::vec3 new_origin_translation = delta_rotation * origin_translation;
+                                changed_transform_component->translation = middle_translation + new_origin_translation;
+                                changed_transform_component->rotation = delta_rotation * changed_transform_component->rotation;
+                            }
                         }
                     }
                 }
