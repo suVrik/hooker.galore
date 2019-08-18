@@ -7,9 +7,10 @@
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/transform_component.h"
 
+#include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_timer.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/vector_query.hpp>
-#include <SDL2/SDL_mouse.h>
 
 namespace hg {
 
@@ -67,8 +68,10 @@ void EditorCameraSystem::update(float elapsed_time) {
         if ((normal_input_single_component.is_down(Control::KEY_ALT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE) || normal_input_single_component.get_mouse_wheel() != 0) && !selected_entity_single_component.selected_entities.empty()) {
             glm::vec3 middle_translation(0.f, 0.f, 0.f);
             for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
-                auto& object_transform_component = world.get<TransformComponent>(selected_entity);
-                middle_translation += object_transform_component.translation;
+                auto* const object_transform_component = world.try_get<TransformComponent>(selected_entity);
+                if (object_transform_component != nullptr) {
+                    middle_translation += object_transform_component->translation;
+                }
             }
             middle_translation /= selected_entity_single_component.selected_entities.size();
 
@@ -77,7 +80,11 @@ void EditorCameraSystem::update(float elapsed_time) {
                 float delta_yaw = 0.f;
                 float delta_pitch = 0.f;
 
-                if (normal_input_single_component.is_down(Control::BUTTON_RIGHT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
+                if (normal_input_single_component.is_pressed(Control::BUTTON_LEFT)) {
+                    editor_camera_component.press_time = SDL_GetTicks();
+                }
+
+                if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 100 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
                     SDL_SetRelativeMouseMode(SDL_TRUE);
 
                     const float previous_yaw = editor_camera_component.yaw;
@@ -141,7 +148,11 @@ void EditorCameraSystem::update(float elapsed_time) {
                 delta_z = -speed;
             }
 
-            if (normal_input_single_component.is_down(Control::BUTTON_RIGHT)) {
+            if (normal_input_single_component.is_pressed(Control::BUTTON_LEFT)) {
+                editor_camera_component.press_time = SDL_GetTicks();
+            }
+
+            if (normal_input_single_component.is_down(Control::BUTTON_LEFT) && SDL_GetTicks() - editor_camera_component.press_time >= 100 || normal_input_single_component.is_down(Control::BUTTON_MIDDLE)) {
                 SDL_SetRelativeMouseMode(SDL_TRUE);
 
                 editor_camera_component.yaw += normal_input_single_component.get_delta_mouse_x() * MOUSE_SENSITIVITY;

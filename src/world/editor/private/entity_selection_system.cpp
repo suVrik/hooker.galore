@@ -128,7 +128,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             selected_entity_single_component.selection_y = mouse_y;
             selected_entity_single_component.selection_time = SDL_GetTicks();
         } else if (normal_input_single_component.is_released(Control::BUTTON_LEFT)) {
-            if (SDL_GetTicks() - selected_entity_single_component.selection_time < 200) {
+            if (SDL_GetTicks() - selected_entity_single_component.selection_time < 150) {
                 picking_pass_single_component.perform_picking = true;
                 selected_entity_single_component.waiting_for_pick = true;
             }

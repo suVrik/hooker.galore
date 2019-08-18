@@ -16,11 +16,16 @@ WindowSystem::WindowSystem(World& world)
     }
 
     auto& window_single_component = world.set<WindowSingleComponent>();
-    window_single_component.window = SDL_CreateWindow(window_single_component.title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_single_component.width, window_single_component.height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window_single_component.window = SDL_CreateWindow(window_single_component.title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_single_component.width, window_single_component.height, SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
     if (window_single_component.window == nullptr) {
         SDL_Quit();
         throw std::runtime_error(fmt::format("Failed to initialize a window!\nDetails: {}", SDL_GetError()));
     }
+
+    int window_width, window_height;
+    SDL_GetWindowSize(window_single_component.window, &window_width, &window_height);
+    window_single_component.width = static_cast<uint32_t>(window_width);
+    window_single_component.height = static_cast<uint32_t>(window_height);
 
     world.set<NormalInputSingleComponent>();
 }
