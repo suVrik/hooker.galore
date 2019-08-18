@@ -12,6 +12,9 @@ struct CameraSingleComponent final {
 
     glm::vec3 translation                    = glm::vec3(0.f);
     glm::quat rotation                       = glm::quat(1.f, 0.f, 0.f, 0.f);
+    float fov                                = glm::radians(60.f);
+    float z_near                             = 0.1f;
+    float z_far                              = 1000.f;
     glm::mat4 view_matrix                    = glm::mat4(1.f);
     glm::mat4 projection_matrix              = glm::mat4(1.f);
     glm::mat4 view_projection_matrix         = glm::mat4(1.f);

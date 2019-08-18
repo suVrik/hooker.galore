@@ -84,7 +84,12 @@ void GizmoSystem::update(float /*elapsed_time*/) {
     }
     ImGui::End();
 
-    if (!selected_entity_single_component.is_selecting && !selected_entity_single_component.selected_entities.empty()) {
+    bool is_disabled = false;
+    if (!ImGuizmo::IsUsing()) {
+        is_disabled = normal_input_single_component.is_down(Control::BUTTON_LEFT) || normal_input_single_component.is_down(Control::BUTTON_RIGHT) || normal_input_single_component.is_down(Control::BUTTON_MIDDLE);
+    }
+
+    if (!selected_entity_single_component.is_selecting && !is_disabled && !selected_entity_single_component.selected_entities.empty()) {
         const bool was_using = ImGuizmo::IsUsing();
         const bool is_snapping = normal_input_single_component.is_down(Control::KEY_CTRL);
 

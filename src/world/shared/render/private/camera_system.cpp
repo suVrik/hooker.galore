@@ -11,10 +11,6 @@ CameraSystem::CameraSystem(World& world) noexcept
 }
 
 void CameraSystem::update(float /*elapsed_time*/) {
-    constexpr float FOV    = glm::radians(60.f);
-    constexpr float Z_NEAR = 0.1f;
-    constexpr float Z_FAR  = 1000.f;
-
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
@@ -27,7 +23,7 @@ void CameraSystem::update(float /*elapsed_time*/) {
         camera_single_component.translation = transform_component.translation;
         camera_single_component.rotation = transform_component.rotation;
         camera_single_component.view_matrix = glm::lookAtLH(transform_component.translation, transform_component.translation + forward, up);
-        camera_single_component.projection_matrix = glm::perspectiveFovLH(FOV, float(window_single_component.width), float(window_single_component.height), Z_NEAR, Z_FAR);
+        camera_single_component.projection_matrix = glm::perspectiveFovLH(camera_single_component.fov, float(window_single_component.width), float(window_single_component.height), camera_single_component.z_near, camera_single_component.z_far);
         camera_single_component.view_projection_matrix = camera_single_component.projection_matrix * camera_single_component.view_matrix;
         camera_single_component.inverse_view_matrix = glm::inverse(camera_single_component.view_matrix);
         camera_single_component.inverse_projection_matrix = glm::inverse(camera_single_component.projection_matrix);
