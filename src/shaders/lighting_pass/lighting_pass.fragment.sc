@@ -11,14 +11,14 @@ SAMPLERCUBE(s_skybox_irradiance, 3);
 SAMPLERCUBE(s_skybox_prefilter,  4);
 SAMPLER2D(s_skybox_lut,          5);
 
-uniform vec4 u_light_position;
 uniform vec4 u_light_color;
+uniform vec4 u_light_position;
 uniform vec4 u_mip_prefilter_max;
 
 void main() {
     vec2 uv = to_uv(v_texcoord0);
     vec4 color_roughness = texture2D(s_color_roughness, uv);
-    vec3 color = pow(color_roughness.xyz, vec3(2.2, 2.2, 2.2));
+    vec3 color = toLinear(color_roughness.xyz);
     float roughness = color_roughness.w;
 
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, uv);
@@ -26,7 +26,7 @@ void main() {
     float metal = normal_metal_ao.z;
     float ao = normal_metal_ao.w;
 
-    float clip_depth = to_clip_space_depth(texture2D(s_depth, uv).x);
+    float clip_depth = texture2D(s_depth, uv).x;
     vec3 clip_position = to_clip_space_position(vec3(uv * 2.0 - 1.0, clip_depth));
     vec3 world_position = to_world_space_position(clip_position);
     vec3 camera_position = mul(u_invView, vec4(0.0, 0.0, 0.0, 1.0)).xyz;
@@ -47,7 +47,7 @@ void main() {
 
         float ndf = distribution_ggx(normal, half_dir, roughness);
         float g = geometry_smith(normal, camera_dir, light_dir, roughness);
-        vec3 f = fresnel_schlick(max(dot(half_dir, camera_dir), 0.0), surface_reflect_zero, roughness);
+        vec3 f = fresnel_schlick(max(dot(half_dir, camera_dir), 0.0), surface_reflect_zero, 0.0);
 
         vec3 numerator = ndf * g * f;
         float denominator = 4.0 * max(dot(normal, camera_dir), 0.0) * max(dot(normal, light_dir), 0.0) + 0.001;

@@ -42,15 +42,15 @@ LightingPassSystem::LightingPassSystem(World& world)
     bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(LIGHTING_PASS_SHADER, type, "lighting_pass_fragment");
     lighting_pass_single_component.lighting_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-    lighting_pass_single_component.color_roughness_uniform = bgfx::createUniform("s_color_roughness", bgfx::UniformType::Sampler);
-    lighting_pass_single_component.normal_metal_ao_uniform = bgfx::createUniform("s_normal_metal_ao", bgfx::UniformType::Sampler);
-    lighting_pass_single_component.depth_uniform           = bgfx::createUniform("s_depth",           bgfx::UniformType::Sampler);
-    lighting_pass_single_component.light_position_uniform  = bgfx::createUniform("u_light_position",  bgfx::UniformType::Vec4);
-    lighting_pass_single_component.light_color_uniform     = bgfx::createUniform("u_light_color",     bgfx::UniformType::Vec4);
+    lighting_pass_single_component.color_roughness_uniform     = bgfx::createUniform("s_color_roughness",     bgfx::UniformType::Sampler);
+    lighting_pass_single_component.depth_uniform               = bgfx::createUniform("s_depth",               bgfx::UniformType::Sampler);
+    lighting_pass_single_component.light_color_uniform         = bgfx::createUniform("u_light_color",         bgfx::UniformType::Vec4);
+    lighting_pass_single_component.light_position_uniform      = bgfx::createUniform("u_light_position",      bgfx::UniformType::Vec4);
+    lighting_pass_single_component.normal_metal_ao_uniform     = bgfx::createUniform("s_normal_metal_ao",     bgfx::UniformType::Sampler);
 
     lighting_pass_single_component.skybox_texture_irradiance_uniform = bgfx::createUniform("s_skybox_irradiance", bgfx::UniformType::Sampler);
-    lighting_pass_single_component.skybox_texture_prefilter_uniform  = bgfx::createUniform("s_skybox_prefilter", bgfx::UniformType::Sampler);
-    lighting_pass_single_component.skybox_texture_lut_uniform        = bgfx::createUniform("s_skybox_lut", bgfx::UniformType::Sampler);
+    lighting_pass_single_component.skybox_texture_lut_uniform        = bgfx::createUniform("s_skybox_lut",        bgfx::UniformType::Sampler);
+    lighting_pass_single_component.skybox_texture_prefilter_uniform  = bgfx::createUniform("s_skybox_prefilter",  bgfx::UniformType::Sampler);
     lighting_pass_single_component.skybox_mip_prefilter_max_uniform  = bgfx::createUniform("u_mip_prefilter_max", bgfx::UniformType::Vec4);
 
     reset(lighting_pass_single_component, window_single_component.width, window_single_component.height);

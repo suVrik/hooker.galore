@@ -93,8 +93,8 @@ void main() {
     vec2 uv2 = uv_tmp + offset * QUALITY(0);
 
     // Read the lumas at both current extremities of the exploration segment, and compute the delta wrt to the local average luma.
-    float luma_end1 = rgb2luma(texture2DLod(s_texture, uv1, 0.0).rgb);
-    float luma_end2 = rgb2luma(texture2DLod(s_texture, uv2, 0.0).rgb);
+    float luma_end1 = rgb2luma(texture2D(s_texture, uv1).rgb);
+    float luma_end2 = rgb2luma(texture2D(s_texture, uv2).rgb);
     luma_end1 -= luma_average;
     luma_end2 -= luma_average;
 

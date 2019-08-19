@@ -74,6 +74,7 @@ OutlinePassSystem::~OutlinePassSystem() {
     };
 
     destroy_valid(outline_pass_single_component.buffer);
+    destroy_valid(outline_pass_single_component.group_index_uniform);
     destroy_valid(outline_pass_single_component.outline_blur_pass_program);
     destroy_valid(outline_pass_single_component.outline_color_uniform);
     destroy_valid(outline_pass_single_component.outline_pass_program);
@@ -161,7 +162,7 @@ void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CCW);
+            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
 
             assert(bgfx::isValid(outline_pass_single_component.outline_pass_program));
 

@@ -57,11 +57,11 @@ void main() {
     vec4 normal_metal_ao = texture2D(s_normal_metal_ao, parallax_texcoord);
 
     vec3 normal;
-    normal.xy = 1.0 - normal_metal_ao.xy * 2.0;
-    normal.z = sqrt(max(0.0, 1.0 - dot(normal.xy, normal.xy)));
+    normal.xy = normal_metal_ao.xy * 2.0 - 1.0;
+    normal.z = sqrt(1.0 - clamp(dot(normal.xy, normal.xy), 0.0, 1.0));
     normal = normalize(mul(from_tangent_space_matrix, normal));
 
-    float depth_out = to_texture_depth(v_position.z / v_position.w);
+    float depth_out = v_position.z / v_position.w;
 
     gl_FragData[0] = texture2D(s_color_roughness, parallax_texcoord);
     gl_FragData[1] = vec4(encodeNormalOctahedron(normal), normal_metal_ao.zw);

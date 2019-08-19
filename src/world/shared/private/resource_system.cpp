@@ -1,5 +1,4 @@
 #include "core/ecs/world.h"
-#include "core/render/render_pass.h"
 #include "core/resource/texture.h"
 #include "world/editor/editor_component.h"
 #include "world/editor/guid_single_component.h"
@@ -11,7 +10,6 @@
 #include "world/shared/render/model_single_component.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/resource_system.h"
-#include "world/shared/window_single_component.h"
 
 #define TINYGLTF_NO_STB_IMAGE       1
 #define TINYGLTF_NO_STB_IMAGE_WRITE 1
@@ -19,20 +17,16 @@
 #include <SDL2/SDL_filesystem.h>
 #include <algorithm>
 #include <bgfx/bgfx.h>
-#include <bx/bx.h>
 #include <bx/file.h>
 #include <entt/meta/factory.hpp>
 #include <fmt/format.h>
-#include <fstream>
 #include <future>
 #include <ghc/filesystem.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/mat4x4.hpp>
 #include <iostream>
 #include <mutex>
 #include <tiny_gltf.h>
-#include <unordered_set>
 #include <yaml-cpp/yaml.h>
 
 namespace hg {
@@ -247,6 +241,7 @@ void ResourceSystem::load_textures() const {
         if (bgfx::isValid(texture.handle)) {
             std::lock_guard<std::mutex> guard(texture_single_component_mutex);
             const std::string texture_name = file.lexically_relative(directory).lexically_normal().string();
+            bgfx::setName(texture.handle, texture_name.c_str());
             texture_single_component.m_textures.emplace(texture_name, std::move(texture));
         } else {
             std::lock_guard<std::mutex> guard(resource_system_details::output_mutex);
@@ -278,7 +273,6 @@ Texture ResourceSystem::load_texture(const std::string &path) const noexcept {
                 result.width = texture_info.width;
                 result.height = texture_info.height;
                 result.is_cube_map = texture_info.cubeMap;
-                bgfx::setName(result.handle, path.c_str());
             }
         }
         bx::close(&file_reader);
