@@ -1382,13 +1382,14 @@ entities:
       path: blockout.glb
     MaterialComponent:
       material: parallax
+      parallax_steps: 25
     EditorComponent:
       name: parallax-cube
       guid: 66
   - TransformComponent:
       translation:
         x: 4
-        y: 4.5
+        y: 4.4
         z: 0
       rotation:
         x: 0
@@ -1409,7 +1410,7 @@ entities:
   - TransformComponent:
       translation:
         x: 0
-        y: 5.5
+        y: 5.8
         z: 0
       rotation:
         x: 0
@@ -1430,7 +1431,7 @@ entities:
   - TransformComponent:
       translation:
         x: 0
-        y: 5.5
+        y: 5.8
         z: 0
       rotation:
         x: 0
@@ -1451,7 +1452,7 @@ entities:
   - TransformComponent:
       translation:
         x: 0
-        y: 5.5
+        y: 5.8
         z: 0
       rotation:
         x: 0
@@ -1472,7 +1473,7 @@ entities:
   - TransformComponent:
       translation:
         x: 0
-        y: 5.5
+        y: 5.8
         z: 0
       rotation:
         x: 0
@@ -1493,7 +1494,7 @@ entities:
   - TransformComponent:
       translation:
         x: 0
-        y: 5.5
+        y: 5.8
         z: 0
       rotation:
         x: 0
@@ -1535,3 +1536,46 @@ entities:
     EditorComponent:
       name: LIGHT
       guid: 73
+  - TransformComponent:
+      translation:
+        x: 6
+        y: 5.4
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    ModelComponent:
+      path: damaged_helmet.glb
+    MaterialComponent:
+      material: damaged_helmet
+    EditorComponent:
+      name: damaged_helmet
+      guid: 74
+  - TransformComponent:
+      translation:
+        x: 0
+        y: 0
+        z: -3.9
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1000
+        y: 1000
+        z: 1
+    ModelComponent:
+      path: blockout.glb
+    MaterialComponent:
+      material: blockout_gray
+    EditorComponent:
+      name: wall_1
+      guid: 75
+    BlockoutComponent:
