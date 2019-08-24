@@ -70,6 +70,7 @@ struct HistorySingleComponent final {
     std::vector<HistoryChange> redo;
 
     bool is_continuous = false;
+    bool is_level_changed = false;
 
     // Menu items.
     std::shared_ptr<bool> undo_action;

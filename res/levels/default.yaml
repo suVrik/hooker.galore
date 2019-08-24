@@ -1578,4 +1578,4 @@ entities:
     EditorComponent:
       name: wall_1
       guid: 75
-    BlockoutComponent:
+    BlockoutComponent: {}

@@ -24,7 +24,7 @@ public:
     template <typename T>
     void register_component() noexcept;
 
-    /** Iterate over all registered components. */
+    /** Iterate over all registered component types. */
     template <typename T>
     void each_type(T callback) const noexcept;
 
@@ -32,19 +32,22 @@ public:
     entt::meta_any construct_component(entt::meta_type component) const noexcept;
 
     /** Acquire copy of specified component using copy constructor. */
-    entt::meta_any copy_component(const entt::meta_handle& component) const noexcept;
+    entt::meta_any copy_component(entt::meta_handle component) const noexcept;
 
     /** Return name of specified component. */
     const char* get_component_name(entt::meta_type component) const noexcept;
+
+    /** Check whether specified component type is registered. */
+    bool is_component_registered(entt::meta_type component) const noexcept;
 
     /** Perform `entt::registry::assign` on earlier registered component. Default constructor is used. */
     entt::meta_handle assign(entt::entity entity, entt::meta_type component) noexcept;
 
     /** Perform `entt::registry::assign` on earlier registered component. Copy constructor is used. */
-    entt::meta_handle assign(entt::entity entity, const entt::meta_handle& component) noexcept;
+    entt::meta_handle assign(entt::entity entity, entt::meta_handle component) noexcept;
 
     /** Perform `entt::registry::replace` on earlier registered component. Copy constructor is used. */
-    entt::meta_handle replace(entt::entity entity, const entt::meta_handle& component) noexcept;
+    entt::meta_handle replace(entt::entity entity, entt::meta_handle component) noexcept;
 
     /** Perform `entt::registry::remove` on earlier registered component. */
     void remove(entt::entity entity, entt::meta_type component_type) noexcept;

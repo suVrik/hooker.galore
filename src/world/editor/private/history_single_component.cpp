@@ -270,6 +270,8 @@ HistorySingleComponent::HistoryChange* HistorySingleComponent::begin(World& worl
 
         redo.clear();
 
+        is_level_changed = true;
+
         return &change;
     }
     return nullptr;
@@ -287,6 +289,7 @@ HistorySingleComponent::HistoryChange* HistorySingleComponent::begin_continuous(
 void HistorySingleComponent::end_continuous() noexcept {
     assert(is_continuous);
     is_continuous = false;
+    is_level_changed = true;
 }
 
 void HistorySingleComponent::perform_undo(World& world) noexcept {
@@ -298,6 +301,8 @@ void HistorySingleComponent::perform_undo(World& world) noexcept {
 
         undo[undo_position].actions.clear();
         undo_position = (undo_position + HISTORY_BUFFER_SIZE - 1) % HISTORY_BUFFER_SIZE;
+
+        is_level_changed = true;
     }
 }
 
@@ -312,6 +317,8 @@ void HistorySingleComponent::perform_redo(World& world) noexcept {
         history_single_component_details::perform_undo_redo(world, redo.back(), change);
 
         redo.pop_back();
+
+        is_level_changed = true;
     }
 }
 

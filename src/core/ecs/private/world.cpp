@@ -18,58 +18,62 @@ World::~World() {
     }
 }
 
-entt::meta_any World::construct_component(entt::meta_type component) const noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+entt::meta_any World::construct_component(const entt::meta_type component) const noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     return m_components.find(component)->second.construct();
 }
 
-entt::meta_any World::copy_component(const entt::meta_handle& component) const noexcept {
-    assert(m_components.count(component.type()) != 0 && "Specified component type is not registered!");
+entt::meta_any World::copy_component(const entt::meta_handle component) const noexcept {
+    assert(is_component_registered(component.type()) && "Specified component type is not registered!");
     return m_components.find(component.type())->second.copy(component);
 }
 
-const char* World::get_component_name(entt::meta_type component) const noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+const char* World::get_component_name(const entt::meta_type component) const noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
 
-    entt::meta_prop component_name_property = component.prop("name"_hs);
+    const entt::meta_prop component_name_property = component.prop("name"_hs);
     if (component_name_property && component_name_property.value().can_cast<const char*>()) {
         return component_name_property.value().cast<const char*>();
     }
     return "undefined";
 }
 
-entt::meta_handle World::assign(entt::entity entity, entt::meta_type component) noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+bool World::is_component_registered(const entt::meta_type component) const noexcept {
+    return m_components.count(component) != 0;
+}
+
+entt::meta_handle World::assign(const entt::entity entity, const entt::meta_type component) noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     return m_components.find(component)->second.assign_default(this, entity);
 }
 
-entt::meta_handle World::assign(entt::entity entity, const entt::meta_handle& component) noexcept {
-    assert(m_components.count(component.type()) != 0 && "Specified component type is not registered!");
+entt::meta_handle World::assign(const entt::entity entity, const entt::meta_handle component) noexcept {
+    assert(is_component_registered(component.type()) && "Specified component type is not registered!");
     return m_components.find(component.type())->second.assign_copy(this, entity, component);
 }
 
-entt::meta_handle World::replace(entt::entity entity, const entt::meta_handle& component) noexcept {
-    assert(m_components.count(component.type()) != 0 && "Specified component type is not registered!");
+entt::meta_handle World::replace(const entt::entity entity, const entt::meta_handle component) noexcept {
+    assert(is_component_registered(component.type()) && "Specified component type is not registered!");
     return m_components.find(component.type())->second.replace(this, entity, component);
 }
 
-void World::remove(entt::entity entity, entt::meta_type component) noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+void World::remove(const entt::entity entity, const entt::meta_type component) noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     m_components.find(component)->second.remove(this, entity);
 }
 
-bool World::has(entt::entity entity, entt::meta_type component) const noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+bool World::has(const entt::entity entity, const entt::meta_type component) const noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     return m_components.find(component)->second.has(this, entity);
 }
 
-entt::meta_handle World::get(entt::entity entity, entt::meta_type component) const noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+entt::meta_handle World::get(const entt::entity entity, const entt::meta_type component) const noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     return m_components.find(component)->second.get(this, entity);
 }
 
-entt::meta_handle World::get_or_assign(entt::entity entity, entt::meta_type component) noexcept {
-    assert(m_components.count(component) != 0 && "Specified component type is not registered!");
+entt::meta_handle World::get_or_assign(const entt::entity entity, const entt::meta_type component) noexcept {
+    assert(is_component_registered(component) && "Specified component type is not registered!");
     return m_components.find(component)->second.get_or_assign(this, entity);
 }
 

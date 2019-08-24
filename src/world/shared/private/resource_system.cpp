@@ -1,20 +1,16 @@
 #include "core/ecs/world.h"
 #include "core/resource/texture.h"
-#include "world/editor/editor_component.h"
-#include "world/editor/guid_single_component.h"
 #include "world/editor/preset_single_component.h"
-#include "world/shared/level_single_component.h"
-#include "world/shared/name_single_component.h"
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/resource_system.h"
+#include "world/shared/resource_utils.h"
 
 #define TINYGLTF_NO_STB_IMAGE       1
 #define TINYGLTF_NO_STB_IMAGE_WRITE 1
 
-#include <SDL2/SDL_filesystem.h>
 #include <algorithm>
 #include <bgfx/bgfx.h>
 #include <bx/file.h>
@@ -28,6 +24,8 @@
 #include <mutex>
 #include <tiny_gltf.h>
 #include <yaml-cpp/yaml.h>
+
+#define RESOURCE_WARNING assert(false); std::cout << "[RESOURCE] "
 
 namespace hg {
 
@@ -136,12 +134,14 @@ ResourceSystem::ResourceSystem(World& world)
 
         try {
             load_presets();
-            load_level();
+            if (!ResourceUtils::deserialize_level(world)) {
+                throw std::runtime_error("Failed to load a level.");
+            }
         }
         catch (...) {
-            auto &model_single_component = world.ctx<ModelSingleComponent>();
-            for (auto&[material_name, material_ptr] : std::exchange(model_single_component.m_models, {})) {
-                for (Model::Node &node : material_ptr->children) {
+            auto& model_single_component = world.ctx<ModelSingleComponent>();
+            for (auto& [material_name, material_ptr] : std::exchange(model_single_component.m_models, {})) {
+                for (Model::Node& node : material_ptr->children) {
                     resource_system_details::destroy_model_node(node);
                 }
             }
@@ -214,28 +214,11 @@ void ResourceSystem::update(float /*elapsed_time*/) {
     m_material_update_observer.each(material_updated);
 }
 
-std::string ResourceSystem::get_resource_directory() const {
-    char* const base_path = SDL_GetBasePath();
-    if (base_path == nullptr) {
-        throw std::runtime_error("Failed to get resource directory.");
-    }
-
-#if defined(__APPLE__) && defined(HG_MACOS_BUNDLE)
-    const std::string result = base_path;
-#else
-    const std::string result = (ghc::filesystem::path(base_path) / "resources").string();
-#endif
-
-    SDL_free(base_path);
-
-    return result;
-}
-
 void ResourceSystem::load_textures() const {
     auto& texture_single_component = world.set<TextureSingleComponent>();
     std::mutex texture_single_component_mutex;
 
-    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "textures";
+    const ghc::filesystem::path directory = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "textures";
     resource_system_details::iterate_recursive_parallel(directory, ".dds", [&](const ghc::filesystem::path& file) {
         Texture texture = load_texture(file.string());
         if (bgfx::isValid(texture.handle)) {
@@ -284,7 +267,7 @@ void ResourceSystem::load_models() const  {
     auto& model_single_component = world.set<ModelSingleComponent>();
     std::mutex model_single_component_mutex;
 
-    const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "models";
+    const ghc::filesystem::path directory = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "models";
     resource_system_details::iterate_recursive_parallel(directory, ".glb", [&](const ghc::filesystem::path& file) {
         std::unique_ptr<Model> model = std::make_unique<Model>();
         const std::string name = file.lexically_relative(directory).lexically_normal().string();
@@ -646,7 +629,7 @@ void ResourceSystem::load_presets() const {
     if (auto* preset_single_component = world.try_ctx<PresetSingleComponent>(); preset_single_component != nullptr) {
         std::mutex preset_single_component_mutex;
 
-        const ghc::filesystem::path directory = ghc::filesystem::path(get_resource_directory()) / "presets";
+        const ghc::filesystem::path directory = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "presets";
         resource_system_details::iterate_recursive_parallel(directory, ".yaml", [&](const ghc::filesystem::path& file) {
             std::vector<entt::meta_any> preset;
             const std::string name = file.lexically_relative(directory).lexically_normal().string();
@@ -660,195 +643,48 @@ void ResourceSystem::load_presets() const {
 }
 
 void ResourceSystem::load_preset(std::vector<entt::meta_any>& result, const std::string &path) const {
-    try {
-        std::ifstream stream(path);
-        if (!stream.is_open()) {
-            throw std::runtime_error("Failed to open a file.");
-        }
-
+    std::ifstream stream(path);
+    if (stream.is_open()) {
         YAML::Node node = YAML::Load(stream);
-        if (!node.IsMap()) {
-            throw std::runtime_error("The root node must be a map.");
-        }
+        if (node.IsMap()) {
+            for (YAML::const_iterator component_it = node.begin(); component_it != node.end(); ++component_it) {
+                const auto component_name = component_it->first.as<std::string>("");
+                assert(!component_name.empty());
 
-        for (YAML::const_iterator component_it = node.begin(); component_it != node.end(); ++component_it) {
-            if (!component_it->second.IsMap() && !component_it->second.IsNull()) {
-                throw std::runtime_error("The component node must be a map.");
-            }
-
-            const auto component_name = component_it->first.as<std::string>("");
-
-            entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
-            if (!component_type) {
-                throw std::runtime_error(fmt::format("Component type \"{}\" is not registered.", component_name));
-            }
-
-            entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-            if (ignore_property && ignore_property.value().can_cast<bool>() && ignore_property.value().cast<bool>()) {
-                throw std::runtime_error(fmt::format("Component \"{}\" must not be in a level file.", component_name));
-            }
-
-            entt::meta_any component = world.construct_component(component_type);
-            if (!component) {
-                throw std::runtime_error(fmt::format("Component \"{}\" is not default-constructible.", component_name));
-            }
-
-            if (!component_it->second.IsNull()) {
-                load_properties(component, component_it->second);
-            }
-            result.push_back(std::move(component));
-        }
-    }
-    catch (const std::runtime_error& error) {
-        throw std::runtime_error(fmt::format("Failed to load model \"{}\".\nDetails: {}", path, error.what()));
-    }
-}
-
-void ResourceSystem::load_properties(entt::meta_handle object, const YAML::Node& node) const {
-    entt::meta_type object_type = object.type();
-    for (YAML::const_iterator property_it = node.begin(); property_it != node.end(); ++property_it) {
-        const auto property_name = property_it->first.as<std::string>("");
-
-        entt::meta_data property = object_type.data(entt::hashed_string(property_name.c_str()));
-        if (!property) {
-            throw std::runtime_error(fmt::format("Property \"{}\" not found.", property_name));
-        }
-
-        entt::meta_type property_type = property.type();
-        if (!property_type) {
-            throw std::runtime_error(fmt::format("Property \"{}\" is not registered.", property_name));
-        }
-
-        if (property_it->second.IsMap()) {
-            if (!property_type.is_class()) {
-                throw std::runtime_error(fmt::format("Property \"{}\" is not a structure.", property_name));
-            }
-
-            entt::meta_any child_object = property_type.construct();
-            if (!child_object) {
-                throw std::runtime_error(fmt::format("Property \"{}\" is not default-constructible.", property_name));
-            }
-
-            load_properties(child_object, property_it->second);
-
-            if (!property.set(object, child_object)) {
-                throw std::runtime_error(fmt::format("Failed to set structure property \"{}\" value.", property_name));
+                if (component_it->second.IsMap()) {
+                    const entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
+                    if (component_type) {
+                        const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
+                        if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
+                            if (world.is_component_registered(component_type)) {
+                                entt::meta_any component = world.construct_component(component_type);
+                                if (component) {
+                                    ResourceUtils::deserialize_structure_property(component, component_it->second);
+                                    result.push_back(std::move(component));
+                                } else {
+                                    RESOURCE_WARNING << "Failed to construct preset component \"" << component_name << "\"." << std::endl;
+                                }
+                            } else {
+                                RESOURCE_WARNING << "Preset component \"" << component_name << "\" is not registered." << std::endl;
+                            }
+                        } else {
+                            RESOURCE_WARNING << "Ignored preset component \"" << component_name << "\" is specified." << std::endl;
+                        }
+                    } else {
+                        RESOURCE_WARNING << "Unknown preset component \"" << component_name << "\" is specified." << std::endl;
+                    }
+                } else {
+                    RESOURCE_WARNING << "Corrupted preset component \"" << component_name << "\" is specified." << std::endl;
+                }
             }
         } else {
-            if (!property_it->second.IsScalar()) {
-                throw std::runtime_error(fmt::format("Property \"{}\" is neither a map nor scalar.", property_name));
-            }
-
-            static entt::meta_type TYPE_INT    = entt::resolve<int32_t>();
-            static entt::meta_type TYPE_UINT   = entt::resolve<uint32_t>();
-            static entt::meta_type TYPE_FLOAT  = entt::resolve<float>();
-            static entt::meta_type TYPE_BOOL   = entt::resolve<bool>();
-            static entt::meta_type TYPE_STRING = entt::resolve<std::string>();
-
-            if (property_type == TYPE_INT) {
-                if (!property.set(object, property_it->second.as<int32_t>(0))) {
-                    throw std::runtime_error(fmt::format("Failed to set integer property \"{}\" value.", property_name));
-                }
-            } else if (property_type == TYPE_UINT) {
-                if (!property.set(object, property_it->second.as<uint32_t>(0))) {
-                    throw std::runtime_error(fmt::format("Failed to set unsigned integer property \"{}\" value.", property_name));
-                }
-            } else if (property_type == TYPE_FLOAT) {
-                if (!property.set(object, property_it->second.as<float>(0.f))) {
-                    throw std::runtime_error(fmt::format("Failed to set float property \"{}\" value.", property_name));
-                }
-            } else if (property_type == TYPE_BOOL) {
-                if (!property.set(object, property_it->second.as<bool>(false))) {
-                    throw std::runtime_error(fmt::format("Failed to set boolean property \"{}\" value.", property_name));
-                }
-            } else if (property_type == TYPE_STRING) {
-                if (!property.set(object, property_it->second.as<std::string>(""))) {
-                    throw std::runtime_error(fmt::format("Failed to set string property \"{}\" value.", property_name));
-                }
-            } else {
-                throw std::runtime_error(fmt::format("Property \"{}\" type is not supported.", property_name));
-            }
+            RESOURCE_WARNING << "Corrupted preset \"" << path << "\" is specified." << std::endl;
         }
-    }
-}
-
-void ResourceSystem::load_level() const {
-    auto& level_single_component = world.ctx<LevelSingleComponent>();
-    auto& guid_single_component = world.set<GuidSingleComponent>();
-    auto& name_single_component = world.set<NameSingleComponent>();
-
-    const ghc::filesystem::path level_path = ghc::filesystem::path(get_resource_directory()) / "levels" / level_single_component.level_name;
-    if (!ghc::filesystem::exists(level_path)) {
-        throw std::runtime_error(fmt::format("Specified level \"{}\" doesn't exist.", level_path.string()));
-    }
-
-    try {
-        std::ifstream stream(level_path.string());
-        if (!stream.is_open()) {
-            throw std::runtime_error("Failed to open a file.");
-        }
-
-        YAML::Node node = YAML::Load(stream);
-        if (!node.IsMap()) {
-            throw std::runtime_error("The root node must be a map.");
-        }
-
-        YAML::Node entities = node["entities"];
-        if (!entities || !entities.IsSequence()) {
-            throw std::runtime_error("The entities node must be a sequence.");
-        }
-
-        for (YAML::const_iterator entity_it = entities.begin(); entity_it != entities.end(); ++entity_it) {
-            if (!entity_it->IsMap()) {
-                throw std::runtime_error("The entity node must be a map.");
-            }
-
-            entt::entity entity = world.create();
-
-            for (YAML::const_iterator component_it = entity_it->begin(); component_it != entity_it->end(); ++component_it) {
-                if (!component_it->second.IsMap() && !component_it->second.IsNull()) {
-                    throw std::runtime_error("The component node must be a map.");
-                }
-
-                const auto component_name = component_it->first.as<std::string>("");
-
-                entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
-                if (!component_type) {
-                    throw std::runtime_error(fmt::format("Component type \"{}\" is not registered.", component_name));
-                }
-
-                entt::meta_handle component = world.assign(entity, component_type);
-                if (!component_it->second.IsNull()) {
-                    load_properties(component, component_it->second);
-                }
-            }
-
-            if (!world.has<EditorComponent>(entity)) {
-                throw std::runtime_error("Entity must have EditorComponent.");
-            }
-
-            auto& editor_component = world.get<EditorComponent>(entity);
-
-            if (editor_component.guid > 0x00FFFFFF) {
-                throw std::runtime_error(fmt::format("Invalid entity guid {}.", editor_component.guid));
-            }
-            if (guid_single_component.guid_to_entity.count(editor_component.guid) > 0) {
-                throw std::runtime_error(fmt::format("Entity with specified guid {} already exists.", editor_component.guid));
-            }
-            guid_single_component.guid_to_entity[editor_component.guid] = entity;
-
-            if (editor_component.name.empty()) {
-                throw std::runtime_error("Empty entity names are not allowed.");
-            }
-            if (name_single_component.name_to_entity.count(editor_component.name) > 0) {
-                throw std::runtime_error(fmt::format("Entity with specified name \"{}\" already exists.", editor_component.name));
-            }
-            name_single_component.name_to_entity[editor_component.name] = entity;
-        }
-    }
-    catch (const std::runtime_error& error) {
-        throw std::runtime_error(fmt::format("Failed to load level \"{}\".\nDetails: {}", level_path.string(), error.what()));
+    } else {
+        RESOURCE_WARNING << "Failed to open preset \"" << path << "\"." << std::endl;
     }
 }
 
 } // namespace hg
+
+#undef RESOURCE_WARNING

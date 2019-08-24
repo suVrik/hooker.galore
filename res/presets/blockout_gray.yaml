@@ -16,4 +16,4 @@ ModelComponent:
   path: blockout.glb
 MaterialComponent:
   material: blockout_gray
-BlockoutComponent:
+BlockoutComponent: {}
