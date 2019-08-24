@@ -46,7 +46,7 @@ function(build_textures TYPE INPUT_DIRECTORY EXTENSION_PATTERN OUTPUT_DIRECTORY)
             set(output_prefilter "${output_no_extension}_prefilter.dds")
             file(TO_NATIVE_PATH "${output_prefilter}" output_prefilter)
 
-            separate_arguments(cube_map_options NATIVE_COMMAND "--output-size 1024 --irradiance ${output_irradiance} --irradiance-size 32 --prefilter ${output_prefilter} --prefilter-size 128")
+            separate_arguments(cube_map_options NATIVE_COMMAND "--output-size 1024 --irradiance ${output_irradiance} --irradiance-size 64 --prefilter ${output_prefilter} --prefilter-size 128")
         endif()
 
         file(TO_NATIVE_PATH "${input}" input)
