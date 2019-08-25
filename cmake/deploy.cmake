@@ -46,8 +46,10 @@ function(deploy_shared_library NAME OUTPUT_DIRECTORY WINDOWS_PATH DARWIN_PATH LI
     get_filename_component(file_name "${input}" NAME)
     set(output "${OUTPUT_DIRECTORY}/${file_name}")
 
-    file(TO_NATIVE_PATH "${input}" input)
-    file(TO_NATIVE_PATH "${output}" output)
+    if(NOT UNIX)
+        file(TO_NATIVE_PATH "${input}" input)
+        file(TO_NATIVE_PATH "${output}" output)
+    endif()
 
     add_custom_command(
             DEPENDS "${input}"
