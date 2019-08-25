@@ -7,9 +7,9 @@ include(cmake/deploy.cmake)
 
 # Compile small thirdpary libraries in place.
 
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/imgui/")
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/debug-draw/")
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/tiny-gltf/")
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/imgui/")
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/debug-draw/")
+add_subdirectory("${CMAKE_SOURCE_DIR}/thirdparty/tiny-gltf/")
 
 # Select C++ version and set up visual studio solution properties.
 
@@ -20,7 +20,7 @@ set(PREDEFINED_TARGETS_FOLDER "CustomTargets")
 
 # Compile executable sources.
 
-file(GLOB_RECURSE HOOKER_GALORE_SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.h" "${CMAKE_SOURCE_DIR}/src/*.sc" "${CMAKE_SOURCE_DIR}/src/*.sh")
+file(GLOB_RECURSE HOOKER_GALORE_SOURCES "${CMAKE_SOURCE_DIR}/sources/*.cpp" "${CMAKE_SOURCE_DIR}/sources/*.h" "${CMAKE_SOURCE_DIR}/sources/*.sc" "${CMAKE_SOURCE_DIR}/sources/*.sh")
 add_executable(hooker_galore ${HOOKER_GALORE_SOURCES})
 
 # Use filesystem hierarchy in Visual Studio project.
@@ -28,7 +28,7 @@ add_executable(hooker_galore ${HOOKER_GALORE_SOURCES})
 if(WIN32)
     foreach(FILE ${HOOKER_GALORE_SOURCES}) 
         get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
-        string(REPLACE "${CMAKE_SOURCE_DIR}/src" "" GROUP "${PARENT_DIR}")
+        string(REPLACE "${CMAKE_SOURCE_DIR}/sources" "" GROUP "${PARENT_DIR}")
         string(REPLACE "/" "\\" GROUP "${GROUP}")
         source_group("Sources${GROUP}" FILES "${FILE}")
     endforeach()
@@ -36,19 +36,19 @@ endif()
 
 # Include thirdparty libraries.
 
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/src/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/${CMAKE_HOST_SYSTEM_NAME}/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/imgui/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/Clara/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/debug-draw/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/entt/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/glm/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/tiny-gltf/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/ghc-filesystem/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/sources/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/${CMAKE_HOST_SYSTEM_NAME}/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/imgui/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/Clara/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/debug-draw/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/entt/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/glm/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/tiny-gltf/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/ghc-filesystem/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/include/")
 
 # Link thirdpary libraries.
 
@@ -57,51 +57,51 @@ target_link_libraries(hooker_galore PRIVATE debug-draw)
 target_link_libraries(hooker_galore PRIVATE tiny-gltf)
 
 if(WIN32)
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/lib/SDL2main.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/lib/SDL2.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bgfx.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bimg.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bx.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/astc-codec.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/yaml-cpp.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/fmt.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCharacterKinematic_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXExtensions_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXVehicle_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SimulationController_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevel_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelAABB_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelDynamics_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SceneQuery_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXTask_static_64.lib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXPvdSDK_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Windows/lib/SDL2main.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Windows/lib/SDL2.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bgfx.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bimg.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bx.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/astc-codec.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/yaml-cpp.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/fmt.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCharacterKinematic_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXExtensions_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXVehicle_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SimulationController_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevel_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelAABB_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelDynamics_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SceneQuery_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXTask_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXPvdSDK_static_64.lib")
 elseif(APPLE)
     find_library(COCOA_LIBRARY Cocoa)
     find_library(METAL_LIBRARY Metal)
     find_library(QUARTZCORE_LIBRARY QuartzCore)
     target_link_libraries(hooker_galore PRIVATE "${COCOA_LIBRARY}" "${METAL_LIBRARY}" "${QUARTZCORE_LIBRARY}")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/libSDL2.dylib")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Darwin/libyaml-cpp.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Darwin/libfmt.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Darwin/bin/libSDL2.dylib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/lib/Darwin/libyaml-cpp.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/lib/Darwin/libfmt.a")
     # TODO: PhysX
 elseif(UNIX)
     set(OpenGL_GL_PREFERENCE GLVND)
     find_package(OpenGL REQUIRED)
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Linux/libyaml-cpp.a")
-    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Linux/libfmt.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Linux/bin/libSDL2.so")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/lib/Linux/libyaml-cpp.a")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/lib/Linux/libfmt.a")
     target_link_libraries(hooker_galore PRIVATE X11 pthread ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})
     # TODO: PhysX
 endif()
@@ -136,8 +136,8 @@ endif()
 
 # Compile shaders.
 
-build_shaders("fragment" "${CMAKE_SOURCE_DIR}/src/shaders/*.fragment.sc" "${CMAKE_SOURCE_DIR}/src/shaders/headers/")
-build_shaders("vertex" "${CMAKE_SOURCE_DIR}/src/shaders/*.vertex.sc" "${CMAKE_SOURCE_DIR}/src/shaders/headers/")
+build_shaders("fragment" "${CMAKE_SOURCE_DIR}/sources/shaders/*.fragment.sc" "${CMAKE_SOURCE_DIR}/sources/shaders/headers/")
+build_shaders("vertex" "${CMAKE_SOURCE_DIR}/sources/shaders/*.vertex.sc" "${CMAKE_SOURCE_DIR}/sources/shaders/headers/")
 add_dependencies(hooker_galore build_fragment_shaders build_vertex_shaders)
 
 # Compile textures.
@@ -146,10 +146,10 @@ set(output_directory "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/")
 set(output_resources_directory "${output_directory}/resources/")
 set(output_textures_directory "${output_resources_directory}/textures/")
 
-build_textures("base_color_roughness" "${CMAKE_SOURCE_DIR}/res/textures/" "*_bcr.png" "${output_textures_directory}")
-build_textures("normal_metal_ambient_occlusion" "${CMAKE_SOURCE_DIR}/res/textures/" "*_nmao.png" "${output_textures_directory}")
-build_textures("height" "${CMAKE_SOURCE_DIR}/res/textures/" "*_h.png" "${output_textures_directory}")
-build_textures("cube" "${CMAKE_SOURCE_DIR}/res/textures/" "*.hdr" "${output_textures_directory}")
+build_textures("base_color_roughness" "${CMAKE_SOURCE_DIR}/resources/textures/" "*_bcr.png" "${output_textures_directory}")
+build_textures("normal_metal_ambient_occlusion" "${CMAKE_SOURCE_DIR}/resources/textures/" "*_nmao.png" "${output_textures_directory}")
+build_textures("height" "${CMAKE_SOURCE_DIR}/resources/textures/" "*_h.png" "${output_textures_directory}")
+build_textures("cube" "${CMAKE_SOURCE_DIR}/resources/textures/" "*.hdr" "${output_textures_directory}")
 add_dependencies(hooker_galore
         build_base_color_roughness_maps
         build_normal_metal_ambient_occlusion_maps
@@ -159,10 +159,10 @@ add_dependencies(hooker_galore
 
 # Deploy other resources.
 
-deploy_resources("level" "${CMAKE_SOURCE_DIR}/res/levels/" "*.yaml" "${output_resources_directory}/levels/")
-deploy_resources("model" "${CMAKE_SOURCE_DIR}/res/models/" "*.glb" "${output_resources_directory}/models/")
-deploy_resources("preset" "${CMAKE_SOURCE_DIR}/res/presets/" "*.yaml" "${output_resources_directory}/presets/")
-deploy_resources("texture" "${CMAKE_SOURCE_DIR}/res/textures/" "*.dds" "${output_resources_directory}/textures/")
+deploy_resources("level" "${CMAKE_SOURCE_DIR}/resources/levels/" "*.yaml" "${output_resources_directory}/levels/")
+deploy_resources("model" "${CMAKE_SOURCE_DIR}/resources/models/" "*.glb" "${output_resources_directory}/models/")
+deploy_resources("preset" "${CMAKE_SOURCE_DIR}/resources/presets/" "*.yaml" "${output_resources_directory}/presets/")
+deploy_resources("texture" "${CMAKE_SOURCE_DIR}/resources/textures/" "*.dds" "${output_resources_directory}/textures/")
 add_dependencies(hooker_galore
         deploy_levels
         deploy_models
@@ -174,33 +174,33 @@ add_dependencies(hooker_galore
 
 deploy_shared_library("SDL2"
         "${output_directory}"
-        "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll"
-        "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/libSDL2.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so"
+        "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Windows/bin/SDL2.dll"
+        "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Darwin/bin/libSDL2.dylib"
+        "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/Linux/bin/libSDL2.so"
 )
 deploy_shared_library("PhysX_64"
         "${output_directory}"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dll"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.so"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dll"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dylib"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.so"
 )
 deploy_shared_library("PhysXCommon_64"
         "${output_directory}"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dll"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.so"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dll"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dylib"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.so"
 )
 deploy_shared_library("PhysXCooking_64"
         "${output_directory}"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dll"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.so"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dll"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dylib"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.so"
 )
 deploy_shared_library("PhysXFoundation_64"
         "${output_directory}"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dll"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.so"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dll"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dylib"
+        "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.so"
 )
 add_dependencies(hooker_galore 
         deploy_SDL2
