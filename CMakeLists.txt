@@ -48,6 +48,7 @@ target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/glm/in
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/include/")
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/tiny-gltf/include/")
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/ghc-filesystem/include/")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/include/")
 
 # Link thirdpary libraries.
 
@@ -64,6 +65,20 @@ if(WIN32)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/astc-codec.lib")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/yaml-cpp.lib")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/fmt.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCharacterKinematic_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXExtensions_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXVehicle_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SimulationController_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevel_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelAABB_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/LowLevelDynamics_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/SceneQuery_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXTask_static_64.lib")
+    target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/PhysX/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXPvdSDK_static_64.lib")
 elseif(APPLE)
     find_library(COCOA_LIBRARY Cocoa)
     find_library(METAL_LIBRARY Metal)
@@ -76,6 +91,7 @@ elseif(APPLE)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Darwin/libyaml-cpp.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Darwin/libfmt.a")
+    # TODO: PhysX
 elseif(UNIX)
     set(OpenGL_GL_PREFERENCE GLVND)
     find_package(OpenGL REQUIRED)
@@ -87,6 +103,7 @@ elseif(UNIX)
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/yaml-cpp/lib/Linux/libyaml-cpp.a")
     target_link_libraries(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/lib/libfmt/lib/Linux/libfmt.a")
     target_link_libraries(hooker_galore PRIVATE X11 pthread ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})
+    # TODO: PhysX
 endif()
 
 # Link against static runtime library.
@@ -155,13 +172,43 @@ add_dependencies(hooker_galore
 
 # Deploy shared libraries.
 
-deploy_shared_library("sdl2"
+deploy_shared_library("SDL2"
         "${output_directory}"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/libSDL2.dylib"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so"
 )
-add_dependencies(hooker_galore deploy_sdl2)
+deploy_shared_library("PhysX_64"
+        "${output_directory}"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dll"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysX_64.so"
+)
+deploy_shared_library("PhysXCommon_64"
+        "${output_directory}"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dll"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCommon_64.so"
+)
+deploy_shared_library("PhysXCooking_64"
+        "${output_directory}"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dll"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXCooking_64.so"
+)
+deploy_shared_library("PhysXFoundation_64"
+        "${output_directory}"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dll"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/PhysX/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/PhysXFoundation_64.so"
+)
+add_dependencies(hooker_galore 
+        deploy_SDL2
+        deploy_PhysX_64
+        deploy_PhysXCommon_64
+        deploy_PhysXCooking_64
+        deploy_PhysXFoundation_64
+)
 
 # Hide all the deploy targets into a "Deploy" directory in Visual Studio.
 
@@ -178,6 +225,10 @@ set_target_properties(imgui
         deploy_models
         deploy_presets
         deploy_textures
-        deploy_sdl2
+        deploy_SDL2
+        deploy_PhysX_64
+        deploy_PhysXCommon_64
+        deploy_PhysXCooking_64
+        deploy_PhysXFoundation_64
         PROPERTIES FOLDER "BuildAndDeploy"
 )
