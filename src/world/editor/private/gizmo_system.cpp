@@ -98,7 +98,8 @@ void GizmoSystem::update(float /*elapsed_time*/) {
             assert(world.valid(selected_entity));
             assert(world.has<EditorComponent>(selected_entity));
 
-            auto& editor_component = world.get<EditorComponent>(selected_entity);
+            // Avoid reference, because `create_entity` changes the `EditorComponent` pool and `original_editor_component` reference becomes corrupted.
+            const EditorComponent editor_component = world.get<EditorComponent>(selected_entity);
 
             const auto* const transform_component = world.try_get<TransformComponent>(selected_entity);
             if (transform_component != nullptr) {
@@ -247,7 +248,8 @@ void GizmoSystem::update(float /*elapsed_time*/) {
                             selected_entity_single_component.clear_selection(world);
 
                             for (entt::entity original_entity : old_selected_entities) {
-                                auto& original_editor_component = world.get<EditorComponent>(original_entity);
+                                // Avoid reference, because `create_entity` changes the `EditorComponent` pool and `original_editor_component` reference becomes corrupted.
+                                const EditorComponent original_editor_component = world.get<EditorComponent>(original_entity);
 
                                 entt::entity new_entity = change->create_entity(world, original_editor_component.name);
                                 world.each(original_entity, [&](entt::meta_handle component_handle) {
