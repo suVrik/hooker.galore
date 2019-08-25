@@ -11,6 +11,7 @@
 #include "world/shared/level_single_component.h"
 #include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
+#include "world/shared/physics/physics_single_component.h"
 #include "world/shared/render/aa_pass_single_component.h"
 #include "world/shared/render/blockout_component.h"
 #include "world/shared/render/camera_single_component.h"
@@ -53,6 +54,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(NameSingleComponent);
     REGISTER_COMPONENT(NormalInputSingleComponent);
     REGISTER_COMPONENT(OutlinePassSingleComponent);
+    REGISTER_COMPONENT(PhysicsSingleComponent);
     REGISTER_COMPONENT(PickingPassSingleComponent);
     REGISTER_COMPONENT(PresetSingleComponent);
     REGISTER_COMPONENT(QuadSingleComponent);

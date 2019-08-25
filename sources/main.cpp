@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
                 "ImguiPassSystem",
                 "PickingPassSystem",
                 "RenderSystem",
+                "PhysicsFetchSystem", // TODO: What's the best place for this system?
         };
         std::vector<std::string> fixed_system_order;
 
