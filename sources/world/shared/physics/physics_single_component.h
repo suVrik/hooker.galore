@@ -11,6 +11,7 @@ class PxFoundation;
 class PxPhysics;
 class PxPvd;
 class PxPvdTransport;
+class PxScene;
 
 } // namespace physx
 
@@ -25,7 +26,8 @@ struct PhysicsSingleComponent final {
     physx::PxPvd* visual_debugger = nullptr;
     physx::PxPhysics* physics = nullptr;
     physx::PxCooking* cooking = nullptr;
-    physx::PxDefaultCpuDispatcher* cpu_dispatcher  = nullptr;
+    physx::PxDefaultCpuDispatcher* cpu_dispatcher = nullptr;
+    physx::PxScene* scene = nullptr;
 };
 
 } // namespace hg

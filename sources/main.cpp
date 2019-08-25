@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
         }
 
         std::vector<std::string> normal_system_order = {
+                "PhysicsSimulateSystem",
                 "WindowSystem",
                 "ImguiFetchSystem",
                 "MenuSystem",
@@ -49,7 +50,7 @@ int main(int argc, char* argv[]) {
                 "ImguiPassSystem",
                 "PickingPassSystem",
                 "RenderSystem",
-                "PhysicsFetchSystem", // TODO: What's the best place for this system?
+                "PhysicsFetchSystem",
         };
         std::vector<std::string> fixed_system_order;
 

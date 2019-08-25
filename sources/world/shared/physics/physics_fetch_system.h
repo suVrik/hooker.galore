@@ -4,12 +4,11 @@
 
 namespace hg {
 
-/** `PhysicsFetchSystem` TODO: DESCRIPTION. */
+/** `PhysicsFetchSystem` fetches data from physics engine and puts it into the world. */
 // TODO: Actually `PhysicsFetchSystem` is a `FixedSystem`. Keep it `NormalSystem` until physics is stable.
 class PhysicsFetchSystem final : public NormalSystem {
 public:
     explicit PhysicsFetchSystem(World& world);
-    ~PhysicsFetchSystem() override;
     void update(float elapsed_time) override;
 };
 
