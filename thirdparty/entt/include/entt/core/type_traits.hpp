@@ -10,15 +10,32 @@
 namespace entt {
 
 
+/*! @brief A class to use to push around lists of types, nothing more. */
+template<typename...>
+struct type_list {};
+
+
+/*! @brief Primary template isn't defined on purpose. */
+template<typename>
+struct type_list_size;
+
+
 /**
- * @brief A class to use to push around lists of types, nothing more.
- * @tparam Type Types provided by the given type list.
+ * @brief Compile-time number of elements in a type list.
+ * @tparam Type Types provided by the type list.
  */
 template<typename... Type>
-struct type_list {
-    /*! @brief Unsigned integer type. */
-    static constexpr auto size = sizeof...(Type);
-};
+struct type_list_size<type_list<Type...>>
+        : std::integral_constant<std::size_t, sizeof...(Type)>
+{};
+
+
+/**
+ * @brief Helper variable template.
+ * @tparam List Type list.
+ */
+template<class List>
+constexpr auto type_list_size_v = type_list_size<List>::value;
 
 
 /*! @brief Primary template isn't defined on purpose. */
@@ -145,13 +162,23 @@ struct is_named_type<Type, std::void_t<named_type_traits_t<std::decay_t<Type>>>>
 
 /**
  * @brief Helper variable template.
- *
- * True if a given type has a name, false otherwise.
- *
  * @tparam Type Potentially named type.
  */
 template<class Type>
 constexpr auto is_named_type_v = is_named_type<Type>::value;
+
+
+/**
+ * @brief Defines an enum class to use for opaque identifiers and a dedicate
+ * `to_integer` function to convert the identifiers to their underlying type.
+ * @param clazz The name to use for the enum class.
+ * @param type The underlying type for the enum class.
+ */
+#define ENTT_OPAQUE_TYPE(clazz, type)\
+    enum class clazz: type {};\
+    constexpr auto to_integer(const clazz id) ENTT_NOEXCEPT {\
+        return std::underlying_type_t<clazz>(id);\
+    }
 
 
 }

@@ -71,35 +71,24 @@ class basic_view {
 
     using underlying_iterator_type = typename sparse_set<Entity>::iterator_type;
     using unchecked_type = std::array<const sparse_set<Entity> *, (sizeof...(Component) - 1)>;
-    using traits_type = entt_traits<Entity>;
+    using traits_type = entt_traits<std::underlying_type_t<Entity>>;
 
     class iterator {
         friend class basic_view<Entity, Component...>;
 
-        using extent_type = typename sparse_set<Entity>::size_type;
-
         iterator(unchecked_type other, underlying_iterator_type first, underlying_iterator_type last) ENTT_NOEXCEPT
             : unchecked{other},
               begin{first},
-              end{last},
-              extent{min(std::make_index_sequence<other.size()>{})}
+              end{last}
         {
             if(begin != end && !valid()) {
                 ++(*this);
             }
         }
 
-        template<auto... Indexes>
-        extent_type min(std::index_sequence<Indexes...>) const ENTT_NOEXCEPT {
-            return std::min({ std::get<Indexes>(unchecked)->extent()... });
-        }
-
         bool valid() const ENTT_NOEXCEPT {
-            const auto entt = *begin;
-            const auto sz = size_type(entt& traits_type::entity_mask);
-
-            return sz < extent && std::all_of(unchecked.cbegin(), unchecked.cend(), [entt](const sparse_set<Entity> *view) {
-                return view->has(entt);
+            return std::all_of(unchecked.cbegin(), unchecked.cend(), [this](const sparse_set<Entity> *view) {
+                return view->has(*begin);
             });
         }
 
@@ -141,7 +130,6 @@ class basic_view {
         unchecked_type unchecked;
         underlying_iterator_type begin;
         underlying_iterator_type end;
-        extent_type extent;
     };
 
     // we could use pool_type<Component> *..., but vs complains about it and refuses to compile for unknown reasons (likely a bug)
@@ -177,7 +165,7 @@ class basic_view {
         auto begin = std::get<pool_type<Comp> *>(pools)->sparse_set<Entity>::begin();
 
         if constexpr(std::disjunction_v<std::is_same<Comp, Type>...>) {
-            std::for_each(begin, end, [raw = std::get<pool_type<Comp> *>(pools)->begin(), &func, this](const auto entity) mutable {
+            std::for_each(begin, end, [this, raw = std::get<pool_type<Comp> *>(pools)->begin(), &func](const auto entity) mutable {
                 auto curr = raw++;
 
                 if((std::get<pool_type<Other> *>(pools)->has(entity) && ...)) {
@@ -189,7 +177,7 @@ class basic_view {
                 }
             });
         } else {
-            std::for_each(begin, end, [&func, this](const auto entity) mutable {
+            std::for_each(begin, end, [this, &func](const auto entity) mutable {
                 if((std::get<pool_type<Other> *>(pools)->has(entity) && ...)) {
                     if constexpr(std::is_invocable_v<Func, decltype(get<Type>({}))...>) {
                         func(std::get<pool_type<Type> *>(pools)->get(entity)...);

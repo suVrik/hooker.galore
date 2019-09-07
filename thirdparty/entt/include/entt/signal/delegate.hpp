@@ -27,20 +27,20 @@ template<typename Ret, typename... Args>
 auto to_function_pointer(Ret(*)(Args...)) -> Ret(*)(Args...);
 
 
-template<typename Ret, typename... Args, typename Type, typename Payload, typename = std::enable_if_t<std::is_convertible_v<Payload *, Type *>>>
-auto to_function_pointer(Ret(*)(Type *, Args...), Payload *) -> Ret(*)(Args...);
+template<typename Ret, typename... Args, typename Type, typename Payload, typename = std::enable_if_t<std::is_convertible_v<Payload &, Type &>>>
+auto to_function_pointer(Ret(*)(Type &, Args...), Payload &) -> Ret(*)(Args...);
 
 
 template<typename Class, typename Ret, typename... Args>
-auto to_function_pointer(Ret(Class:: *)(Args...), const Class *) -> Ret(*)(Args...);
+auto to_function_pointer(Ret(Class:: *)(Args...), const Class &) -> Ret(*)(Args...);
 
 
 template<typename Class, typename Ret, typename... Args>
-auto to_function_pointer(Ret(Class:: *)(Args...) const, const Class *) -> Ret(*)(Args...);
+auto to_function_pointer(Ret(Class:: *)(Args...) const, const Class &) -> Ret(*)(Args...);
 
 
 template<typename Class, typename Type>
-auto to_function_pointer(Type Class:: *, const Class *) -> Type(*)();
+auto to_function_pointer(Type Class:: *, const Class &) -> Type(*)();
 
 
 template<typename>
@@ -101,24 +101,25 @@ class delegate;
  */
 template<typename Ret, typename... Args>
 class delegate<Ret(Args...)> {
-    using proto_fn_type = Ret(const void *, std::tuple<Args...>);
+    using proto_fn_type = Ret(const void *, std::tuple<Args &&...>);
 
     template<auto Function, std::size_t... Index>
     void connect(std::index_sequence<Index...>) ENTT_NOEXCEPT {
+        static_assert(std::is_invocable_r_v<Ret, decltype(Function), std::tuple_element_t<Index, std::tuple<Args...>>...>);
         data = nullptr;
 
-        fn = [](const void *, std::tuple<Args...> args) -> Ret {
-            static_assert(std::is_invocable_r_v<Ret, decltype(Function), std::tuple_element_t<Index, std::tuple<Args...>>...>);
-            // Ret(...) allows void(...) to eat return values and avoid errors
-            return Ret(std::invoke(Function, std::get<Index>(args)...));
+        fn = [](const void *, std::tuple<Args &&...> args) -> Ret {
+            // Ret(...) makes void(...) eat the return values to avoid errors
+            return Ret(std::invoke(Function, std::forward<std::tuple_element_t<Index, std::tuple<Args...>>>(std::get<Index>(args))...));
         };
     }
 
     template<auto Candidate, typename Type, std::size_t... Index>
-    void connect(Type *value_or_instance, std::index_sequence<Index...>) ENTT_NOEXCEPT {
-        data = value_or_instance;
+    void connect(Type &value_or_instance, std::index_sequence<Index...>) ENTT_NOEXCEPT {
+        static_assert(std::is_invocable_r_v<Ret, decltype(Candidate), Type &, std::tuple_element_t<Index, std::tuple<Args...>>...>);
+        data = &value_or_instance;
 
-        fn = [](const void *payload, std::tuple<Args...> args) -> Ret {
+        fn = [](const void *payload, std::tuple<Args &&...> args) -> Ret {
             Type *curr = nullptr;
 
             if constexpr(std::is_const_v<Type>) {
@@ -127,9 +128,8 @@ class delegate<Ret(Args...)> {
                 curr = static_cast<Type *>(const_cast<void *>(payload));
             }
 
-            static_assert(std::is_invocable_r_v<Ret, decltype(Candidate), Type *, std::tuple_element_t<Index, std::tuple<Args...>>...>);
-            // Ret(...) allows void(...) to eat return values and avoid errors
-            return Ret(std::invoke(Candidate, curr, std::get<Index>(args)...));
+            // Ret(...) makes void(...) eat the return values to avoid errors
+            return Ret(std::invoke(Candidate, *curr, std::forward<std::tuple_element_t<Index, std::tuple<Args...>>>(std::get<Index>(args))...));
         };
     }
 
@@ -158,10 +158,10 @@ public:
      * or a free function with payload.
      * @tparam Candidate Member or free function to connect to the delegate.
      * @tparam Type Type of class or type of payload.
-     * @param value_or_instance A valid pointer that fits the purpose.
+     * @param value_or_instance A valid reference that fits the purpose.
      */
     template<auto Candidate, typename Type>
-    delegate(connect_arg_t<Candidate>, Type *value_or_instance) ENTT_NOEXCEPT
+    delegate(connect_arg_t<Candidate>, Type &value_or_instance) ENTT_NOEXCEPT
         : delegate{}
     {
         connect<Candidate>(value_or_instance);
@@ -190,11 +190,11 @@ public:
      *
      * @tparam Candidate Member or free function to connect to the delegate.
      * @tparam Type Type of class or type of payload.
-     * @param value_or_instance A valid pointer that fits the purpose.
+     * @param value_or_instance A valid reference that fits the purpose.
      */
     template<auto Candidate, typename Type>
-    void connect(Type *value_or_instance) ENTT_NOEXCEPT {
-        constexpr auto extent = internal::function_extent_v<decltype(internal::to_function_pointer(std::declval<decltype(Candidate)>(), std::declval<Type *>()))>;
+    void connect(Type &value_or_instance) ENTT_NOEXCEPT {
+        constexpr auto extent = internal::function_extent_v<decltype(internal::to_function_pointer(std::declval<decltype(Candidate)>(), value_or_instance))>;
         connect<Candidate>(value_or_instance, std::make_index_sequence<extent>{});
     }
 
@@ -232,7 +232,7 @@ public:
      */
     Ret operator()(Args... args) const {
         ENTT_ASSERT(fn);
-        return fn(data, std::forward_as_tuple(args...));
+        return fn(data, std::forward_as_tuple(std::forward<Args>(args)...));
     }
 
     /**
@@ -245,16 +245,12 @@ public:
     }
 
     /**
-     * @brief Checks if the connected functions differ.
-     *
-     * Instances connected to delegates are ignored by this operator. Use the
-     * `instance` member function instead.
-     *
+     * @brief Compares the contents of two delegates.
      * @param other Delegate with which to compare.
-     * @return False if the connected functions differ, true otherwise.
+     * @return False if the two contents differ, true otherwise.
      */
     bool operator==(const delegate<Ret(Args...)> &other) const ENTT_NOEXCEPT {
-        return fn == other.fn;
+        return fn == other.fn && data == other.data;
     }
 
 private:
@@ -264,16 +260,12 @@ private:
 
 
 /**
- * @brief Checks if the connected functions differ.
- *
- * Instances connected to delegates are ignored by this operator. Use the
- * `instance` member function instead.
- *
+ * @brief Compares the contents of two delegates.
  * @tparam Ret Return type of a function type.
  * @tparam Args Types of arguments of a function type.
  * @param lhs A valid delegate object.
  * @param rhs A valid delegate object.
- * @return True if the connected functions differ, false otherwise.
+ * @return True if the two contents differ, false otherwise.
  */
 template<typename Ret, typename... Args>
 bool operator!=(const delegate<Ret(Args...)> &lhs, const delegate<Ret(Args...)> &rhs) ENTT_NOEXCEPT {
@@ -300,12 +292,13 @@ delegate(connect_arg_t<Function>) ENTT_NOEXCEPT
  * It allows to deduce the function type of the delegate directly from a member
  * or a free function with payload provided to the constructor.
  *
+ * @param value_or_instance A valid reference that fits the purpose.
  * @tparam Candidate Member or free function to connect to the delegate.
  * @tparam Type Type of class or type of payload.
  */
 template<auto Candidate, typename Type>
-delegate(connect_arg_t<Candidate>, Type *) ENTT_NOEXCEPT
--> delegate<std::remove_pointer_t<decltype(internal::to_function_pointer(Candidate, std::declval<Type *>()))>>;
+delegate(connect_arg_t<Candidate>, Type &value_or_instance) ENTT_NOEXCEPT
+-> delegate<std::remove_pointer_t<decltype(internal::to_function_pointer(Candidate, value_or_instance))>>;
 
 
 }
