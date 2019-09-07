@@ -11,85 +11,128 @@ template <typename T>
 void World::register_component() noexcept {
     ComponentDescriptor descriptor{};
 
-    descriptor.construct = []() -> entt::meta_any {
-        static_assert(std::is_default_constructible_v<T>, "Specified component is not default constructible.");
-
-        // `entt::meta_any` requires object to be copy-constructible as well.
-        if constexpr (std::is_copy_constructible_v<T>) {
+    if (std::is_default_constructible_v<T>) {
+        descriptor.construct = []() -> entt::meta_any {
             return entt::meta_any(T{});
-        } else {
-            assert(false && "Specified component type is not copy constructible.");
-            return entt::meta_any();
-        }
-    };
+        };
+    } else {
+        descriptor.construct = nullptr;
+    }
+    
+    if constexpr (std::is_copy_constructible_v<T>) {
+        descriptor.copy = [](const entt::meta_handle component) -> entt::meta_any {
+            return entt::meta_any(T(*component.data<T>()));
+        };
+    } else {
+        descriptor.copy = nullptr;
+    }
 
-    descriptor.copy = [](const entt::meta_handle& component) -> entt::meta_any {
-        if constexpr (std::is_copy_constructible_v<T>) {
-            return entt::meta_any(T(*component.try_cast<T>()));
-        } else {
-            assert(false && "Specified component type is not copy constructible.");
-            return entt::meta_any();
-        }
-    };
+    if constexpr (std::is_move_constructible_v<T>) {
+        descriptor.move = [](const entt::meta_handle component) -> entt::meta_any {
+            return entt::meta_any(T(std::move(*component.data<T>())));
+        };
+    } else {
+        descriptor.move = nullptr;
+    }
 
-    descriptor.assign_default = [](World* world, entt::entity entity) -> entt::meta_handle {
-        if constexpr (std::is_default_constructible_v<T>) {
+    if constexpr (std::is_default_constructible_v<T>) {
+        static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
+        descriptor.assign_default = [](World* const world, const entt::entity entity) -> entt::meta_handle {
             return entt::meta_handle(world->assign<T>(entity));
-        } else {
-            assert(false && "Specified component type is not default constructible.");
-            return entt::meta_handle();
-        }
-    };
+        };
+    } else {
+        descriptor.assign_default = nullptr;
+    }
 
-    descriptor.assign_copy = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
-        if constexpr (std::is_copy_constructible_v<T>) {
-            return entt::meta_handle(world->assign<T>(entity, *component.try_cast<T>()));
-        } else {
-            assert(false && "Specified component type is not copy constructible.");
-            return entt::meta_handle();
-        }
-    };
+    if constexpr (std::is_copy_constructible_v<T>) {
+        static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
+        descriptor.assign_copy = [](World* const world, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+            return entt::meta_handle(world->assign<T>(entity, *component.data<T>()));
+        };
+    } else {
+        descriptor.assign_copy = nullptr;
+    }
 
-    descriptor.replace = [](World* world, entt::entity entity, const entt::meta_handle& component) -> entt::meta_handle {
-        if constexpr (std::is_copy_constructible_v<T>) {
-            return entt::meta_handle(world->replace<T>(entity, *component.try_cast<T>()));
-        } else {
-            assert(false && "Specified component type is not copy constructible.");
-            return entt::meta_handle();
-        }
-    };
+    if constexpr (std::is_move_constructible_v<T>) {
+        static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
+        descriptor.assign_move = [](World* const world, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+            return entt::meta_handle(world->assign<T>(entity, std::move(*component.data<T>())));
+        };
+    } else {
+        descriptor.assign_move = nullptr;
+    }
 
-    descriptor.remove = [](World* world, entt::entity entity) {
+    if constexpr (std::is_copy_assignable_v<T>) {
+        descriptor.replace_copy = [](World* const world, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+            return entt::meta_handle(world->replace<T>(entity, *component.data<T>()));
+        };
+    } else {
+        descriptor.replace_copy = nullptr;
+    }
+
+    if constexpr (std::is_move_assignable_v<T>) {
+        descriptor.replace_move = [](World* const world, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+            return entt::meta_handle(world->replace<T>(entity, std::move(*component.data<T>())));
+        };
+    } else {
+        descriptor.replace_move = nullptr;
+    }
+
+    descriptor.remove = [](World* const world, const entt::entity entity) {
         world->remove<T>(entity);
     };
 
-    descriptor.has = [](const World* world, entt::entity entity) -> bool {
+    descriptor.has = [](const World* const world, const entt::entity entity) -> bool {
         return world->has<T>(entity);
     };
 
-    descriptor.get = [](const World* world, entt::entity entity) -> entt::meta_handle {
+    descriptor.get = [](const World* const world, const entt::entity entity) -> entt::meta_handle {
         return entt::meta_handle(*const_cast<World*>(world)->try_get<T>(entity));
     };
 
-    descriptor.get_or_assign = [](World* world, entt::entity entity) -> entt::meta_handle {
-        return entt::meta_handle(world->get_or_assign<T>(entity));
-    };
+    if (std::is_default_constructible_v<T>) {
+        static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
+        descriptor.get_or_assign = [](World* const world, const entt::entity entity) -> entt::meta_handle {
+            return entt::meta_handle(world->get_or_assign<T>(entity));
+        };
+    } else {
+        descriptor.get_or_assign = nullptr;
+    }
 
     m_components.emplace(entt::resolve<T>(), descriptor);
 }
 
 template <typename T>
-void World::each_type(T callback) const noexcept {
+void World::each_registered_component_type(T callback) const noexcept {
     for (const auto& [type, descriptor] : m_components) {
         callback(type);
     }
 }
 
 template <typename T>
-void World::each(entt::entity entity, T callback) const noexcept {
+void World::each_editable_component_type(T callback) const noexcept {
+    for (const auto& [type, descriptor] : m_components) {
+        if (is_component_editable(type)) {
+            callback(type);
+        }
+    }
+}
+
+template <typename T>
+void World::each_registered_entity_component(const entt::entity entity, T callback) const noexcept {
     for (const auto& [type, descriptor] : m_components) {
         const entt::meta_handle component_handle = get(entity, type);
         if (component_handle) {
+            callback(component_handle);
+        }
+    }
+}
+
+template <typename T>
+void World::each_editable_entity_component(const entt::entity entity, T callback) const noexcept {
+    for (const auto& [type, descriptor] : m_components) {
+        const entt::meta_handle component_handle = get(entity, type);
+        if (component_handle && is_component_editable(type)) {
             callback(component_handle);
         }
     }
