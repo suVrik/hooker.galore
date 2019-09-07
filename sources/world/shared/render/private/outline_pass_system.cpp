@@ -130,7 +130,7 @@ void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_co
             outline_pass_single_component.color_texture,
             outline_pass_single_component.depth_texture
     };
-    outline_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
+    outline_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
 
     bgfx::setViewFrameBuffer(OUTLINE_PASS, outline_pass_single_component.buffer);
     bgfx::setViewRect(OUTLINE_PASS, 0, 0, width, height);
@@ -150,8 +150,8 @@ void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass
             assert(bgfx::isValid(primitive.vertex_buffer));
             assert(bgfx::isValid(primitive.index_buffer));
 
-            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, primitive.num_vertices);
-            bgfx::setIndexBuffer(primitive.index_buffer, 0, primitive.num_indices);
+            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, static_cast<uint32_t>(primitive.num_vertices));
+            bgfx::setIndexBuffer(primitive.index_buffer, 0, static_cast<uint32_t>(primitive.num_indices));
 
             glm::vec4 uniform_value;
             uniform_value.x = ((group_index >> 16) & 0xFF) / 255.f;

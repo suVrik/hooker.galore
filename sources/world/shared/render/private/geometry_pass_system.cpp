@@ -186,7 +186,7 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
             geometry_pass_single_component.depth_stencil_texture
     };
 
-    geometry_pass_single_component.gbuffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
+    geometry_pass_single_component.gbuffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
 
     bgfx::setViewFrameBuffer(GEOMETRY_PASS, geometry_pass_single_component.gbuffer);
     bgfx::setViewRect(GEOMETRY_PASS, 0, 0, width, height);
@@ -204,8 +204,8 @@ void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::
             assert(bgfx::isValid(primitive.vertex_buffer));
             assert(bgfx::isValid(primitive.index_buffer));
             
-            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, primitive.num_vertices);
-            bgfx::setIndexBuffer(primitive.index_buffer, 0, primitive.num_indices);
+            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, static_cast<uint32_t>(primitive.num_vertices));
+            bgfx::setIndexBuffer(primitive.index_buffer, 0, static_cast<uint32_t>(primitive.num_indices));
 
             assert(bgfx::isValid(context.color_roughness_uniform));
             assert(bgfx::isValid(context.normal_metal_ao_uniform));

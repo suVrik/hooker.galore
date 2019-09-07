@@ -118,7 +118,7 @@ void PickingPassSystem::reset(PickingPassSingleComponent& picking_pass_single_co
             picking_pass_single_component.rt_depth_buffer
     };
 
-    picking_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
+    picking_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
 
     bgfx::setViewFrameBuffer(PICKING_PASS, picking_pass_single_component.buffer);
     bgfx::setViewRect(PICKING_PASS, 0, 0, width, height);
@@ -136,8 +136,8 @@ void PickingPassSystem::draw_node(const PickingPassSingleComponent& picking_pass
             assert(bgfx::isValid(primitive.vertex_buffer));
             assert(bgfx::isValid(primitive.index_buffer));
 
-            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, primitive.num_vertices);
-            bgfx::setIndexBuffer(primitive.index_buffer, 0, primitive.num_indices);
+            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, static_cast<uint32_t>(primitive.num_vertices));
+            bgfx::setIndexBuffer(primitive.index_buffer, 0, static_cast<uint32_t>(primitive.num_indices));
 
             glm::vec4 uniform_value;
             uniform_value.x = ((object_index >> 16) & 0xFF) / 255.f;

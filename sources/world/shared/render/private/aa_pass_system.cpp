@@ -101,7 +101,7 @@ void AAPassSystem::reset(AAPassSingleComponent &aa_pass_single_component, uint16
             aa_pass_single_component.color_texture
     };
 
-    aa_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, true);
+    aa_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
 
     bgfx::setViewFrameBuffer(AA_PASS, aa_pass_single_component.buffer);
     bgfx::setViewRect(AA_PASS, 0, 0, width, height);

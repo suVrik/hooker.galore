@@ -144,7 +144,7 @@ void DebugDrawPassSystem::reset(DebugDrawPassSingleComponent& debug_draw_pass_si
             world.ctx<GeometryPassSingleComponent>().depth_stencil_texture
     };
 
-    debug_draw_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
+    debug_draw_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, false);
 
     bgfx::setViewFrameBuffer(DEBUG_DRAW_OFFSCREEN_PASS, debug_draw_pass_single_component.buffer);
     bgfx::setViewRect(DEBUG_DRAW_OFFSCREEN_PASS, 0, 0, width, height);

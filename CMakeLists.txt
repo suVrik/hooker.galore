@@ -141,8 +141,11 @@ if(UNIX)
     endif()
 endif()
 
-# Add missing _DEBUG definition
-if(UNIX)
+# Add required compile definitions.
+
+if(WIN32)
+    target_compile_definitions(hooker_galore PRIVATE _CRT_SECURE_NO_WARNINGS)
+elseif(UNIX)
     target_compile_definitions(hooker_galore PRIVATE _DEBUG)
 endif()
 

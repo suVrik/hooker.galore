@@ -10,7 +10,7 @@ class Node;
 
 namespace entt {
 
-class meta_handle;
+struct meta_handle;
 
 } // namespace entt
 

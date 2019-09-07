@@ -139,7 +139,7 @@ void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_compo
             world.ctx<GeometryPassSingleComponent>().depth_stencil_texture
     };
 
-    skybox_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
+    skybox_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, false);
 
     bgfx::setViewFrameBuffer(SKYBOX_PASS, skybox_pass_single_component.buffer);
     bgfx::setViewRect(SKYBOX_PASS, 0, 0, width, height);

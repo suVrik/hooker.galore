@@ -11,7 +11,7 @@ namespace tinygltf {
 
 class Model;
 class Node;
-class Primitive;
+struct Primitive;
 
 } // namespace tinygltf
 

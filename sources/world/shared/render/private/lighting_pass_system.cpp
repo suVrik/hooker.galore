@@ -155,7 +155,7 @@ void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single
             world.ctx<GeometryPassSingleComponent>().depth_stencil_texture
     };
 
-    lighting_pass_single_component.buffer = bgfx::createFrameBuffer(std::size(attachments), attachments, false);
+    lighting_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, false);
 
     bgfx::setViewFrameBuffer(LIGHTING_PASS, lighting_pass_single_component.buffer);
     bgfx::setViewRect(LIGHTING_PASS, 0, 0, width, height);

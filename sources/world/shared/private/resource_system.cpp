@@ -233,7 +233,7 @@ void ResourceSystem::load_textures() const {
     });
 
     // Red square texture used as a fallback texture.
-    const bgfx::Memory* memory = bgfx::makeRef(resource_system_details::RED_TEXTURE, std::size(resource_system_details::RED_TEXTURE));
+    const bgfx::Memory* memory = bgfx::makeRef(resource_system_details::RED_TEXTURE, static_cast<uint32_t>(std::size(resource_system_details::RED_TEXTURE)));
     texture_single_component.m_default_texture.handle = bgfx::createTexture2D(1, 1, false, 1, bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_NONE, memory);
     texture_single_component.m_default_texture.width = 1;
     texture_single_component.m_default_texture.height = 1;
@@ -328,19 +328,19 @@ void ResourceSystem::load_model_node(const glm::mat4& parent_transform, Model::N
         // Specified as translation, rotation, scale (all optional).
 
         if (node.translation.size() == 3) {
-            result.translation = glm::vec3(node.translation[0], node.translation[1], -node.translation[2]);
+            result.translation = glm::vec3(static_cast<float>(node.translation[0]), static_cast<float>(node.translation[1]), static_cast<float>(-node.translation[2]));
         } else {
             result.translation = glm::vec3(0.f);
         }
 
         if (node.rotation.size() == 4) {
-            result.rotation = glm::quat(node.rotation[3], -node.rotation[0], -node.rotation[1], node.rotation[2]);
+            result.rotation = glm::quat(static_cast<float>(node.rotation[3]), static_cast<float>(-node.rotation[0]), static_cast<float>(-node.rotation[1]), static_cast<float>(node.rotation[2]));
         } else {
             result.rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
         }
 
         if (node.scale.size() == 3) {
-            result.scale = glm::vec3(node.scale[0], node.scale[1], node.scale[2]);
+            result.scale = glm::vec3(static_cast<float>(node.scale[0]), static_cast<float>(node.scale[1]), static_cast<float>(node.scale[2]));
         } else {
             result.scale = glm::vec3(1.f, 1.f, 1.f);
         }
@@ -411,7 +411,7 @@ void ResourceSystem::load_model_primitive(const glm::mat4& parent_transform, Mod
             assert(num_vertices == 0 && vertex_data == nullptr);
 
             num_vertices = accessor.count;
-            vertex_memory = bgfx::alloc(num_vertices * sizeof(Model::BasicModelVertex));
+            vertex_memory = bgfx::alloc(static_cast<uint32_t>(num_vertices * sizeof(Model::BasicModelVertex)));
             vertex_data = reinterpret_cast<Model::BasicModelVertex*>(vertex_memory->data);
         }
 
@@ -587,7 +587,7 @@ void ResourceSystem::load_model_primitive(const glm::mat4& parent_transform, Mod
     if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_BYTE) {
         if ((buffer_view.byteStride == 0 || buffer_view.byteStride == sizeof(uint8_t)) &&
             buffer_view.byteLength == accessor.count) {
-            const bgfx::Memory* memory = bgfx::alloc(accessor.count * sizeof(uint16_t));
+            const bgfx::Memory* memory = bgfx::alloc(static_cast<uint32_t>(accessor.count * sizeof(uint16_t)));
 
             auto* target_data = reinterpret_cast<uint16_t*>(memory->data);
             for (size_t i = 0; i < accessor.count; i++) {
@@ -601,7 +601,7 @@ void ResourceSystem::load_model_primitive(const glm::mat4& parent_transform, Mod
     } else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
         if ((buffer_view.byteStride == 0 || buffer_view.byteStride == sizeof(uint16_t)) &&
             buffer_view.byteLength == accessor.count * sizeof(uint16_t)) {
-            result.index_buffer = bgfx::createIndexBuffer(bgfx::copy(buffer_data, buffer_view.byteLength));
+            result.index_buffer = bgfx::createIndexBuffer(bgfx::copy(buffer_data, static_cast<uint32_t>(buffer_view.byteLength)));
         } else {
             throw std::runtime_error("Invalid SHORT index accessor.");
         }
@@ -609,7 +609,7 @@ void ResourceSystem::load_model_primitive(const glm::mat4& parent_transform, Mod
         const auto* source_data = reinterpret_cast<const uint32_t*>(buffer_data);
         if ((buffer_view.byteStride == 0 || buffer_view.byteStride == sizeof(uint32_t)) &&
             buffer_view.byteLength == accessor.count * sizeof(uint32_t)) {
-            const bgfx::Memory* memory = bgfx::alloc(accessor.count * sizeof(uint16_t));
+            const bgfx::Memory* memory = bgfx::alloc(static_cast<uint32_t>(accessor.count * sizeof(uint16_t)));
 
             auto* target_data = reinterpret_cast<uint16_t*>(memory->data);
             for (size_t i = 0; i < accessor.count; i++) {
