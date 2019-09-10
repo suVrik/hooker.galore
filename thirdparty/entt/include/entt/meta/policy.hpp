@@ -21,6 +21,9 @@ struct as_is_t {};
 struct as_void_t {};
 
 
+/*! @brief Makes `meta_handle` constructed from `meta_handle` a nested `meta_handle`, rather than a copy of a `meta_handle`. */
+struct dont_merge_t {};
+
 }
 
 

@@ -4,8 +4,7 @@
 namespace hg {
 
 REFLECTION_REGISTRATION {
-    entt::reflect<OutlineComponent>("OutlineComponent"_hs, std::make_pair("name"_hs, "OutlineComponent"), std::make_pair("ignore"_hs, true))
-            .ctor<>();
+    entt::reflect<OutlineComponent>("OutlineComponent", std::make_pair("ignore"_hs, true));
 }
 
 } // namespace hg

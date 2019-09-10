@@ -4,8 +4,7 @@
 namespace hg {
 
 REFLECTION_REGISTRATION {
-    entt::reflect<BlockoutComponent>("BlockoutComponent"_hs, std::make_pair("name"_hs, "BlockoutComponent"))
-            .ctor<>();
+    entt::reflect<BlockoutComponent>("BlockoutComponent");
 }
 
 } // namespace hg

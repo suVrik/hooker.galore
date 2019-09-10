@@ -595,9 +595,11 @@ public:
      * @return A meta factory for the parent type.
      */
     template<auto Data, typename Policy = as_is_t, typename... Property>
-    meta_factory data(const ENTT_ID_TYPE identifier, Property &&... property) ENTT_NOEXCEPT {
+    meta_factory data(const char* const name, Property &&... property) ENTT_NOEXCEPT {
         auto * const type = internal::meta_info<Type>::resolve();
         internal::meta_data_node *curr = nullptr;
+
+        const ENTT_ID_TYPE identifier = entt::hashed_string(name);
 
         if constexpr(std::is_same_v<Type, decltype(Data)>) {
             static_assert(std::is_same_v<Policy, as_is_t>);
@@ -618,7 +620,7 @@ public:
                 }
             };
 
-            node.prop = properties<std::integral_constant<Type, Data>>(std::forward<Property>(property)...);
+            node.prop = properties<std::integral_constant<Type, Data>>(std::make_pair("name"_hs, name), std::forward<Property>(property)...);
             curr = &node;
         } else if constexpr(std::is_member_object_pointer_v<decltype(Data)>) {
             using data_type = std::remove_reference_t<decltype(std::declval<Type>().*Data)>;
@@ -639,7 +641,7 @@ public:
                 }
             };
 
-            node.prop = properties<std::integral_constant<decltype(Data), Data>>(std::forward<Property>(property)...);
+            node.prop = properties<std::integral_constant<decltype(Data), Data>>(std::make_pair("name"_hs, name), std::forward<Property>(property)...);
             curr = &node;
         } else {
             static_assert(std::is_pointer_v<std::decay_t<decltype(Data)>>);
@@ -661,7 +663,7 @@ public:
                 }
             };
 
-            node.prop = properties<std::integral_constant<decltype(Data), Data>>(std::forward<Property>(property)...);
+            node.prop = properties<std::integral_constant<decltype(Data), Data>>(std::make_pair("name"_hs, name), std::forward<Property>(property)...);
             curr = &node;
         }
 
@@ -698,11 +700,13 @@ public:
      * @return A meta factory for the parent type.
      */
     template<auto Setter, auto Getter, typename Policy = as_is_t, typename... Property>
-    meta_factory data(const ENTT_ID_TYPE identifier, Property &&... property) ENTT_NOEXCEPT {
+    meta_factory data(const char* const name, Property &&... property) ENTT_NOEXCEPT {
         using owner_type = std::tuple<std::integral_constant<decltype(Setter), Setter>, std::integral_constant<decltype(Getter), Getter>>;
         using underlying_type = std::invoke_result_t<decltype(Getter), Type &>;
         static_assert(std::is_invocable_v<decltype(Setter), Type &, underlying_type>);
         auto * const type = internal::meta_info<Type>::resolve();
+
+        const ENTT_ID_TYPE identifier = entt::hashed_string(name);
 
         static internal::meta_data_node node{
             &internal::meta_info<Type>::template data<Setter, Getter>,
@@ -722,7 +726,7 @@ public:
 
         node.identifier = identifier;
         node.next = type->data;
-        node.prop = properties<owner_type>(std::forward<Property>(property)...);
+        node.prop = properties<owner_type>(std::make_pair("name"_hs, name), std::forward<Property>(property)...);
         ENTT_ASSERT(!duplicate(identifier, node.next));
         ENTT_ASSERT((!internal::meta_info<Type>::template data<Setter, Getter>));
         internal::meta_info<Type>::template data<Setter, Getter> = &node;
@@ -732,7 +736,7 @@ public:
     }
 
     /**
-     * @brief Assigns a meta funcion to a meta type.
+     * @brief Assigns a meta function to a meta type.
      *
      * Both member functions and free functions can be assigned to a meta
      * type.<br/>
@@ -747,10 +751,12 @@ public:
      * @return A meta factory for the parent type.
      */
     template<auto Candidate, typename Policy = as_is_t, typename... Property>
-    meta_factory func(const ENTT_ID_TYPE identifier, Property &&... property) ENTT_NOEXCEPT {
+    meta_factory func(const char* const name, Property &&... property) ENTT_NOEXCEPT {
         using owner_type = std::integral_constant<decltype(Candidate), Candidate>;
         using helper_type = internal::meta_function_helper_t<decltype(Candidate)>;
         auto * const type = internal::meta_info<Type>::resolve();
+
+        const ENTT_ID_TYPE identifier = entt::hashed_string(name);
 
         static internal::meta_func_node node{
             &internal::meta_info<Type>::template func<Candidate>,
@@ -773,7 +779,7 @@ public:
 
         node.identifier = identifier;
         node.next = type->func;
-        node.prop = properties<owner_type>(std::forward<Property>(property)...);
+        node.prop = properties<owner_type>(std::make_pair("name"_hs, name), std::forward<Property>(property)...);
         ENTT_ASSERT(!duplicate(identifier, node.next));
         ENTT_ASSERT((!internal::meta_info<Type>::template func<Candidate>));
         internal::meta_info<Type>::template func<Candidate> = &node;
@@ -842,8 +848,8 @@ public:
  * @return A meta factory for the given type.
  */
 template<typename Type, typename... Property>
-inline meta_factory<Type> reflect(const ENTT_ID_TYPE identifier, Property &&... property) ENTT_NOEXCEPT {
-    return meta_factory<Type>{}.type(identifier, std::forward<Property>(property)...);
+inline meta_factory<Type> reflect(const char* const name, Property &&... property) ENTT_NOEXCEPT {
+    return meta_factory<Type>{}.type(entt::hashed_string(name), std::make_pair("name"_hs, name), std::forward<Property>(property)...);
 }
 
 

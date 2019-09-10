@@ -335,7 +335,7 @@ class meta_any {
         static void destroy(void *instance) {
             auto *node = internal::meta_info<Type>::resolve();
             auto *actual = static_cast<Type *>(instance);
-            [[maybe_unused]] const bool destroyed = node->meta().destroy(*actual);
+            [[maybe_unused]] const bool destroyed = node->meta().destroy(meta_handle(dont_merge_t{}, *actual));
             ENTT_ASSERT(destroyed);
             delete actual;
         }
@@ -363,7 +363,7 @@ class meta_any {
         static void destroy(void *instance) {
             auto *node = internal::meta_info<Type>::resolve();
             auto *actual = static_cast<Type *>(instance);
-            [[maybe_unused]] const bool destroyed = node->meta().destroy(*actual);
+            [[maybe_unused]] const bool destroyed = node->meta().destroy(meta_handle(dont_merge_t{}, *actual));
             ENTT_ASSERT(destroyed);
             actual->~Type();
         }
@@ -598,7 +598,7 @@ public:
     template<typename Type>
     const Type& fast_cast() const ENTT_NOEXCEPT {
         ENTT_ASSERT(node == internal::meta_info<Type>::resolve());
-        return reinterpret_cast<const Type*>(instance);
+        return *reinterpret_cast<const Type*>(instance);
     }
 
     /*! @copydoc fast_cast */
@@ -755,6 +755,17 @@ struct meta_handle {
     meta_handle(Type &obj) ENTT_NOEXCEPT
         : node{internal::meta_info<Type>::resolve()},
           instance{&obj}
+    {}
+    
+    /**
+     * @brief Constructs a meta handle from a given instance. Nested `meta_handle` and `meta_any` are allowed.
+     * @tparam Type Type of object to use to initialize the handle.
+     * @param obj A reference to an object to use to initialize the handle.
+     */
+    template<typename Type>
+    meta_handle(dont_merge_t, Type& obj) ENTT_NOEXCEPT
+        : node{internal::meta_info<Type>::resolve()},
+          instance{ &obj }
     {}
 
     /**

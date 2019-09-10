@@ -8,8 +8,7 @@ namespace hg {
 class World;
 
 /** `SelectedEntitySingleComponent` contains selected entity. */
-class SelectedEntitySingleComponent final {
-public:
+struct SelectedEntitySingleComponent final {
     /** Select specified `entity`, assign `OutlineComponent` to it, reset `OutlineComponent` from previous selected entity. */
     void select_entity(World& world, entt::entity entity) noexcept;
     void add_to_selection(World& world, entt::entity entity) noexcept;

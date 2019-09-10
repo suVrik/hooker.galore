@@ -4,9 +4,8 @@
 namespace hg {
 
 REFLECTION_REGISTRATION {
-    entt::reflect<LightComponent>("LightComponent"_hs, std::make_pair("name"_hs, "LightComponent"))
-            .ctor<>()
-            .data<&LightComponent::color>("color"_hs, std::make_pair("name"_hs, "color"));
+    entt::reflect<LightComponent>("LightComponent")
+            .data<&LightComponent::color>("color");
 }
 
 } // namespace hg

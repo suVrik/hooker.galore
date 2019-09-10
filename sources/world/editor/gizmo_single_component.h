@@ -7,8 +7,7 @@
 namespace hg {
 
 /** `GizmoSingleComponent` contains currently selected gizmo operation. */
-class GizmoSingleComponent final {
-public:
+struct GizmoSingleComponent final {
     ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
     bool is_local_space = false;
 
