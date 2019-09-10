@@ -202,11 +202,9 @@ void ResourceSystem::update(float /*elapsed_time*/) {
         if (!material_component.material.empty()) {
             material_component.color_roughness = &texture_single_component.get(material_component.material + "_bcr.dds");
             material_component.normal_metal_ao = &texture_single_component.get(material_component.material + "_nmao.dds");
-            material_component.parallax = texture_single_component.get_if(material_component.material + "_h.dds");
         } else {
             material_component.color_roughness = nullptr;
             material_component.normal_metal_ao = nullptr;
-            material_component.parallax = nullptr;
         }
     };
 

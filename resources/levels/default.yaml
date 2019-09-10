@@ -1382,7 +1382,6 @@ entities:
       path: blockout.glb
     MaterialComponent:
       material: parallax
-      parallax_steps: 25
     EditorComponent:
       name: parallax-cube
       guid: 66

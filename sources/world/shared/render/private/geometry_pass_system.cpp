@@ -2,8 +2,6 @@
 #include "core/render/render_pass.h"
 #include "core/resource/texture.h"
 #include "shaders/geometry_blockout_pass/geometry_blockout_pass.vertex.h"
-#include "shaders/geometry_no_parallax_pass/geometry_no_parallax_pass.fragment.h"
-#include "shaders/geometry_no_parallax_pass/geometry_no_parallax_pass.vertex.h"
 #include "shaders/geometry_pass/geometry_pass.fragment.h"
 #include "shaders/geometry_pass/geometry_pass.vertex.h"
 #include "world/shared/render/blockout_component.h"
@@ -28,13 +26,7 @@ static const bgfx::EmbeddedShader GEOMETRY_PASS_SHADER[] = {
 
 static const bgfx::EmbeddedShader GEOMETRY_BLOCKOUT_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER(geometry_blockout_pass_vertex),
-        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_fragment),
-        BGFX_EMBEDDED_SHADER_END()
-};
-
-static const bgfx::EmbeddedShader GEOMETRY_NO_PARALLAX_PASS_SHADER[] = {
-        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_vertex),
-        BGFX_EMBEDDED_SHADER(geometry_no_parallax_pass_fragment),
+        BGFX_EMBEDDED_SHADER(geometry_pass_fragment),
         BGFX_EMBEDDED_SHADER_END()
 };
 
@@ -45,13 +37,9 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 struct GeometryPassSystem::DrawNodeContext final {
     bgfx::UniformHandle color_roughness_uniform   = BGFX_INVALID_HANDLE;
     bgfx::UniformHandle normal_metal_ao_uniform   = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle parallax_uniform          = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle parallax_settings_uniform = BGFX_INVALID_HANDLE;
 
     const Texture* color_roughness = nullptr;
     const Texture* normal_metal_ao = nullptr;
-    const Texture* parallax        = nullptr;
-    glm::vec4 parallax_settings    = glm::vec4(0.f);
 
     bgfx::ProgramHandle program    = BGFX_INVALID_HANDLE;
 };
@@ -72,18 +60,12 @@ GeometryPassSystem::GeometryPassSystem(World& world) noexcept
     bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_PASS_SHADER, type, "geometry_pass_fragment");
     geometry_pass_single_component.geometry_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-    vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_NO_PARALLAX_PASS_SHADER, type, "geometry_no_parallax_pass_vertex");
-    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_NO_PARALLAX_PASS_SHADER, type, "geometry_no_parallax_pass_fragment");
-    geometry_pass_single_component.geometry_no_parallax_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
-
     vertex_shader_handle   = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_blockout_pass_vertex");
-    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_no_parallax_pass_fragment");
+    fragment_shader_handle = bgfx::createEmbeddedShader(GEOMETRY_BLOCKOUT_PASS_SHADER, type, "geometry_pass_fragment");
     geometry_pass_single_component.geometry_blockout_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     geometry_pass_single_component.color_roughness_uniform   = bgfx::createUniform("s_color_roughness",   bgfx::UniformType::Sampler);
     geometry_pass_single_component.normal_metal_ao_uniform   = bgfx::createUniform("s_normal_metal_ao",   bgfx::UniformType::Sampler);
-    geometry_pass_single_component.parallax_uniform          = bgfx::createUniform("s_parallax",          bgfx::UniformType::Sampler);
-    geometry_pass_single_component.parallax_settings_uniform = bgfx::createUniform("u_parallax_settings", bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(GEOMETRY_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0xFFFFFFFF, 1.f, 0);
     bgfx::setViewName(GEOMETRY_PASS, "geometry_pass");
@@ -101,11 +83,8 @@ GeometryPassSystem::~GeometryPassSystem() {
     destroy_valid(geometry_pass_single_component.color_roughness_uniform);
     destroy_valid(geometry_pass_single_component.gbuffer);
     destroy_valid(geometry_pass_single_component.geometry_blockout_pass_program);
-    destroy_valid(geometry_pass_single_component.geometry_no_parallax_pass_program);
     destroy_valid(geometry_pass_single_component.geometry_pass_program);
     destroy_valid(geometry_pass_single_component.normal_metal_ao_uniform);
-    destroy_valid(geometry_pass_single_component.parallax_settings_uniform);
-    destroy_valid(geometry_pass_single_component.parallax_uniform);
 }
 
 void GeometryPassSystem::update(float /*elapsed_time*/) {
@@ -122,8 +101,6 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     DrawNodeContext context;
     context.color_roughness_uniform   = geometry_pass_single_component.color_roughness_uniform;
     context.normal_metal_ao_uniform   = geometry_pass_single_component.normal_metal_ao_uniform;
-    context.parallax_uniform          = geometry_pass_single_component.parallax_uniform;
-    context.parallax_settings_uniform = geometry_pass_single_component.parallax_settings_uniform;
 
     bgfx::touch(GEOMETRY_PASS);
     
@@ -131,24 +108,15 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
         if (material_component.color_roughness != nullptr && material_component.normal_metal_ao != nullptr && !model_component.model.children.empty()) {
             context.color_roughness   = material_component.color_roughness;
             context.normal_metal_ao   = material_component.normal_metal_ao;
-            context.parallax          = material_component.parallax;
-            context.parallax_settings = glm::vec4(material_component.parallax_scale, material_component.parallax_steps, 1.f / material_component.parallax_steps, 0.f);
 
             glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
             transform = transform * glm::mat4_cast(transform_component.rotation);
             transform = glm::scale(transform, transform_component.scale);
 
             if (!world.has<BlockoutComponent>(entity)) {
-                if (context.parallax != nullptr) {
-                    context.program = geometry_pass_single_component.geometry_pass_program;
-                    for (const Model::Node& node : model_component.model.children) {
-                        draw_node(context, node, transform);
-                    }
-                } else {
-                    context.program = geometry_pass_single_component.geometry_no_parallax_pass_program;
-                    for (const Model::Node& node : model_component.model.children) {
-                        draw_node(context, node, transform);
-                    }
+                context.program = geometry_pass_single_component.geometry_pass_program;
+                for (const Model::Node& node : model_component.model.children) {
+                    draw_node(context, node, transform);
                 }
             } else {
                 context.program = geometry_pass_single_component.geometry_blockout_pass_program;
@@ -212,14 +180,6 @@ void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::
             
             bgfx::setTexture(0, context.color_roughness_uniform, context.color_roughness->handle);
             bgfx::setTexture(1, context.normal_metal_ao_uniform, context.normal_metal_ao->handle);
-
-            if (context.parallax != nullptr) {
-                assert(bgfx::isValid(context.parallax_uniform));
-                assert(bgfx::isValid(context.parallax_settings_uniform));
-
-                bgfx::setTexture(2, context.parallax_uniform, context.parallax->handle);
-                bgfx::setUniform(context.parallax_settings_uniform, glm::value_ptr(context.parallax_settings), 1);
-            }
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);
 
