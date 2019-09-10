@@ -59,7 +59,7 @@ bool World::is_component_editable(const entt::meta_type component_type) const no
     const entt::meta_prop component_name_property = component_type.prop("name"_hs);
     if (component_name_property && component_name_property.value().type() == entt::resolve<const char*>()) {
         const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-        if (!ignore_property || ignore_property.value().type() == entt::resolve<bool>() || ignore_property.value().cast<bool>()) {
+        if (!ignore_property || ignore_property.value().type() != entt::resolve<bool>() || !ignore_property.value().cast<bool>()) {
             return is_default_constructible(component_type) && is_copy_constructible(component_type) && is_copy_assignable(component_type);
         }
     }
