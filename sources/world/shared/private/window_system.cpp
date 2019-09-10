@@ -24,8 +24,8 @@ WindowSystem::WindowSystem(World& world)
 
     int window_width, window_height;
     SDL_GetWindowSize(window_single_component.window, &window_width, &window_height);
-    window_single_component.width = static_cast<uint32_t>(window_width);
-    window_single_component.height = static_cast<uint32_t>(window_height);
+    window_single_component.width = std::max(static_cast<uint32_t>(window_width), 1U);
+    window_single_component.height = std::max(static_cast<uint32_t>(window_height), 1U);
 
     world.set<NormalInputSingleComponent>();
 }
@@ -47,6 +47,11 @@ void WindowSystem::update(float /*elapsed_time*/) {
 
     int window_width, window_height;
     SDL_GetWindowSize(window_single_component.window, &window_width, &window_height);
+
+    // Don't let user change window size to zero. Zeros may break many other systems.
+    window_single_component.width = std::max(window_single_component.width, 1U);
+    window_single_component.height = std::max(window_single_component.height, 1U);
+
     if (window_width != window_single_component.width || window_height != window_single_component.height) {
         SDL_SetWindowSize(window_single_component.window, window_single_component.width, window_single_component.height);
     }
@@ -120,8 +125,8 @@ void WindowSystem::handle_window_event(SDL_Event& event) {
         case SDL_WINDOWEVENT_RESIZED:
         case SDL_WINDOWEVENT_SIZE_CHANGED: {
             auto &window_single_component = world.ctx<WindowSingleComponent>();
-            window_single_component.width = static_cast<uint32_t>(event.window.data1);
-            window_single_component.height = static_cast<uint32_t>(event.window.data2);
+            window_single_component.width = std::max(static_cast<uint32_t>(event.window.data1), 1U);
+            window_single_component.height = std::max(static_cast<uint32_t>(event.window.data2), 1U);
             window_single_component.resized = true;
             break;
         }
