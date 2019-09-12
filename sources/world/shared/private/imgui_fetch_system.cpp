@@ -84,6 +84,11 @@ ImguiFetchSystem::~ImguiFetchSystem() {
 }
 
 void ImguiFetchSystem::update(float elapsed_time) {
+    update_imgui(elapsed_time);
+    build_dock_space();
+}
+
+void ImguiFetchSystem::update_imgui(float elapsed_time) const {
     ImGuiIO& io = ImGui::GetIO();
 
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
@@ -147,7 +152,9 @@ void ImguiFetchSystem::update(float elapsed_time) {
 
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
+}
 
+void ImguiFetchSystem::build_dock_space() const {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
     ImGui::SetNextWindowSize(viewport->Size);

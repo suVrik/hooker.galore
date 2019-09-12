@@ -10,6 +10,10 @@ public:
     explicit ImguiFetchSystem(World& world) noexcept;
     ~ImguiFetchSystem() override;
     void update(float elapsed_time) override;
+
+private:
+    void update_imgui(float elapsed_time) const;
+    void build_dock_space() const;
 };
 
 } // namespace hg
