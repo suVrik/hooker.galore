@@ -28,10 +28,15 @@ PresetSystem::PresetSystem(World& world) noexcept
 void PresetSystem::update(float /*elapsed_time*/) {
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& history_single_component = world.ctx<HistorySingleComponent>();
-    auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& preset_single_component = world.ctx<PresetSingleComponent>();
-    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
+    show_presets_window(preset_single_component, history_single_component, camera_single_component);
+    process_drag_and_drop(preset_single_component, history_single_component, camera_single_component);
+}
+
+
+void PresetSystem::show_presets_window(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
+                                       CameraSingleComponent& camera_single_component) const noexcept {
     if (ImGui::Begin("Presets", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
@@ -110,8 +115,14 @@ void PresetSystem::update(float /*elapsed_time*/) {
         ImGui::EndChildFrame();
     }
     ImGui::End();
+}
 
-    if (const ImGuiPayload* payload = ImGui::GetDragDropPayload(); payload != nullptr) {
+void PresetSystem::process_drag_and_drop(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
+                                         CameraSingleComponent& camera_single_component) const noexcept {
+    auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
+    auto& window_single_component = world.ctx<WindowSingleComponent>();
+
+    if (const ImGuiPayload * const payload = ImGui::GetDragDropPayload(); payload != nullptr) {
         if (payload->IsDataType("place_preset")) {
             if (!world.valid(preset_single_component.placed_entity)) {
                 const auto* const preset_name = reinterpret_cast<const char*>(payload->Data);
@@ -124,11 +135,11 @@ void PresetSystem::update(float /*elapsed_time*/) {
             if (world.valid(preset_single_component.placed_entity)) {
                 assert(window_single_component.width != 0);
                 assert(window_single_component.height != 0);
-                
+
                 const float normalized_mouse_position_x = static_cast<float>(normal_input_single_component.get_mouse_x()) / window_single_component.width * 2.f - 1.f;
                 const float normalized_mouse_position_y = 1.f - static_cast<float>(normal_input_single_component.get_mouse_y()) / window_single_component.height * 2.f;
                 const glm::vec4 screen_space_position(normalized_mouse_position_x, normalized_mouse_position_y, 1.f, 1.f);
- 
+
                 glm::vec4 projection_space_position = camera_single_component.inverse_projection_matrix * screen_space_position;
                 projection_space_position /= projection_space_position.w * camera_single_component.z_far / PLACE_PRESET_DISTANCE;
 
@@ -147,7 +158,7 @@ void PresetSystem::update(float /*elapsed_time*/) {
 }
 
 entt::entity PresetSystem::place_preset(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
-                                        CameraSingleComponent& camera_single_component, const std::string& preset_name, bool is_continuous) {
+                                        CameraSingleComponent& camera_single_component, const std::string& preset_name, bool is_continuous) const noexcept {
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
     assert(preset_single_component.presets.count(preset_name) > 0);
@@ -166,14 +177,13 @@ entt::entity PresetSystem::place_preset(PresetSingleComponent& preset_single_com
         change->description = fmt::format("Create entity \"{}\"", editor_component.name);
 
         for (entt::meta_any& component_prototype : preset) {
-            change->assign_component(world, entity, component_prototype);
+            change->assign_component_copy(world, entity, component_prototype);
         }
 
-        if (auto * transform_component = world.try_get<TransformComponent>(entity); transform_component != nullptr) {
+        if (auto* transform_component = world.try_get<TransformComponent>(entity); transform_component != nullptr) {
             TransformComponent changed_transform_component = *transform_component;
             changed_transform_component.translation = camera_single_component.translation + camera_single_component.rotation * glm::vec3(0.f, 0.f, PLACE_PRESET_DISTANCE);
-            entt::meta_any any_changed_transform_component(changed_transform_component);
-            change->replace_component(world, entity, any_changed_transform_component);
+            change->replace_component_move(world, entity, changed_transform_component);
         }
 
         selected_entity_single_component.select_entity(world, entity);

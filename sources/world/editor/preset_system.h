@@ -19,8 +19,12 @@ public:
 private:
     static constexpr float PLACE_PRESET_DISTANCE = 7.f;
 
+    void show_presets_window(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
+                             CameraSingleComponent& camera_single_component) const noexcept;
+    void process_drag_and_drop(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
+                               CameraSingleComponent& camera_single_component) const noexcept;
     entt::entity place_preset(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
-                              CameraSingleComponent& camera_single_component, const std::string& preset_name, bool is_continuous);
+                              CameraSingleComponent& camera_single_component, const std::string& preset_name, bool is_continuous) const noexcept;
 };
 
 } // namespace hg
