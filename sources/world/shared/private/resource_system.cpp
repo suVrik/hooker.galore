@@ -652,21 +652,18 @@ void ResourceSystem::load_preset(std::vector<entt::meta_any>& result, const std:
                 if (component_it->second.IsMap()) {
                     const entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
                     if (component_type) {
-                        const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-                        if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-                            if (world.is_component_registered(component_type)) {
+                        if (world.is_component_registered(component_type)) {
+                            if (world.is_component_editable(component_type)) {
                                 entt::meta_any component = world.construct_component(component_type);
-                                if (component) {
-                                    ResourceUtils::deserialize_structure_property(component, component_it->second);
-                                    result.push_back(std::move(component));
-                                } else {
-                                    RESOURCE_WARNING << "Failed to construct preset component \"" << component_name << "\"." << std::endl;
-                                }
+                                assert(component && "Failed to construct editable component.");
+
+                                ResourceUtils::deserialize_structure_property(component, component_it->second);
+                                result.push_back(std::move(component));
                             } else {
-                                RESOURCE_WARNING << "Preset component \"" << component_name << "\" is not registered." << std::endl;
+                                RESOURCE_WARNING << "Preset component \"" << component_name << "\" is not editable." << std::endl;
                             }
                         } else {
-                            RESOURCE_WARNING << "Ignored preset component \"" << component_name << "\" is specified." << std::endl;
+                            RESOURCE_WARNING << "Preset component \"" << component_name << "\" is not registered." << std::endl;
                         }
                     } else {
                         RESOURCE_WARNING << "Unknown preset component \"" << component_name << "\" is specified." << std::endl;

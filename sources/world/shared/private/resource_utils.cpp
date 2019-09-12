@@ -103,12 +103,13 @@ void ResourceUtils::serialize_structure_property(const entt::meta_handle structu
     assert(structure_type.is_class());
 
     structure_type.data([&](const entt::meta_data property) {
+        assert(property);
         const entt::meta_type property_type = property.type();
         if (property_type) {
             const entt::meta_prop ignore_property = property_type.prop("ignore"_hs);
-            if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
+            if (!ignore_property || ignore_property.value().type() != entt::resolve<bool>() || !ignore_property.value().cast<bool>()) {
                 const entt::meta_prop name_property = property.prop("name"_hs);
-                if (name_property && name_property.value().can_cast<const char*>()) {
+                if (name_property && name_property.value().type() == entt::resolve<const char*>()) {
                     const std::string name = name_property.value().cast<const char*>();
                     assert(!name.empty());
 
@@ -142,7 +143,7 @@ void ResourceUtils::deserialize_structure_property(const entt::meta_handle struc
         const entt::meta_data property = structure_type.data(entt::hashed_string(property_name.c_str()));
         if (property) {
             const entt::meta_prop ignore_property = property.prop("ignore"_hs);
-            if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
+            if (!ignore_property || ignore_property.value().type() != entt::resolve<bool>() || !ignore_property.value().cast<bool>()) {
                 const entt::meta_type property_type = property.type();
                 if (property_type) {
                     if (is_registered_type(property_type)) {
@@ -181,24 +182,13 @@ void ResourceUtils::serialize_entity(World& world, const entt::entity entity, YA
     assert(world.valid(entity));
     assert(node.IsMap());
 
-    world.each(entity, [&](const entt::meta_handle component_handle) {
+    world.each_editable_entity_component(entity, [&](const entt::meta_handle component_handle) {
         assert(component_handle);
-
         const entt::meta_type component_type = component_handle.type();
-        assert(component_type);
-
-        if (!serialize_editor_component && component_type == entt::resolve<EditorComponent>()) {
-            return;
-        }
-
-        const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-        if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-            const entt::meta_prop name_property = component_type.prop("name"_hs);
-            if (name_property && name_property.value().can_cast<const char*>()) {
-                const std::string component_name = name_property.value().cast<const char*>();
-                YAML::Node& component_node = node[component_name] = YAML::Node(YAML::NodeType::Map);
-                serialize_structure_property(component_handle, component_node);
-            }
+        if (component_type != entt::resolve<EditorComponent>() || serialize_editor_component) {
+            const std::string component_name = world.get_component_name(component_type);
+            YAML::Node& component_node = node[component_name] = YAML::Node(YAML::NodeType::Map);
+            serialize_structure_property(component_handle, component_node);
         }
     });
 }
@@ -215,9 +205,8 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
         if (component_it->second.IsMap()) {
             const entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
             if (component_type) {
-                const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-                if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-                    if (world.is_component_registered(component_type)) {
+                if (world.is_component_registered(component_type)) {
+                    if (world.is_component_editable(component_type)) {
                         if (!world.has(entity, component_type)) {
                             const bool is_editor_component = component_type == entt::resolve<EditorComponent>();
                             const bool allow_editor_component = guid_single_component != nullptr && name_single_component != nullptr;
@@ -226,39 +215,41 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
                             }
 
                             entt::meta_any component = world.construct_component(component_type);
-                            if (component) {
-                                deserialize_structure_property(component, component_it->second);
+                            assert(component && "Failed to construct editable component.");
 
-                                if (is_editor_component) {
-                                    auto& editor_component = component.cast<EditorComponent>();
+                            deserialize_structure_property(component, component_it->second);
 
-                                    if (guid_single_component->guid_to_entity.count(editor_component.guid) > 0) {
-                                        RESOURCE_WARNING << "Entity with guid \"" << editor_component.guid << "\" already exists." << std::endl;
-                                        editor_component.guid = guid_single_component->acquire_unique_guid(entity);
-                                    } else {
-                                        guid_single_component->guid_to_entity[editor_component.guid] = entity;
-                                    }
+                            if (is_editor_component) {
+                                auto& editor_component = component.cast<EditorComponent>();
 
-                                    if (name_single_component->name_to_entity.count(editor_component.name) > 0) {
-                                        RESOURCE_WARNING << "Entity with name \"" << editor_component.guid << "\" already exists." << std::endl;
-                                        editor_component.name = name_single_component->acquire_unique_name(entity, editor_component.name);
-                                    } else {
-                                        name_single_component->name_to_entity[editor_component.name] = entity;
-                                    }
+                                if (guid_single_component->guid_to_entity.count(editor_component.guid) > 0) {
+                                    RESOURCE_WARNING << "Entity with guid \"" << editor_component.guid << "\" already exists." << std::endl;
+                                    editor_component.guid = guid_single_component->acquire_unique_guid(entity);
+                                } else {
+                                    guid_single_component->guid_to_entity[editor_component.guid] = entity;
                                 }
 
-                                world.assign(entity, component);
+                                if (name_single_component->name_to_entity.count(editor_component.name) > 0) {
+                                    RESOURCE_WARNING << "Entity with name \"" << editor_component.guid << "\" already exists." << std::endl;
+                                    editor_component.name = name_single_component->acquire_unique_name(entity, editor_component.name);
+                                } else {
+                                    name_single_component->name_to_entity[editor_component.name] = entity;
+                                }
+                            }
+
+                            if (world.is_move_constructible(component_type)) {
+                                world.assign_move(entity, component);
                             } else {
-                                RESOURCE_WARNING << "Failed to construct component \"" << component_name << "\"." << std::endl;
+                                world.assign_copy(entity, component);
                             }
                         } else {
                             RESOURCE_WARNING << "Component \"" << component_name << "\" is already assigned." << std::endl;
                         }
                     } else {
-                        RESOURCE_WARNING << "Component \"" << component_name << "\" is not registered." << std::endl;
+                        RESOURCE_WARNING << "Component \"" << component_name << "\" is not editable." << std::endl;
                     }
                 } else {
-                    RESOURCE_WARNING << "Ignored component \"" << component_name << "\" is specified." << std::endl;
+                    RESOURCE_WARNING << "Component \"" << component_name << "\" is not registered." << std::endl;
                 }
             } else {
                 RESOURCE_WARNING << "Unknown component \"" << component_name << "\" is specified." << std::endl;
@@ -276,7 +267,7 @@ void ResourceUtils::serialize_level(World& world, YAML::Node& node, const bool s
     for (entt::entity entity : entities) {
         YAML::Node child_node(YAML::NodeType::Map);
         serialize_entity(world, entity, child_node, serialize_editor_component);
-        if (child_node.size() > 0) {
+        if (child_node.size() != 0) {
             node.push_back(child_node);
         }
     }
