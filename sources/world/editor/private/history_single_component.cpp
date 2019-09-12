@@ -46,13 +46,12 @@ void perform_undo_redo(World& world, HistorySingleComponent::HistoryChange& undo
                 redo_action.action_type = HistorySingleComponent::ActionType::DELETE_ENTITY;
                 redo_action.entity_guid = undo_action.entity_guid;
 
-                world.each(entity, [&](entt::meta_handle component_handle) {
-                    entt::meta_prop ignore_property = component_handle.type().prop("ignore"_hs);
-                    if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-                        HISTORY_LOG("    Remember component \"%s\".\n", world.get_component_name(component_handle.type()));
-                        redo_action.components.push_back(world.copy_component(component_handle));
+                world.each_editable_entity_component(entity, [&](const entt::meta_handle component) {
+                    HISTORY_LOG("    Remember component \"%s\".\n", world.get_component_name(component.type()));
+                    if (world.is_move_constructible(component.type())) {
+                        redo_action.components.push_back(world.move_component(component));
                     } else {
-                        HISTORY_LOG("    Ignore component \"%s\".\n", world.get_component_name(component_handle.type()));
+                        redo_action.components.push_back(world.copy_component(component));
                     }
                 });
 
@@ -71,7 +70,11 @@ void perform_undo_redo(World& world, HistorySingleComponent::HistoryChange& undo
                 entt::entity entity = world.create();
                 for (entt::meta_any& component : undo_action.components) {
                     HISTORY_LOG("    Assign component \"%s\" to it.\n", world.get_component_name(component.type()));
-                    world.assign(entity, component);
+                    if (world.is_move_constructible(component.type())) {
+                        world.assign_move(entity, component);
+                    } else {
+                        world.assign_copy(entity, component);
+                    }
                 }
 
                 assert(world.has<EditorComponent>(entity));
@@ -119,7 +122,12 @@ void perform_undo_redo(World& world, HistorySingleComponent::HistoryChange& undo
                 assert(world.get<EditorComponent>(entity).guid == undo_action.entity_guid);
                 assert(!world.has(entity, undo_action.components.front().type()));
 
-                world.assign(entity, undo_action.components.front());
+                entt::meta_any& component = undo_action.components.front();
+                if (world.is_move_constructible(component.type())) {
+                    world.assign_move(entity, component);
+                } else {
+                    world.assign_copy(entity, component);
+                }
 
                 HISTORY_LOG("  Assign component \"%s\" to entity with GUID %u.\n", world.get_component_name(undo_action.components.front().type()), undo_action.entity_guid);
 
@@ -134,19 +142,24 @@ void perform_undo_redo(World& world, HistorySingleComponent::HistoryChange& undo
                 assert(undo_action.components.size() == 1);
                 assert(guid_single_component.guid_to_entity.count(undo_action.entity_guid) == 1);
 
-                entt::entity entity = guid_single_component.guid_to_entity[undo_action.entity_guid];
+                const entt::entity entity = guid_single_component.guid_to_entity[undo_action.entity_guid];
                 assert(world.valid(entity));
                 assert(world.has<EditorComponent>(entity));
                 assert(world.get<EditorComponent>(entity).guid == undo_action.entity_guid);
                 assert(world.has(entity, undo_action.components.front().type()));
 
-                entt::meta_type component_type = undo_action.components.front().type();
-                entt::meta_handle component_handle = world.get(entity, component_type);
+                const entt::meta_type component_type = undo_action.components.front().type();
+                const entt::meta_handle component_handle = world.get(entity, component_type);
                 entt::meta_any component_copy = world.copy_component(component_handle);
 
                 HISTORY_LOG("  Replace component from entity with GUID %u.\n", world.get_component_name(component_type), undo_action.entity_guid);
 
-                world.replace(entity, undo_action.components.front());
+                entt::meta_any& component = undo_action.components.front();
+                if (world.is_move_assignable(component.type())) {
+                    world.replace_move(entity, component);
+                } else {
+                    world.replace_copy(entity, component);
+                }
 
                 redo_action.action_type = HistorySingleComponent::ActionType::REPLACE_COMPONENT;
                 redo_action.entity_guid = undo_action.entity_guid;
@@ -165,7 +178,7 @@ entt::entity HistorySingleComponent::HistoryChange::create_entity(World& world, 
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
-    entt::entity result = world.create();
+    const entt::entity result = world.create();
 
     auto& editor_component = world.assign<EditorComponent>(result);
     editor_component.guid = guid_single_component.acquire_unique_guid(result);
@@ -181,7 +194,7 @@ entt::entity HistorySingleComponent::HistoryChange::create_entity(World& world, 
     return result;
 }
 
-void HistorySingleComponent::HistoryChange::delete_entity(World& world, entt::entity entity) noexcept {
+void HistorySingleComponent::HistoryChange::delete_entity(World& world, const entt::entity entity) noexcept {
     auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
@@ -202,60 +215,86 @@ void HistorySingleComponent::HistoryChange::delete_entity(World& world, entt::en
     action.action_type = ActionType::DELETE_ENTITY;
     action.entity_guid = editor_component.guid;
 
-    world.each(entity, [&](entt::meta_handle component_handle) {
-        entt::meta_prop ignore_property = component_handle.type().prop("ignore"_hs);
-        if (!ignore_property || !ignore_property.value().can_cast<bool>() || !ignore_property.value().cast<bool>()) {
-            HISTORY_LOG("  Remember component \"%s\".\n", world.get_component_name(component_handle.type()));
-            action.components.push_back(world.copy_component(component_handle));
+    world.each_registered_entity_component(entity, [&](const entt::meta_handle component) {
+        HISTORY_LOG("  Remember component \"%s\".\n", world.get_component_name(component.type()));
+        if (world.is_move_constructible(component.type())) {
+            action.components.push_back(world.move_component(component));
         } else {
-            HISTORY_LOG("  Ignore component \"%s\".\n", world.get_component_name(component_handle.type()));
+            action.components.push_back(world.copy_component(component));
         }
     });
 
     world.destroy(entity);
 }
 
-entt::meta_handle HistorySingleComponent::HistoryChange::assign_component(World& world, entt::entity entity, const entt::meta_handle& original) noexcept {
+void HistorySingleComponent::HistoryChange::assign_component(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
     assert(world.valid(entity));
     assert(world.has<EditorComponent>(entity));
-    assert(!world.has(entity, original.type()));
+    assert(component);
+    assert(!world.has(entity, component.type()));
+    assert(world.is_component_editable(component.type()));
 
     HISTORY_LOG("Assign component \"%s\" to entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
 
     HistoryAction& action = actions.emplace_back();
     action.action_type = ActionType::ASSIGN_COMPONENT;
     action.entity_guid = world.get<EditorComponent>(entity).guid;
-    action.components.push_back(world.copy_component(original));
-
-    return world.assign(entity, original);
+    action.components.push_back(world.copy_component(component));
 }
 
-entt::meta_handle HistorySingleComponent::HistoryChange::replace_component(World& world, entt::entity entity, const entt::meta_handle& original) noexcept {
+entt::meta_handle HistorySingleComponent::HistoryChange::assign_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+    assign_component(world, entity, component);
+    return world.assign_copy(entity, component);
+}
+
+entt::meta_handle HistorySingleComponent::HistoryChange::assign_component_move(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+    assign_component(world, entity, component);
+    return world.assign_move(entity, component);
+}
+
+void HistorySingleComponent::HistoryChange::replace_component(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
     assert(world.valid(entity));
     assert(world.has<EditorComponent>(entity));
-    assert(world.has(entity, original.type()));
+    assert(component);
+    assert(world.has(entity, component.type()));
+    assert(world.is_component_editable(component.type()));
 
     HISTORY_LOG("Replace component \"%s\" from entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
 
     HistoryAction& action = actions.emplace_back();
     action.action_type = ActionType::REPLACE_COMPONENT;
     action.entity_guid = world.get<EditorComponent>(entity).guid;
-    action.components.push_back(world.copy_component(world.get(entity, original.type())));
-
-    return world.replace(entity, original);
+    action.components.push_back(world.copy_component(world.get(entity, component.type())));
 }
 
-void HistorySingleComponent::HistoryChange::remove_component(World& world, entt::entity entity, const entt::meta_type& component_type) noexcept {
+entt::meta_handle HistorySingleComponent::HistoryChange::replace_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+    replace_component(world, entity, component);
+    return world.replace_copy(entity, component);
+}
+
+entt::meta_handle HistorySingleComponent::HistoryChange::replace_component_move(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+    replace_component(world, entity, component);
+    return world.replace_move(entity, component);
+}
+
+void HistorySingleComponent::HistoryChange::remove_component(World& world, const entt::entity entity, const entt::meta_type component_type) noexcept {
     assert(world.valid(entity));
     assert(world.has<EditorComponent>(entity));
     assert(world.has(entity, component_type));
+    assert(world.is_component_editable(component_type));
 
     HISTORY_LOG("Remove component \"%s\" from entity with GUID %u.\n", world.get_component_name(original.type()), world.get<EditorComponent>(entity).guid);
 
     HistoryAction& action = actions.emplace_back();
     action.action_type = ActionType::REMOVE_COMPONENT;
     action.entity_guid = world.get<EditorComponent>(entity).guid;
-    action.components.push_back(world.copy_component(world.get(entity, component_type)));
+
+    const entt::meta_handle component = world.get(entity, component_type);
+    if (world.is_move_constructible(component_type)) {
+        action.components.push_back(world.move_component(component));
+    } else {
+        action.components.push_back(world.copy_component(component));
+    }
 
     world.remove(entity, component_type);
 }

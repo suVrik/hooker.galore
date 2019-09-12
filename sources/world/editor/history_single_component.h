@@ -32,7 +32,8 @@ struct HistorySingleComponent final {
     };
 
     /** `HistoryChange` is a bunch of actions performed with one user action (e.g. translate multiple objects). */
-    struct HistoryChange final {
+    class HistoryChange final {
+    public:
         /** Create entity and remember it in history. */
         entt::entity create_entity(World& world, const std::string& name_hint) noexcept;
 
@@ -40,16 +41,22 @@ struct HistorySingleComponent final {
         void delete_entity(World& world, entt::entity entity) noexcept;
 
         /** Attach copy of specified component to given entity and remember it in history. */
-        entt::meta_handle assign_component(World& world, entt::entity entity, const entt::meta_handle& original) noexcept;
+        entt::meta_handle assign_component_copy(World& world, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle assign_component_move(World& world, entt::entity entity, entt::meta_handle component) noexcept;
 
         /** Replace specified component in given entity and remember it in history. */
-        entt::meta_handle replace_component(World& world, entt::entity entity, const entt::meta_handle& original) noexcept;
+        entt::meta_handle replace_component_copy(World& world, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle replace_component_move(World& world, entt::entity entity, entt::meta_handle component) noexcept;
 
         /** Remove specified component from given entity and remember it in history. */
-        void remove_component(World& world, entt::entity entity, const entt::meta_type& component_type) noexcept;
+        void remove_component(World& world, entt::entity entity, entt::meta_type component_type) noexcept;
 
         std::vector<HistoryAction> actions;
         std::string description;
+
+    private:
+        void assign_component(World& world, entt::entity entity, entt::meta_handle component) noexcept;
+        void replace_component(World& world, entt::entity entity, entt::meta_handle component) noexcept;
     };
 
     /** Clear `redo` stack, append new item with the specified `description` to `undo` buffer. */
