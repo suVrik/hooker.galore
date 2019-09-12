@@ -235,13 +235,17 @@ void GizmoSystem::process_multiple_entities(CameraSingleComponent& camera_single
     const bool is_snapping = normal_input_single_component.is_down(Control::KEY_CTRL);
 
     glm::vec3 middle_translation(0.f, 0.f, 0.f);
+    size_t selected_entities_with_transform_component = 0;
     for (entt::entity selected_entity : selected_entity_single_component.selected_entities) {
         auto* const object_transform_component = world.try_get<TransformComponent>(selected_entity);
         if (object_transform_component != nullptr) {
             middle_translation += object_transform_component->translation;
+            selected_entities_with_transform_component++;
         }
     }
-    middle_translation /= selected_entity_single_component.selected_entities.size();
+    if (selected_entities_with_transform_component > 0) {
+        middle_translation /= selected_entities_with_transform_component;
+    }
 
     if (!ImGuizmo::IsUsing()) {
         gizmo_single_component.transform = glm::translate(glm::mat4(1.f), middle_translation);
