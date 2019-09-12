@@ -17,7 +17,6 @@
 #include <fmt/format.h>
 #include <glm/common.hpp>
 #include <imgui.h>
-#include <set>
 
 namespace hg {
 
@@ -35,18 +34,21 @@ EntitySelectionSystem::EntitySelectionSystem(World& world) noexcept
 }
 
 void EntitySelectionSystem::update(float /*elapsed_time*/) {
-    auto& guid_single_component = world.ctx<GuidSingleComponent>();
-    auto& history_single_component = world.ctx<HistorySingleComponent>();
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
-    auto& picking_pass_single_component = world.ctx<PickingPassSingleComponent>();
-    auto& render_single_component = world.ctx<RenderSingleComponent>();
     auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
-    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     world.sort<EditorComponent>([](const EditorComponent& a, const EditorComponent& b) {
         return a.name < b.name;
     });
 
+    show_level_window(selected_entity_single_component, normal_input_single_component);
+    perform_picking(selected_entity_single_component, normal_input_single_component);
+    delete_selected(selected_entity_single_component, normal_input_single_component);
+    select_all(selected_entity_single_component, normal_input_single_component);
+    clear_selection(selected_entity_single_component, normal_input_single_component);
+}
+
+void EntitySelectionSystem::show_level_window(SelectedEntitySingleComponent& selected_entity_single_component, NormalInputSingleComponent& normal_input_single_component) const noexcept {
     if (ImGui::Begin("Level", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
@@ -60,7 +62,7 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         ImGui::PopStyleColor();
 
         size_t index = 0;
-        world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
+        world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent& editor_component) {
             std::string lower_case_name = editor_component.name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
             if (lower_case_filter.empty() || lower_case_name.find(lower_case_filter) != std::string::npos) {
@@ -82,6 +84,13 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
         ImGui::EndChildFrame();
     }
     ImGui::End();
+}
+
+void EntitySelectionSystem::perform_picking(SelectedEntitySingleComponent& selected_entity_single_component, NormalInputSingleComponent& normal_input_single_component) const noexcept {
+    auto& guid_single_component = world.ctx<GuidSingleComponent>();
+    auto& picking_pass_single_component = world.ctx<PickingPassSingleComponent>();
+    auto& render_single_component = world.ctx<RenderSingleComponent>();
+    auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (selected_entity_single_component.waiting_for_pick) {
         if (render_single_component.current_frame >= picking_pass_single_component.target_frame) {
@@ -93,11 +102,14 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                 selected_entity_single_component.selection_y = window_single_component.height - selected_entity_single_component.selection_y;
             }
 
-            const int32_t selection_x = glm::clamp(selected_entity_single_component.selection_x, 0, std::max(int32_t(window_single_component.width), 1) - 1);
-            const int32_t selection_y = glm::clamp(selected_entity_single_component.selection_y, 0, std::max(int32_t(window_single_component.height), 1) - 1);
+            assert(window_single_component.width != 0);
+            assert(window_single_component.height != 0);
+
+            const auto selection_x = static_cast<uint32_t>(glm::clamp(selected_entity_single_component.selection_x, 0, static_cast<int32_t>(window_single_component.width) - 1));
+            const auto selection_y = static_cast<uint32_t>(glm::clamp(selected_entity_single_component.selection_y, 0, static_cast<int32_t>(window_single_component.height) - 1));
 
             uint32_t selected_entity = 0;
-            const size_t offset = size_t(window_single_component.width * selection_y + selection_x) * 4;
+            const uint32_t offset = (window_single_component.width * selection_y + selection_x) * 4;
             if (offset + sizeof(uint32_t) <= picking_pass_single_component.target_data.size()) {
                 selected_entity = *reinterpret_cast<uint32_t*>(picking_pass_single_component.target_data.data() + offset) & 0x00FFFFFF;
             }
@@ -113,10 +125,6 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
                     } else {
                         selected_entity_single_component.add_to_selection(world, guid_single_component.guid_to_entity[selected_entity]);
                     }
-                }
-            } else {
-                if (!normal_input_single_component.is_down(Control::KEY_SHIFT) && !normal_input_single_component.is_down(Control::KEY_ALT)) {
-                    selected_entity_single_component.select_entity(world, entt::null);
                 }
             }
         }
@@ -134,8 +142,14 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
         }
     }
+}
+
+void EntitySelectionSystem::delete_selected(SelectedEntitySingleComponent& selected_entity_single_component, NormalInputSingleComponent& normal_input_single_component) const noexcept {
+    auto& history_single_component = world.ctx<HistorySingleComponent>();
 
     if ((*selected_entity_single_component.delete_selected_entities || normal_input_single_component.is_pressed(Control::KEY_DELETE)) && !selected_entity_single_component.selected_entities.empty()) {
+        *selected_entity_single_component.delete_selected_entities = false;
+
         std::string description;
         if (selected_entity_single_component.selected_entities.size() == 1) {
             assert(world.has<EditorComponent>(selected_entity_single_component.selected_entities[0]));
@@ -158,21 +172,26 @@ void EntitySelectionSystem::update(float /*elapsed_time*/) {
             }
         }
     }
-    *selected_entity_single_component.delete_selected_entities = false;
+}
 
+void EntitySelectionSystem::select_all(SelectedEntitySingleComponent& selected_entity_single_component, NormalInputSingleComponent& normal_input_single_component) const noexcept {
     if (*selected_entity_single_component.select_all_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_A))) {
+        *selected_entity_single_component.select_all_entities = false;
+
         selected_entity_single_component.clear_selection(world);
 
-        world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent &editor_component) {
+        world.view<EditorComponent>().each([&](entt::entity entity, EditorComponent& editor_component) {
             selected_entity_single_component.add_to_selection(world, entity);
         });
     }
-    *selected_entity_single_component.select_all_entities = false;
+}
 
+void EntitySelectionSystem::clear_selection(SelectedEntitySingleComponent& selected_entity_single_component, NormalInputSingleComponent& normal_input_single_component) const noexcept {
     if (*selected_entity_single_component.clear_selected_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_D))) {
+        *selected_entity_single_component.clear_selected_entities = false;
+
         selected_entity_single_component.clear_selection(world);
     }
-    *selected_entity_single_component.clear_selected_entities = false;
 }
 
 } // namespace hg
