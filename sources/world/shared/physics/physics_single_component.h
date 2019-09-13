@@ -8,6 +8,7 @@ namespace physx {
 class PxCooking;
 class PxDefaultCpuDispatcher;
 class PxFoundation;
+class PxMaterial;
 class PxPhysics;
 class PxPvd;
 class PxPvdTransport;
@@ -28,6 +29,7 @@ struct PhysicsSingleComponent final {
     physx::PxCooking* cooking = nullptr;
     physx::PxDefaultCpuDispatcher* cpu_dispatcher = nullptr;
     physx::PxScene* scene = nullptr;
+    physx::PxMaterial* default_material = nullptr;
 };
 
 } // namespace hg

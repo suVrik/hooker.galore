@@ -11,7 +11,11 @@
 #include "world/shared/level_single_component.h"
 #include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
+#include "world/shared/physics/physics_box_shape_component.h"
+#include "world/shared/physics/physics_box_shape_private_component.h"
 #include "world/shared/physics/physics_single_component.h"
+#include "world/shared/physics/physics_static_rigid_body_component.h"
+#include "world/shared/physics/physics_static_rigid_body_private_component.h"
 #include "world/shared/render/aa_pass_single_component.h"
 #include "world/shared/render/blockout_component.h"
 #include "world/shared/render/camera_single_component.h"
@@ -72,6 +76,10 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(MaterialComponent);
     REGISTER_COMPONENT(ModelComponent);
     REGISTER_COMPONENT(OutlineComponent);
+    REGISTER_COMPONENT(PhysicsBoxShapeComponent);
+    REGISTER_COMPONENT(PhysicsBoxShapePrivateComponent);
+    REGISTER_COMPONENT(PhysicsStaticRigidBodyComponent);
+    REGISTER_COMPONENT(PhysicsStaticRigidBodyPrivateComponent);
     REGISTER_COMPONENT(TransformComponent);
 }
 

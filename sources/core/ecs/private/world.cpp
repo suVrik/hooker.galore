@@ -157,7 +157,7 @@ void World::construct_systems() {
         for (const std::string &system_name : m_system_order[i]) {
             assert(m_systems[i].count(system_name) > 0);
             if (!m_systems[i][system_name].system) {
-                m_systems[i][system_name].system = m_systems[0][system_name].construct(*this);
+                m_systems[i][system_name].system = m_systems[i][system_name].construct(*this);
                 assert(m_systems[i][system_name].system);
             }
         }

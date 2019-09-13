@@ -2,11 +2,11 @@
 #include "world/shared/level_single_component.h"
 #include "world/shared/window_single_component.h"
 
+#include <SDL2/SDL_messagebox.h>
 #include <chrono>
 #include <clara.hpp>
 #include <fmt/format.h>
 #include <iostream>
-#include <SDL2/SDL_messagebox.h>
 
 int main(int argc, char* argv[]) {
     SDL_Window* message_box_window = nullptr;
@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
         }
 
         std::vector<std::string> normal_system_order = {
-                "PhysicsSimulateSystem",
                 "WindowSystem",
                 "ImguiFetchSystem",
                 "MenuSystem",
@@ -50,9 +49,14 @@ int main(int argc, char* argv[]) {
                 "ImguiPassSystem",
                 "PickingPassSystem",
                 "RenderSystem",
+        };
+        std::vector<std::string> fixed_system_order = {
+                "PhysicsInitializationSystem",
+                "PhysicsRigidBodySystem",
+                "PhysicsShapeSystem",
+                "PhysicsSimulateSystem",
                 "PhysicsFetchSystem",
         };
-        std::vector<std::string> fixed_system_order;
 
         hg::World world;
         world.normal_system_order(normal_system_order);
@@ -66,16 +70,14 @@ int main(int argc, char* argv[]) {
 
         // `hg::WindowSingleComponent` is created and initialized by `WindowSystem`.
         auto& window_single_component = world.ctx<hg::WindowSingleComponent>();
-        if (is_editor) {
-            window_single_component.title = "Hooker Galore Editor";
-        } else {
-            window_single_component.title = "Hooker Galore";
-        }
+        window_single_component.title = "Hooker Galore";
+
         message_box_window = window_single_component.window;
 
         std::chrono::steady_clock::time_point last = std::chrono::steady_clock::now();
         while (true) {
             std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+            world.update_fixed(1.f / 60.f); // TODO: Call `update_fixed` from one of normal update systems.
             if (!world.update_normal(std::chrono::duration<float>(now - last).count())) {
                 break;
             }

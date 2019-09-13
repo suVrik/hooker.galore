@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/physics/physics_fetch_system.h"
 #include "world/shared/physics/physics_single_component.h"
@@ -6,9 +7,14 @@
 
 namespace hg {
 
-// TODO: Actually `PhysicsFetchSystem` is a `FixedSystem`. Keep it `NormalSystem` until physics is stable.
+SYSTEM_DESCRIPTOR(
+    SYSTEM(PhysicsFetchSystem),
+    REQUIRE("physics"),
+    AFTER("PhysicsInitializationSystem")
+)
+
 PhysicsFetchSystem::PhysicsFetchSystem(World& world)
-        : NormalSystem(world) {
+        : FixedSystem(world) {
 }
 
 void PhysicsFetchSystem::update(float /*elapsed_time*/) {

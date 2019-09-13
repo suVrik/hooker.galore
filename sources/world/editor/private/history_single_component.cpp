@@ -215,7 +215,7 @@ void HistorySingleComponent::HistoryChange::delete_entity(World& world, const en
     action.action_type = ActionType::DELETE_ENTITY;
     action.entity_guid = editor_component.guid;
 
-    world.each_registered_entity_component(entity, [&](const entt::meta_handle component) {
+    world.each_editable_entity_component(entity, [&](const entt::meta_handle component) {
         HISTORY_LOG("  Remember component \"%s\".\n", world.get_component_name(component.type()));
         if (world.is_move_constructible(component.type())) {
             action.components.push_back(world.move_component(component));

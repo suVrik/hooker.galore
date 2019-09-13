@@ -187,7 +187,7 @@ void GizmoSystem::process_single_entity(CameraSingleComponent& camera_single_com
                         selected_entity_single_component.clear_selection(world);
 
                         const entt::entity new_entity = change->create_entity(world, editor_component.name);
-                        world.each_registered_entity_component(selected_entity, [&](const entt::meta_handle component) {
+                        world.each_editable_entity_component(selected_entity, [&](const entt::meta_handle component) {
                             if (component.type() != entt::resolve<EditorComponent>()) {
                                 change->assign_component_copy(world, new_entity, component);
                             }

@@ -10,6 +10,9 @@
 #include "world/editor/property_editor_system.h"
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/physics/physics_fetch_system.h"
+#include "world/shared/physics/physics_initialization_system.h"
+#include "world/shared/physics/physics_rigid_body_system.h"
+#include "world/shared/physics/physics_shape_system.h"
 #include "world/shared/physics/physics_simulate_system.h"
 #include "world/shared/render/aa_pass_system.h"
 #include "world/shared/render/camera_system.h"
@@ -49,6 +52,9 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(MenuSystem);
     REGISTER_SYSTEM(OutlinePassSystem);
     REGISTER_SYSTEM(PhysicsFetchSystem);
+    REGISTER_SYSTEM(PhysicsInitializationSystem);
+    REGISTER_SYSTEM(PhysicsRigidBodySystem);
+    REGISTER_SYSTEM(PhysicsShapeSystem);
     REGISTER_SYSTEM(PhysicsSimulateSystem);
     REGISTER_SYSTEM(PickingPassSystem);
     REGISTER_SYSTEM(PresetSystem);
