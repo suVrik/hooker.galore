@@ -147,10 +147,24 @@ void World::register_system(const std::string& name) noexcept {
         type = 1;
     }
 
-    assert(m_systems[type].count(name) == 0);
-    m_systems[type].emplace(name, SystemDescriptor{ [](World& world) -> std::unique_ptr<System> {
+    m_systems[type].push_back(SystemDescriptor{ [](World& world) -> std::unique_ptr<System> {
         return std::make_unique<T>(world);
-    }, nullptr });
+    }, entt::resolve<T>(), name });
+}
+
+template <typename... Tags>
+void World::add_tags(Tags&& ... tags) noexcept {
+    (add_tag(tags), ...);
+}
+
+template <typename... Tags>
+void World::remove_tags(Tags&& ... tags) noexcept {
+    (remove_tag(tags), ...);
+}
+
+template <typename... Tags>
+bool World::check_tags(Tags&& ... tags) noexcept {
+    return (check_tag(tags) && ...);
 }
 
 } // namespace hg

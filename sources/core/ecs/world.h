@@ -4,7 +4,6 @@
 
 #include <entt/entity/registry.hpp>
 #include <entt/meta/factory.hpp>
-#include <functional>
 #include <string>
 #include <vector>
 
@@ -116,12 +115,23 @@ public:
     template <typename T>
     void register_system(const std::string& name) noexcept;
 
-    /** Specify in which order systems of specified type should be executed. */
-    void normal_system_order(const std::vector<std::string>& system_order) noexcept;
-    void fixed_system_order(const std::vector<std::string>& system_order) noexcept;
+    /** Remove all the tags from this world. */
+    void clear_tags() noexcept;
 
-    /** Construct all the systems specified by `normal_system_order` and `fixed_system_order` methods. */
-    void construct_systems();
+    /** Add specified tags to this world. */
+    template <typename... Tags>
+    void add_tags(Tags&&... tags) noexcept;
+    void add_tag(const char* tag) noexcept;
+
+    /** Remove the specified tags from this world. */
+    template <typename... Tags>
+    void remove_tags(Tags&&... tags) noexcept;
+    void remove_tag(const char* tag) noexcept;
+
+    /** Check whether the specified tags are added to this world. */
+    template <typename... Tags>
+    bool check_tags(Tags&&... tags) noexcept;
+    bool check_tag(const char* tag) noexcept;
 
     /** Execute all systems of specified type. */
     bool update_normal(float elapsed_time) noexcept;
@@ -146,12 +156,35 @@ private:
     std::unordered_map<entt::meta_type, ComponentDescriptor> m_components;
 
     struct SystemDescriptor final {
-        std::function<std::unique_ptr<System>(World& world)> construct;
+        std::unique_ptr<System>(*construct)(World& world);
+        entt::meta_type system_type;
+        std::string name;
+
+        std::vector<size_t> require;
+        std::vector<size_t> after;
+
         std::unique_ptr<System> system;
+        float construction_duration = 0.f;
     };
 
-    std::unordered_map<std::string, SystemDescriptor> m_systems[2];
-    std::vector<std::string> m_system_order[2];
+    enum class PropagateState : uint8_t {
+        NOT_VISITED,
+        IN_PROGRESS,
+        COMPLETED,
+    };
+
+    void commit_registered_systems() noexcept;
+    void sort_systems(size_t system_type) noexcept;
+    bool check_tag_indices(const std::vector<size_t>& tags) noexcept;
+    void propagate_system(size_t system_type, size_t system_index) noexcept;
+
+    std::vector<SystemDescriptor> m_systems[2];
+    std::vector<size_t> m_system_order[2];
+    std::vector<PropagateState> m_propagate_state[2];
+
+    std::vector<uint8_t> m_tags;
+    std::unordered_map<std::string, size_t> m_tags_mapping;
+    bool m_tags_changed[2]{};
 };
 
 /** Presence of this single component means the world may keep running. */

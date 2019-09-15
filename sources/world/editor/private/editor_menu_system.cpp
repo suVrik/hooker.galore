@@ -1,24 +1,32 @@
 #include "core/base/split.h"
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/editor/menu_single_component.h"
-#include "world/editor/menu_system.h"
+#include "world/editor/editor_menu_single_component.h"
+#include "world/editor/editor_menu_system.h"
 
 #include <imgui.h>
 
 namespace hg {
 
-MenuSystem::MenuSystem(World& world) noexcept
+SYSTEM_DESCRIPTOR(
+    SYSTEM(EditorMenuSystem),
+    REQUIRE("editor"),
+    BEFORE("ImguiPassSystem"),
+    AFTER("WindowSystem", "ImguiFetchSystem")
+)
+
+EditorMenuSystem::EditorMenuSystem(World& world) noexcept
     : NormalSystem(world) {
-    world.set<MenuSingleComponent>();
+    world.set<EditorMenuSingleComponent>();
 }
 
-void MenuSystem::update(float /*elapsed_time*/) {
-    auto& menu_single_component = world.ctx<MenuSingleComponent>();
+void EditorMenuSystem::update(float /*elapsed_time*/) {
+    auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
     if (ImGui::BeginMainMenuBar()) {
         std::vector<std::string> items;
         bool is_last_item_open = true;
 
-        for (auto& [path, menu_item] : menu_single_component.items) {
+        for (auto& [path, menu_item] : editor_menu_single_component.items) {
             std::vector<std::string> current_items = split(path, '/');
 
             auto get_item_text = [](const std::string& full_text) {

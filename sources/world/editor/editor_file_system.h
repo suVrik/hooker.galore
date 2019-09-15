@@ -4,8 +4,8 @@
 
 namespace hg {
 
-struct EditorFileSingleComponent;
 class NormalInputSingleComponent;
+struct EditorFileSingleComponent;
 
 /** `EditorFileSystem` manages "file" menu. */
 class EditorFileSystem final : public NormalSystem {
@@ -14,10 +14,14 @@ public:
     void update(float elapsed_time) override;
     
 private:
-    void handle_new_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept;
-    void handle_open_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept;
-    void handle_save_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept;
-    void handle_save_level_as_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept;
+    void handle_new_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                 NormalInputSingleComponent& normal_input_single_component) noexcept;
+    void handle_open_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                  NormalInputSingleComponent& normal_input_single_component) noexcept;
+    void handle_save_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                  NormalInputSingleComponent& normal_input_single_component) noexcept;
+    void handle_save_level_as_action(EditorFileSingleComponent& editor_file_single_component, 
+                                     NormalInputSingleComponent& normal_input_single_component) noexcept;
     void handle_save_level_popup(EditorFileSingleComponent& editor_file_single_component) noexcept;
     void handle_save_level_as_popup(EditorFileSingleComponent& editor_file_single_component) noexcept;
     void handle_open_level_popup(EditorFileSingleComponent& editor_file_single_component) noexcept;

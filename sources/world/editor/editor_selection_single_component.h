@@ -1,14 +1,15 @@
 #pragma once
 
 #include <entt/entity/registry.hpp>
+#include <entt/meta/meta.hpp>
 #include <memory>
 
 namespace hg {
 
 class World;
 
-/** `SelectedEntitySingleComponent` contains selected entity. */
-struct SelectedEntitySingleComponent final {
+/** `EditorSelectionSingleComponent` contains selected entity. */
+struct EditorSelectionSingleComponent final {
     /** Select specified `entity`, assign `OutlineComponent` to it, reset `OutlineComponent` from previous selected entity. */
     void select_entity(World& world, entt::entity entity) noexcept;
     void add_to_selection(World& world, entt::entity entity) noexcept;

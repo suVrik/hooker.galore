@@ -1,10 +1,11 @@
 #include "core/base/split.h"
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/editor/editor_component.h"
-#include "world/editor/history_single_component.h"
-#include "world/editor/preset_single_component.h"
-#include "world/editor/preset_system.h"
-#include "world/editor/selected_entity_single_component.h"
+#include "world/editor/editor_history_single_component.h"
+#include "world/editor/editor_preset_single_component.h"
+#include "world/editor/editor_preset_system.h"
+#include "world/editor/editor_selection_single_component.h"
+#include "world/shared/name_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/outline_component.h"
@@ -20,23 +21,30 @@
 
 namespace hg {
 
-PresetSystem::PresetSystem(World& world) noexcept
+SYSTEM_DESCRIPTOR(
+    SYSTEM(EditorPresetSystem),
+    REQUIRE("editor"),
+    BEFORE("ImguiPassSystem", "GeometryPassSystem", "ResourceSystem"),
+    AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem", "CameraSystem")
+)
+
+EditorPresetSystem::EditorPresetSystem(World& world) noexcept
         : NormalSystem(world) {
-    world.set<PresetSingleComponent>();
+    world.set<EditorPresetSingleComponent>();
 }
 
-void PresetSystem::update(float /*elapsed_time*/) {
+void EditorPresetSystem::update(float /*elapsed_time*/) {
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
-    auto& history_single_component = world.ctx<HistorySingleComponent>();
-    auto& preset_single_component = world.ctx<PresetSingleComponent>();
+    auto& editor_history_single_component = world.ctx<EditorHistorySingleComponent>();
+    auto& editor_preset_single_component = world.ctx<EditorPresetSingleComponent>();
 
-    show_presets_window(preset_single_component, history_single_component, camera_single_component);
-    process_drag_and_drop(preset_single_component, history_single_component, camera_single_component);
+    show_presets_window(editor_preset_single_component, editor_history_single_component, camera_single_component);
+    process_drag_and_drop(editor_preset_single_component, editor_history_single_component, camera_single_component);
 }
 
-
-void PresetSystem::show_presets_window(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
-                                       CameraSingleComponent& camera_single_component) const noexcept {
+void EditorPresetSystem::show_presets_window(EditorPresetSingleComponent& editor_preset_single_component, 
+                                             EditorHistorySingleComponent& editor_history_single_component,
+                                             CameraSingleComponent& camera_single_component) const noexcept {
     if (ImGui::Begin("Presets", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
@@ -53,7 +61,7 @@ void PresetSystem::show_presets_window(PresetSingleComponent& preset_single_comp
         bool is_last_item_open = true;
 
         intptr_t idx = 0;
-        for (auto& [preset_name, preset] : preset_single_component.presets) {
+        for (auto& [preset_name, preset] : editor_preset_single_component.presets) {
             std::string lower_case_name = preset_name;
             std::transform(lower_case_name.begin(), lower_case_name.end(), lower_case_name.begin(), ::tolower);
 
@@ -94,7 +102,7 @@ void PresetSystem::show_presets_window(PresetSingleComponent& preset_single_comp
                                 ImGui::SetActiveID(window->GetID(tree_node_id), window);
 
                                 if (ImGui::IsMouseDoubleClicked(0)) {
-                                    place_preset(preset_single_component, history_single_component, camera_single_component, preset_name, false);
+                                    place_preset(editor_preset_single_component, editor_history_single_component, camera_single_component, preset_name, false);
                                 }
                             }
                             if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoPreviewTooltip)) {
@@ -117,22 +125,23 @@ void PresetSystem::show_presets_window(PresetSingleComponent& preset_single_comp
     ImGui::End();
 }
 
-void PresetSystem::process_drag_and_drop(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
-                                         CameraSingleComponent& camera_single_component) const noexcept {
+void EditorPresetSystem::process_drag_and_drop(EditorPresetSingleComponent& editor_preset_single_component, 
+                                               EditorHistorySingleComponent& editor_history_single_component,
+                                               CameraSingleComponent& camera_single_component) const noexcept {
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (const ImGuiPayload * const payload = ImGui::GetDragDropPayload(); payload != nullptr) {
         if (payload->IsDataType("place_preset")) {
-            if (!world.valid(preset_single_component.placed_entity)) {
+            if (!world.valid(editor_preset_single_component.placed_entity)) {
                 const auto* const preset_name = reinterpret_cast<const char*>(payload->Data);
-                preset_single_component.placed_entity = place_preset(preset_single_component, history_single_component, camera_single_component, preset_name, true);
-                if (!world.has<TransformComponent>(preset_single_component.placed_entity)) {
-                    preset_single_component.placed_entity = entt::null;
-                    history_single_component.end_continuous();
+                editor_preset_single_component.placed_entity = place_preset(editor_preset_single_component, editor_history_single_component, camera_single_component, preset_name, true);
+                if (!world.has<TransformComponent>(editor_preset_single_component.placed_entity)) {
+                    editor_preset_single_component.placed_entity = entt::null;
+                    editor_history_single_component.end_continuous();
                 }
             }
-            if (world.valid(preset_single_component.placed_entity)) {
+            if (world.valid(editor_preset_single_component.placed_entity)) {
                 assert(window_single_component.width != 0);
                 assert(window_single_component.height != 0);
 
@@ -143,38 +152,40 @@ void PresetSystem::process_drag_and_drop(PresetSingleComponent& preset_single_co
                 glm::vec4 projection_space_position = camera_single_component.inverse_projection_matrix * screen_space_position;
                 projection_space_position /= projection_space_position.w * camera_single_component.z_far / PLACE_PRESET_DISTANCE;
 
-                assert(world.has<TransformComponent>(preset_single_component.placed_entity));
-                auto& transform_component = world.get<TransformComponent>(preset_single_component.placed_entity);
+                assert(world.has<TransformComponent>(editor_preset_single_component.placed_entity));
+                auto& transform_component = world.get<TransformComponent>(editor_preset_single_component.placed_entity);
                 transform_component.translation = camera_single_component.translation + camera_single_component.rotation * glm::vec3(projection_space_position);
             }
-        } else if (world.valid(preset_single_component.placed_entity)) {
-            preset_single_component.placed_entity = entt::null;
-            history_single_component.end_continuous();
+        } else if (world.valid(editor_preset_single_component.placed_entity)) {
+            editor_preset_single_component.placed_entity = entt::null;
+            editor_history_single_component.end_continuous();
         }
-    } else if (world.valid(preset_single_component.placed_entity)) {
-        preset_single_component.placed_entity = entt::null;
-        history_single_component.end_continuous();
+    } else if (world.valid(editor_preset_single_component.placed_entity)) {
+        editor_preset_single_component.placed_entity = entt::null;
+        editor_history_single_component.end_continuous();
     }
 }
 
-entt::entity PresetSystem::place_preset(PresetSingleComponent& preset_single_component, HistorySingleComponent& history_single_component,
-                                        CameraSingleComponent& camera_single_component, const std::string& preset_name, bool is_continuous) const noexcept {
-    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
+entt::entity EditorPresetSystem::place_preset(EditorPresetSingleComponent& editor_preset_single_component,
+                                              EditorHistorySingleComponent& editor_history_single_component,
+                                              CameraSingleComponent& camera_single_component, 
+                                              const std::string& preset_name, const bool is_continuous) const noexcept {
+    auto& editor_selection_single_component = world.ctx<EditorSelectionSingleComponent>();
 
-    assert(preset_single_component.presets.count(preset_name) > 0);
-    std::vector<entt::meta_any>& preset = preset_single_component.presets[preset_name];
+    assert(editor_preset_single_component.presets.count(preset_name) > 0);
+    std::vector<entt::meta_any>& preset = editor_preset_single_component.presets[preset_name];
 
     assert(!preset_name.empty());
     std::vector<std::string> preset_path = split(preset_name, ghc::filesystem::path::preferred_separator);
     const std::string& preset_short_path = preset_path.back();
 
-    HistorySingleComponent::HistoryChange* change = is_continuous ? history_single_component.begin_continuous(world, "") : history_single_component.begin(world, "");
+    EditorHistorySingleComponent::HistoryChange* change = is_continuous ? editor_history_single_component.begin_continuous(world, "") : editor_history_single_component.begin(world, "");
     if (change != nullptr) {
         entt::entity entity = change->create_entity(world, ghc::filesystem::path(preset_short_path).replace_extension("").string());
 
-        assert(world.has<EditorComponent>(entity));
-        auto& editor_component = world.get<EditorComponent>(entity);
-        change->description = fmt::format("Create entity \"{}\"", editor_component.name);
+        assert(world.has<NameComponent>(entity));
+        auto& name_component = world.get<NameComponent>(entity);
+        change->description = fmt::format("Create entity \"{}\"", name_component.name);
 
         for (entt::meta_any& component_prototype : preset) {
             change->assign_component_copy(world, entity, component_prototype);
@@ -186,7 +197,7 @@ entt::entity PresetSystem::place_preset(PresetSingleComponent& preset_single_com
             change->replace_component_move(world, entity, changed_transform_component);
         }
 
-        selected_entity_single_component.select_entity(world, entity);
+        editor_selection_single_component.select_entity(world, entity);
 
         return entity;
     }

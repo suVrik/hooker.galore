@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/debug_solid_pass/debug_solid_pass.fragment.h"
@@ -53,6 +54,13 @@ static const bgfx::VertexDecl TEXTURED_VERTEX_DECLARATION = [] {
 static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
 
 } // namespace debug_draw_pass_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(DebugDrawPassSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
+)
 
 DebugDrawPassSystem::DebugDrawPassSystem(World& world)
         : NormalSystem(world) {
@@ -113,6 +121,7 @@ void DebugDrawPassSystem::update(float /*elapsed_time*/) {
     }
 
     bgfx::setViewTransform(DEBUG_DRAW_OFFSCREEN_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
+    bgfx::touch(DEBUG_DRAW_OFFSCREEN_PASS);
 
     dd::flush(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 

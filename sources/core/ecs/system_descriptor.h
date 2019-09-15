@@ -18,7 +18,13 @@
 
     Every argument except SYSTEM is optional. If system requires no tags, it's added to every tag combination.
 */
-#define SYSTEM_DESCRIPTOR(system, ...) REFLECTION_REGISTRATION { \
+#define SYSTEM_DESCRIPTOR(system, ...) SYSTEM_DESCRIPTOR_IMPL(system, ##__VA_ARGS__)
+
+#ifdef SYSTEM_DESCRIPTOR_IMPL
+#undef SYSTEM_DESCRIPTOR_IMPL
+#endif
+
+#define SYSTEM_DESCRIPTOR_IMPL(system, ...) REFLECTION_REGISTRATION { \
     entt::reflect<system>(#system, ##__VA_ARGS__); \
 }
 
@@ -38,7 +44,7 @@
 #undef AFTER
 #endif 
 
-#define SYSTEM(system)            system
-#define REQUIRE(required_tags)    std::make_pair("require", std::vector<const char*>{ required_tags })
-#define BEFORE(following_systems) std::make_pair("before", std::vector<const char*>{ following_systems })
-#define AFTER(preceding_system)   std::make_pair("after", std::vector<const char*>{ preceding_system })
+#define SYSTEM(system) system
+#define REQUIRE(...)   std::make_pair("require"_hs, std::vector<const char*>{ __VA_ARGS__ })
+#define BEFORE(...)    std::make_pair("before"_hs, std::vector<const char*>{ __VA_ARGS__ })
+#define AFTER(...)     std::make_pair("after"_hs, std::vector<const char*>{ __VA_ARGS__ })

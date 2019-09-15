@@ -6,8 +6,8 @@
 
 namespace hg {
 
-/** `MenuSingleComponent` is an interface to editor menu. You can create menu items with it. */
-struct MenuSingleComponent final {
+/** `EditorMenuSingleComponent` is an interface to editor menu. You can create menu items with it. */
+struct EditorMenuSingleComponent final {
     struct MenuItem final {
         explicit MenuItem(const std::shared_ptr<bool>& selected, const std::string& shortcut = {}, bool enabled = true) noexcept
                 : selected(selected)

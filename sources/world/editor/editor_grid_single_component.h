@@ -4,8 +4,8 @@
 
 namespace hg {
 
-/** `GridSingleComponent` describes look of editor grid. */
-struct GridSingleComponent final {
+/** `EditorGridSingleComponent` describes look of editor grid. */
+struct EditorGridSingleComponent final {
     // Menu items.
     std::shared_ptr<bool> is_shown;
 };

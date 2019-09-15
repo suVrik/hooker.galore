@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/hdr_pass/hdr_pass.fragment.h"
@@ -21,6 +22,13 @@ static const bgfx::EmbeddedShader HDR_PASS_SHADER[] = {
 };
 
 } // namespace hdr_pass_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(HDRPassSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "AAPassSystem")
+)
 
 HDRPassSystem::HDRPassSystem(World& world)
         : NormalSystem(world) {

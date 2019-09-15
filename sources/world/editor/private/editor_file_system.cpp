@@ -1,12 +1,12 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/editor/editor_component.h"
 #include "world/editor/editor_file_single_component.h"
 #include "world/editor/editor_file_system.h"
-#include "world/editor/guid_single_component.h"
-#include "world/editor/history_single_component.h"
-#include "world/editor/menu_single_component.h"
-#include "world/editor/selected_entity_single_component.h"
+#include "world/editor/editor_history_single_component.h"
+#include "world/editor/editor_menu_single_component.h"
+#include "world/editor/editor_selection_single_component.h"
 #include "world/shared/level_single_component.h"
+#include "world/shared/name_component.h"
 #include "world/shared/name_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/resource_utils.h"
@@ -19,6 +19,13 @@
 
 namespace hg {
 
+SYSTEM_DESCRIPTOR(
+    SYSTEM(EditorFileSystem),
+    REQUIRE("editor"),
+    BEFORE("ImguiPassSystem", "GeometryPassSystem"),
+    AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem", "ResourceSystem")
+)
+
 EditorFileSystem::EditorFileSystem(World& world) noexcept
     : NormalSystem(world) {
     auto& editor_file_single_component = world.set<EditorFileSingleComponent>();
@@ -27,11 +34,11 @@ EditorFileSystem::EditorFileSystem(World& world) noexcept
     editor_file_single_component.save_level    = std::make_shared<bool>(false);
     editor_file_single_component.save_level_as = std::make_shared<bool>(false);
 
-    auto& menu_single_component = world.ctx<MenuSingleComponent>();
-    menu_single_component.items.emplace("0File/New Level",        MenuSingleComponent::MenuItem(editor_file_single_component.new_level,     "Ctrl+N"));
-    menu_single_component.items.emplace("0File/Open Level...",    MenuSingleComponent::MenuItem(editor_file_single_component.open_level,    "Ctrl+O"));
-    menu_single_component.items.emplace("0File/Save Level",       MenuSingleComponent::MenuItem(editor_file_single_component.save_level,    "Ctrl+S"));
-    menu_single_component.items.emplace("0File/Save Level As...", MenuSingleComponent::MenuItem(editor_file_single_component.save_level_as, "Ctrl+Shift+S"));
+    auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
+    editor_menu_single_component.items.emplace("0File/New Level",        EditorMenuSingleComponent::MenuItem(editor_file_single_component.new_level,     "Ctrl+N"));
+    editor_menu_single_component.items.emplace("0File/Open Level...",    EditorMenuSingleComponent::MenuItem(editor_file_single_component.open_level,    "Ctrl+O"));
+    editor_menu_single_component.items.emplace("0File/Save Level",       EditorMenuSingleComponent::MenuItem(editor_file_single_component.save_level,    "Ctrl+S"));
+    editor_menu_single_component.items.emplace("0File/Save Level As...", EditorMenuSingleComponent::MenuItem(editor_file_single_component.save_level_as, "Ctrl+Shift+S"));
 }
 
 void EditorFileSystem::update(float /*elapsed_time*/) {
@@ -48,7 +55,8 @@ void EditorFileSystem::update(float /*elapsed_time*/) {
     update_window_title();
 }
 
-void EditorFileSystem::handle_new_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept {
+void EditorFileSystem::handle_new_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                               NormalInputSingleComponent& normal_input_single_component) noexcept {
     if (*editor_file_single_component.new_level || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_N))) {
         *editor_file_single_component.new_level = false;
 
@@ -64,7 +72,8 @@ void EditorFileSystem::handle_new_level_action(EditorFileSingleComponent& editor
     }
 }
 
-void EditorFileSystem::handle_open_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept {
+void EditorFileSystem::handle_open_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                                NormalInputSingleComponent& normal_input_single_component) noexcept {
     if (*editor_file_single_component.open_level || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_O))) {
         *editor_file_single_component.open_level = false;
 
@@ -79,7 +88,8 @@ void EditorFileSystem::handle_open_level_action(EditorFileSingleComponent& edito
     }
 }
 
-void EditorFileSystem::handle_save_level_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept {
+void EditorFileSystem::handle_save_level_action(EditorFileSingleComponent& editor_file_single_component, 
+                                                NormalInputSingleComponent& normal_input_single_component) noexcept {
     if (*editor_file_single_component.save_level || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_S))) {
         *editor_file_single_component.save_level = false;
 
@@ -91,7 +101,8 @@ void EditorFileSystem::handle_save_level_action(EditorFileSingleComponent& edito
     }
 }
 
-void EditorFileSystem::handle_save_level_as_action(EditorFileSingleComponent& editor_file_single_component, NormalInputSingleComponent& normal_input_single_component) noexcept {
+void EditorFileSystem::handle_save_level_as_action(EditorFileSingleComponent& editor_file_single_component, 
+                                                   NormalInputSingleComponent& normal_input_single_component) noexcept {
     if (*editor_file_single_component.save_level_as || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_SHIFT) && normal_input_single_component.is_pressed(Control::KEY_S))) {
         *editor_file_single_component.save_level_as = false;
 
@@ -104,7 +115,7 @@ void EditorFileSystem::handle_save_level_as_action(EditorFileSingleComponent& ed
 void EditorFileSystem::handle_save_level_popup(EditorFileSingleComponent& editor_file_single_component) noexcept {
     bool show_error = false;
 
-    if (ImGui::BeginPopupModal("Save Level", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Save Level", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         auto& level_single_component = world.ctx<LevelSingleComponent>();
         
         ImGui::Text("Save changes to \"%s\"?", level_single_component.level_name.c_str());
@@ -156,7 +167,7 @@ void EditorFileSystem::handle_save_level_popup(EditorFileSingleComponent& editor
 void EditorFileSystem::handle_save_level_as_popup(EditorFileSingleComponent& editor_file_single_component) noexcept {
     bool show_error = false;
 
-    if (ImGui::BeginPopupModal("Save Level As", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Save Level As", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::InputText("Level Name", editor_file_single_component.save_level_as_path.data(), editor_file_single_component.save_level_as_path.size());
 
         ImGui::Spacing();
@@ -211,7 +222,7 @@ void EditorFileSystem::handle_save_level_as_popup(EditorFileSingleComponent& edi
 void EditorFileSystem::handle_open_level_popup(EditorFileSingleComponent& editor_file_single_component) noexcept {
     bool show_error = false;
 
-    if (ImGui::BeginPopupModal("Open Level", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Open Level", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         const ghc::filesystem::path directory = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "levels";
         if (ghc::filesystem::exists(directory)) {
             for (const auto& directory_entry : ghc::filesystem::recursive_directory_iterator(directory)) {
@@ -255,7 +266,7 @@ void EditorFileSystem::handle_open_level_popup(EditorFileSingleComponent& editor
 }
 
 void EditorFileSystem::handle_level_error_popup(EditorFileSingleComponent& editor_file_single_component) noexcept {
-    if (ImGui::BeginPopupModal("Level Error", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    if (ImGui::BeginPopupModal("Level Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::TextUnformatted("Failed to save level.");
 
         ImGui::Spacing();
@@ -281,7 +292,7 @@ void EditorFileSystem::update_window_title() noexcept {
 }
 
 bool EditorFileSystem::is_level_changed() noexcept {
-    return world.ctx<HistorySingleComponent>().is_level_changed;
+    return world.ctx<EditorHistorySingleComponent>().is_level_changed;
 }
 
 bool EditorFileSystem::new_level() noexcept {
@@ -307,44 +318,40 @@ bool EditorFileSystem::new_level() noexcept {
 }
 
 void EditorFileSystem::clear_level() noexcept {
-    auto& guid_single_component = world.ctx<GuidSingleComponent>();
-    auto& history_single_component = world.ctx<HistorySingleComponent>();
+    auto& editor_history_single_component = world.ctx<EditorHistorySingleComponent>();
+    auto& editor_selection_single_component = world.ctx<EditorSelectionSingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
-    auto& selected_entity_single_component = world.ctx<SelectedEntitySingleComponent>();
 
-    selected_entity_single_component.clear_selection(world);
+    editor_selection_single_component.clear_selection(world);
 
     std::vector<entt::entity> entities_to_delete;
-    for (entt::entity entity : world.view<EditorComponent>()) {
+    for (entt::entity entity : world.view<NameComponent>()) {
         entities_to_delete.push_back(entity);
     }
 
     for (entt::entity entity : entities_to_delete) {
-        auto& editor_component = world.get<EditorComponent>(entity);
+        auto& name_component = world.get<NameComponent>(entity);
 
-        assert(guid_single_component.guid_to_entity.count(editor_component.guid) == 1);
-        assert(guid_single_component.guid_to_entity[editor_component.guid] == entity);
-        guid_single_component.guid_to_entity.erase(editor_component.guid);
-
-        assert(name_single_component.name_to_entity.count(editor_component.name) == 1);
-        assert(name_single_component.name_to_entity[editor_component.name] == entity);
-        name_single_component.name_to_entity.erase(editor_component.name);
+        assert(name_single_component.name_to_entity.count(name_component.name) == 1);
+        assert(name_single_component.name_to_entity[name_component.name] == entity);
+        name_single_component.name_to_entity.erase(name_component.name);
 
         world.destroy(entity);
     }
 
-    assert(guid_single_component.guid_to_entity.empty());
+    // TODO: Reset camera as well.
+
     assert(name_single_component.name_to_entity.empty());
 
-    std::fill(history_single_component.undo.begin(), history_single_component.undo.end(), HistorySingleComponent::HistoryChange());
-    history_single_component.undo_position = 0;
-    history_single_component.redo.clear();
-    history_single_component.is_level_changed = false;
+    std::fill(editor_history_single_component.undo.begin(), editor_history_single_component.undo.end(), EditorHistorySingleComponent::HistoryChange());
+    editor_history_single_component.undo_position = 0;
+    editor_history_single_component.redo.clear();
+    editor_history_single_component.is_level_changed = false;
 }
 
 bool EditorFileSystem::save_level() noexcept {
     if (ResourceUtils::serialize_level(world, true)) {
-        world.ctx<HistorySingleComponent>().is_level_changed = false;
+        world.ctx<EditorHistorySingleComponent>().is_level_changed = false;
         return true;
     }
     return false;
@@ -352,7 +359,6 @@ bool EditorFileSystem::save_level() noexcept {
 
 bool EditorFileSystem::open_level() noexcept {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
-    auto& guid_single_component = world.ctx<GuidSingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
     const ghc::filesystem::path level_path = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "levels" / level_single_component.level_name;
@@ -377,7 +383,7 @@ bool EditorFileSystem::open_level() noexcept {
 
     clear_level();
 
-    ResourceUtils::deserialize_level(world, entities, &guid_single_component, &name_single_component);
+    ResourceUtils::deserialize_level(world, entities, &name_single_component);
 
     return true;
 }

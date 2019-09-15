@@ -1,0 +1,4113 @@
+entities:
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-10
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 3
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.00000048
+        y: 2.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-100
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -8.5
+        y: 2.43402958
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-101
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0756428242
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -8.5
+        y: 3.95751715
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-102
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -7.5
+        y: 2.82003546
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-103
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.068801403
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -7.5
+        y: 4.34694576
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-104
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -6.5
+        y: 3.17388582
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-105
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0726869032
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -6.5
+        y: 4.6988554
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-106
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7033587
+        y: 0.244477451
+        x: -8.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-107
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7114725
+        y: 1.77858269
+        x: -8.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-108
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7033587
+        y: -0.10486716
+        x: -7.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-109
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7114725
+        y: 1.42923844
+        x: -7.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-11
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 4
+        y: 1
+        x: 12
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 11
+        y: 3.5
+        x: 8
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-110
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 2.5
+        y: 4.11366272
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-111
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0976252556
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 3.5
+        y: 4.29106426
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-112
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 3.5
+        y: 3.76209831
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-113
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 0.973379076
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.98096085
+        y: 4.1531291
+        x: -10.5034342
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-114
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 0.0821957886
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.98096085
+        y: 4.28979301
+        x: -9.50343418
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-115
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 0.973379076
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.98096085
+        y: 3.77217007
+        x: -9.50343418
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-116
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 2
+        x: 4.16031933
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -1.50000048
+        y: 10.999999
+        x: -0.0417588055
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-117
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 26
+        y: 3
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3
+        y: 9.5
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-118
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 2
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15
+        y: 7.50000048
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-119
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.14251041
+        y: 7.50000048
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-12
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.347266316
+        y: 1
+        x: 5
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.17528617
+        y: 3.5
+        x: 11.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-120
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 8.5
+        y: 7.50000048
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-121
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 2.85748672
+        y: 7.50000048
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-122
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.14251328
+        y: 7.50000048
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-123
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6750736
+        y: 1.42708492
+        x: 5.97321129
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-124
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6973295
+        y: 0.242324114
+        x: 6.97299576
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-125
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6892157
+        y: 1.77642918
+        x: 6.97311211
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-126
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7114735
+        y: 0.625519753
+        x: 7.97289658
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-127
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7033587
+        y: 2.15962553
+        x: 7.97301102
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-128
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7256155
+        y: 0.972277641
+        x: 8.97279739
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-129
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7175016
+        y: 2.50638151
+        x: 8.97291183
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-13
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 7.36232948
+        y: 1
+        x: 5
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.31883526
+        y: 3.5
+        x: 11.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-130
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7397585
+        y: 1.36886859
+        x: 9.9726963
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-131
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7316456
+        y: 2.9029727
+        x: 9.97281075
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-132
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6973295
+        y: 2.03767538
+        x: 11.9729958
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-133
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6892157
+        y: 3.57178116
+        x: 11.9731121
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-134
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7114735
+        y: 2.42087126
+        x: 12.9728966
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-135
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7033587
+        y: 3.9549787
+        x: 12.973011
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-136
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7256155
+        y: 2.72481632
+        x: 13.9727974
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-137
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7175016
+        y: 4.25892353
+        x: 13.9729118
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-138
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7397585
+        y: 3.16421986
+        x: 14.9726963
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-139
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7316456
+        y: 4.65551472
+        x: 14.9728107
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-14
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 12
+        y: 3
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 7
+        y: 5.5
+        x: 13.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-140
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7397585
+        y: 3.12140703
+        x: 14.9726963
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-141
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7316456
+        y: 5.03346634
+        x: 15.9728107
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-142
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7397585
+        y: 3.49935913
+        x: 15.9726963
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-15
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.5
+        y: 4.5
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-16
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 11
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 12.5
+        y: 5.5
+        x: 7.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-17
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 4
+        y: 7
+        x: 17
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 11
+        y: 6.5
+        x: -6.50000048
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-18
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1.99999988
+        y: 1
+        x: 4.99999523
+      rotation:
+        w: 0.922285616
+        z: 0
+        y: 0.386509031
+        x: 0
+      translation:
+        z: 11.2459469
+        y: 4.50000095
+        x: 12.175087
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-19
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 3
+        x: 5
+      rotation:
+        w: 0.922285616
+        z: 0
+        y: 0.386509091
+        x: 0
+      translation:
+        z: 11.5965557
+        y: 5.50000095
+        x: 12.5315571
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-2
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 1
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.00000048
+        y: 3.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-20
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 10
+        y: 4
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.99999952
+        y: 3
+        x: -8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-21
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5
+        y: 3
+        x: 2
+      rotation:
+        w: 0.922285616
+        z: 0
+        y: 0.386509061
+        x: 0
+      translation:
+        z: 11.8220015
+        y: 5.50000095
+        x: 2.42813754
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-22
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 10
+        y: 2
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.99999952
+        y: 2
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-23
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3.04160023
+        y: 8.99999905
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.52079964
+        y: 5.49999952
+        x: -6
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-24
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 2
+        y: 9
+        x: 9
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9
+        y: 5.5
+        x: 7.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-25
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1.99999988
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -8.5
+        y: 8.99999905
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-26
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.878769815
+        y: 2
+        x: 4.5561614
+      rotation:
+        w: 0.921566546
+        z: 0
+        y: -0.388220459
+        x: 0
+      translation:
+        z: -7.09314299
+        y: 3.62079859
+        x: 9.86618137
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-27
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 4
+        y: 4
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -6.99999952
+        y: 7
+        x: -8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-28
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 4
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.499999523
+        y: 7
+        x: -8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-29
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.49999952
+        y: 8.5
+        x: -8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-3
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 5
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.50000048
+        y: 6.5
+        x: 6
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-30
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7033587
+        y: 0.974430919
+        x: -10.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-31
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -14.5
+        y: 7.5
+        x: 17.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-32
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.5
+        y: 7.5
+        x: 17.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-33
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.5
+        y: 7.5
+        x: 13.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-34
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 11.0044689
+        y: 2
+        x: 3
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -4.50223446
+        y: 4
+        x: 12.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-35
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5
+        y: 2
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -1.49999952
+        y: 6
+        x: 13.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-36
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 0.500000477
+        y: 2.14963913
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-37
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.7316456
+        y: 4.69832611
+        x: 14.9728107
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-38
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 2
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.5
+        y: 6
+        x: 16
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-39
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 11
+        y: 2
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.5
+        y: 6
+        x: 17.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-4
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 5
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.50000048
+        y: 6.5
+        x: -6
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-40
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 10.1999998
+        y: 0.105323777
+        x: 6.11999989
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.99999952
+        y: 3.02490926
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-41
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 19
+        y: 0.115530968
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.49999994
+        y: 1.01877308
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-42
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 2.26798511
+        y: 0.0945037976
+        x: 4.8242836
+      rotation:
+        w: 0.921566546
+        z: 0
+        y: -0.388220459
+        x: 0
+      translation:
+        z: -7.47975779
+        y: 4.6527977
+        x: 10.3318157
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-43
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 11.2559605
+        y: 0.0742342845
+        x: 7.76041889
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -4.37797976
+        y: 5.01415682
+        x: 14.8507385
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-44
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6831875
+        y: 1.68833077
+        x: 10.9730968
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-45
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6750736
+        y: 3.22243643
+        x: 10.9732113
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-46
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 0.0500000007
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.01082897
+        y: 3.9936862
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-47
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0976252556
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 2.5
+        y: 4.64262867
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-48
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0976252556
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.5
+        y: 5.02896595
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-49
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 1
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -6.49999762
+        y: 9.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-5
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 16
+        y: 0.973379076
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.98096085
+        y: 4.50740385
+        x: -11.5034342
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-50
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 1
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.49999762
+        y: 9.5
+        x: 5.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-51
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 3
+        y: 1
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.49999762
+        y: 9.5
+        x: -5.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-52
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 12.000001
+        y: 2
+        x: 16
+      rotation:
+        w: 0.702088714
+        z: 0
+        y: 0.712089479
+        x: 0
+      translation:
+        z: -7.96419096
+        y: 11
+        x: 7.93660593
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-53
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 4
+        y: 1
+        x: 12.000001
+      rotation:
+        w: 0.702088714
+        z: 0
+        y: 0.712089479
+        x: 0
+      translation:
+        z: -8.99237633
+        y: 10.5
+        x: 15.9222651
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-54
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 11
+        x: 16
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.5
+        x: 10
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-55
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 11
+        y: 2
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.5
+        y: 9
+        x: 17.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-56
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 4
+        y: 2
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -2
+        y: 9
+        x: 13.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-57
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 2
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.5
+        y: 9
+        x: 16
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-58
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.5
+        y: 9.5
+        x: 11
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-59
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 7
+        y: 0.99999994
+        x: 30.9999962
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -12.5
+        y: 0.571386635
+        x: 0.500000834
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-6
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 7
+        y: 5
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.50000048
+        y: 6.5
+        x: 8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-60
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 0.00707164407
+        z: 0
+        y: -0.999975026
+        x: 0
+      translation:
+        z: -12.6831875
+        y: -0.107020617
+        x: 5.97309685
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-61
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 11
+        x: 12
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.5
+        x: -8
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-62
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 4
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 2.00000024
+        x: 5.06639481e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-63
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 4
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 9
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-64
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 26
+        y: 6.00960779
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3
+        y: 4.00480413
+        x: -14.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-65
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 12.999999
+        y: 2
+        x: 26
+      rotation:
+        w: 0.702088714
+        z: 0
+        y: 0.712089479
+        x: 0
+      translation:
+        z: -2.95761967
+        y: 11
+        x: -8.49263
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-66
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7114725
+        y: 2.50853634
+        x: -10.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-67
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 16
+        y: 0.0821957886
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.98096085
+        y: 5.0250268
+        x: -11.5034342
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-68
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.5
+        y: 7.5
+        x: 13.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-69
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 4
+        x: 0.143541738
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.39359999
+        x: 5.06639481e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-7
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 15.000001
+        y: 1
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.50000143
+        y: 9.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-70
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 3.99999952
+        x: 0.143541783
+      rotation:
+        w: 0.702088654
+        z: 0.712089539
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.39359999
+        x: 5.06639481e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-71
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 4
+        x: 0.143541738
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.39359999
+        x: -0.999999523
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-72
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 4
+        x: 0.143541738
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 5.39359999
+        x: 1.00000048
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-73
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 3.99999952
+        x: 0.143541783
+      rotation:
+        w: 0.702088654
+        z: 0.712089539
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 6.18231678
+        x: -0.0111554172
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-74
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 0.0667290688
+        y: 3.99999952
+        x: 0.143541783
+      rotation:
+        w: 0.702088654
+        z: 0.712089539
+        y: 0
+        x: 0
+      translation:
+        z: -15.5
+        y: 4.58836508
+        x: 0.0113900891
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-75
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 2
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 12.5
+        y: 8
+        x: 8.5
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-76
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 11.000001
+        y: 2
+        x: 4
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -10.5
+        y: 10.999999
+        x: -0.02540344
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-77
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 0.0821957886
+        x: 7
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.98096085
+        y: 4.67075205
+        x: -10.5034342
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-78
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.499999523
+        y: 1.79578888
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-79
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -1.49999952
+        y: 1.40978301
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-8
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 1.50000048
+        y: 8.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-80
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -1.49999952
+        y: 1.40978301
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-81
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -2.49999952
+        y: 1.04672885
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-82
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.49999952
+        y: 0.676940203
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-83
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -4.49999952
+        y: 0.260306716
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-84
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -5.49999952
+        y: -0.0910932422
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-85
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0730192661
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -5.49999952
+        y: 1.43370581
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-86
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0637654737
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -4.49999952
+        y: 1.78973269
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-87
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0723091662
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.49999952
+        y: 2.20209432
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-88
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0774344429
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -2.49999952
+        y: 2.56932044
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-89
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0756428242
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -1.49999952
+        y: 2.93327022
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-9
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 8
+        y: 3
+        x: 18
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 5.00000048
+        y: 2.5
+        x: 0
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-90
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.068801403
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -0.499999523
+        y: 3.32269692
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-91
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0726869032
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 0.500000477
+        y: 3.67460442
+        x: 2.38418579e-07
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-92
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7033587
+        y: 0.627673149
+        x: -9.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-93
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7114725
+        y: 2.16177893
+        x: -9.66655827
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-94
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.42294502
+        y: 0.0544070788
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7114725
+        y: 2.90512705
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-95
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 5.4067173
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -13.7033587
+        y: 1.37102199
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-96
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -10.5
+        y: 1.70118666
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-97
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0723091662
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -10.5
+        y: 3.22634077
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-98
+    MaterialComponent:
+      material: blockout_gray
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 3
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.5
+        y: 2.07097554
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    BlockoutComponent:
+      {}
+    NameComponent:
+      name: blockout_gray-99
+    MaterialComponent:
+      material: blockout_orange
+    PhysicsStaticRigidBodyComponent:
+      {}
+    PhysicsBoxShapeComponent:
+      size:
+        z: 1
+        y: 1
+        x: 1
+    TransformComponent:
+      scale:
+        z: 1
+        y: 0.0774344429
+        x: 6
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -9.5
+        y: 3.59356666
+        x: -11.6665583
+  - ModelComponent:
+      path: blockout.glb
+    LightComponent:
+      color:
+        z: 150
+        y: 150
+        x: 150
+    NameComponent:
+      name: LIGHT
+    TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: -3.27987051
+        y: 12.3144617
+        x: 2.6690948

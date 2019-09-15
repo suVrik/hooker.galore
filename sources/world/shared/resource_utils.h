@@ -16,9 +16,8 @@ struct meta_handle;
 
 namespace hg {
 
-struct GuidSingleComponent;
-struct NameSingleComponent;
 class World;
+struct NameSingleComponent;
 
 /** `ResourceUtils` is a set of utilities functions for manipulations on resources. */
 class ResourceUtils final {
@@ -44,7 +43,7 @@ public:
     static void serialize_entity(World& world, entt::entity entity, YAML::Node& node, bool serialize_editor_component = false) noexcept;
 
     /** Deserialize the specified entity from the given YAML node. */
-    static void deserialize_entity(World& world, entt::entity entity, const YAML::Node& node, GuidSingleComponent* guid_single_component = nullptr, NameSingleComponent* name_single_component = nullptr) noexcept;
+    static void deserialize_entity(World& world, entt::entity entity, const YAML::Node& node, NameSingleComponent* name_single_component = nullptr) noexcept;
 
     /** Serialize the specified world into the given YAML node. */
     static void serialize_level(World& world, YAML::Node& node, bool serialize_editor_component = false) noexcept;
@@ -53,7 +52,7 @@ public:
     static bool serialize_level(World& world, bool serialize_editor_component = false) noexcept;
 
     /** Deserialize world from the specified YAML node. */
-    static void deserialize_level(World& world, const YAML::Node& node, GuidSingleComponent* guid_single_component = nullptr, NameSingleComponent* name_single_component = nullptr) noexcept;
+    static void deserialize_level(World& world, const YAML::Node& node, NameSingleComponent* name_single_component = nullptr) noexcept;
 
     /** Deserialize world from the file specified in `LevelSingleComponent`. */
     static bool deserialize_level(World& world) noexcept;

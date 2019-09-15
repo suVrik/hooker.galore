@@ -1,6 +1,5 @@
 #include "core/ecs/world.h"
 #include "world/shared/level_single_component.h"
-#include "world/shared/window_single_component.h"
 
 #include <SDL2/SDL_messagebox.h>
 #include <chrono>
@@ -9,8 +8,6 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    SDL_Window* message_box_window = nullptr;
-
     try {
         bool is_editor         = false;
         std::string level_file = "default.yaml";
@@ -23,56 +20,13 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        std::vector<std::string> normal_system_order = {
-                "WindowSystem",
-                "ImguiFetchSystem",
-                "MenuSystem",
-                "EditorCameraSystem",
-                "CameraSystem",
-                "RenderFetchSystem",
-                "PresetSystem",
-                "EntitySelectionSystem",
-                "GizmoSystem",
-                "PropertyEditorSystem",
-                "HistorySystem",
-                "QuadSystem",
-                "ResourceSystem",
-                "EditorFileSystem",
-                "GeometryPassSystem",
-                "LightingPassSystem",
-                "SkyboxPassSystem",
-                "AAPassSystem",
-                "HDRPassSystem",
-                "OutlinePassSystem",
-                "DebugDrawPassSystem",
-                "GridSystem",
-                "ImguiPassSystem",
-                "PickingPassSystem",
-                "RenderSystem",
-        };
-        std::vector<std::string> fixed_system_order = {
-                "PhysicsInitializationSystem",
-                "PhysicsRigidBodySystem",
-                "PhysicsShapeSystem",
-                "PhysicsSimulateSystem",
-                "PhysicsFetchSystem",
-        };
-
         hg::World world;
-        world.normal_system_order(normal_system_order);
-        world.fixed_system_order(fixed_system_order);
+        world.add_tags("editor", "render", "imgui", "physics");
 
         // `hg::LevelSingleComponent` is created and initialized before any system is executed.
+        // TODO: This is temporary.
         auto& level_single_component = world.set<hg::LevelSingleComponent>();
         level_single_component.level_name = level_file;
-
-        world.construct_systems();
-
-        // `hg::WindowSingleComponent` is created and initialized by `WindowSystem`.
-        auto& window_single_component = world.ctx<hg::WindowSingleComponent>();
-        window_single_component.title = "Hooker Galore";
-
-        message_box_window = window_single_component.window;
 
         std::chrono::steady_clock::time_point last = std::chrono::steady_clock::now();
         while (true) {
@@ -85,12 +39,12 @@ int main(int argc, char* argv[]) {
         }
     }
     catch (const std::runtime_error& error) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Runtime Error", error.what(), message_box_window);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Runtime Error", error.what(), nullptr);
         std::cerr << "Runtime Error: " << error.what() << std::endl;
         return 1;
     }
     catch (...) {
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Runtime Error", "Anonymous runtime error.", message_box_window);
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Runtime Error", "Anonymous runtime error.", nullptr);
         std::cerr << "Runtime Error: Anonymous runtime error." << std::endl;
         return 1;
     }

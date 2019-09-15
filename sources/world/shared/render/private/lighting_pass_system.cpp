@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/lighting_pass/lighting_pass.fragment.h"
@@ -29,6 +30,13 @@ static const bgfx::EmbeddedShader LIGHTING_PASS_SHADER[] = {
 static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
 
 } // namespace lighting_pass_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(LightingPassSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "GeometryPassSystem")
+)
 
 LightingPassSystem::LightingPassSystem(World& world)
         : NormalSystem(world) {

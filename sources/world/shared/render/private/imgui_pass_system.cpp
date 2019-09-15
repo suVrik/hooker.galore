@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/imgui_pass/imgui_pass.fragment.h"
@@ -21,6 +22,13 @@ static const bgfx::EmbeddedShader IMGUI_PASS_SHADER[] = {
 };
 
 } // namespace imgui_pass_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(ImguiPassSystem),
+    REQUIRE("imgui"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "ImguiFetchSystem")
+)
 
 ImguiPassSystem::ImguiPassSystem(World& world) noexcept
         : NormalSystem(world) {

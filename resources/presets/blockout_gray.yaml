@@ -16,4 +16,12 @@ ModelComponent:
   path: blockout.glb
 MaterialComponent:
   material: blockout_gray
-BlockoutComponent: {}
+BlockoutComponent: 
+  {}
+PhysicsStaticRigidBodyComponent:
+  {}
+PhysicsBoxShapeComponent:
+  size:
+    z: 1
+    y: 1
+    x: 1

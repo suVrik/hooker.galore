@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/render_fetch_system.h"
@@ -9,6 +10,13 @@
 #include <SDL2/SDL_syswm.h>
 
 namespace hg {
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(RenderFetchSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem")
+)
 
 RenderFetchSystem::RenderFetchSystem(World& world)
         : NormalSystem(world) {

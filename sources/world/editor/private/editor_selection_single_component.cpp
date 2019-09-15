@@ -1,10 +1,10 @@
 #include "core/ecs/world.h"
-#include "world/editor/selected_entity_single_component.h"
+#include "world/editor/editor_selection_single_component.h"
 #include "world/shared/render/outline_component.h"
 
 namespace hg {
 
-void SelectedEntitySingleComponent::select_entity(World& world, entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::select_entity(World& world, const entt::entity entity) noexcept {
     clear_selection(world);
     if (world.valid(entity)) {
         selected_entities.push_back(entity);
@@ -13,7 +13,7 @@ void SelectedEntitySingleComponent::select_entity(World& world, entt::entity ent
     }
 }
 
-void SelectedEntitySingleComponent::add_to_selection(World& world, entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::add_to_selection(World& world, const entt::entity entity) noexcept {
     if (std::find(selected_entities.begin(), selected_entities.end(), entity) == selected_entities.end()) {
         if (world.valid(entity)) {
             selected_entities.push_back(entity);
@@ -23,7 +23,7 @@ void SelectedEntitySingleComponent::add_to_selection(World& world, entt::entity 
     }
 }
 
-void SelectedEntitySingleComponent::remove_from_selection(World& world, entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::remove_from_selection(World& world, const entt::entity entity) noexcept {
     auto it = std::remove(selected_entities.begin(), selected_entities.end(), entity);
     if (it != selected_entities.end()) {
         world.reset<OutlineComponent>(entity);
@@ -31,7 +31,7 @@ void SelectedEntitySingleComponent::remove_from_selection(World& world, entt::en
     }
 }
 
-void SelectedEntitySingleComponent::clear_selection(World& world) noexcept {
+void EditorSelectionSingleComponent::clear_selection(World& world) noexcept {
     for (entt::entity entity : selected_entities) {
         if (world.valid(entity)) {
             world.reset<OutlineComponent>(entity);

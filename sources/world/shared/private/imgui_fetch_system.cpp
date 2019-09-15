@@ -1,14 +1,15 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/imgui_single_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/window_single_component.h"
 
-#include <imgui.h>
-#include <imgui_internal.h>
 #include <ImGuizmo.h>
 #include <SDL2/SDL_clipboard.h>
 #include <SDL2/SDL_mouse.h>
+#include <imgui.h>
+#include <imgui_internal.h>
 
 namespace hg {
 
@@ -29,6 +30,13 @@ static void set_clipboard_text(void* /*user_data*/, const char* text) {
 }
 
 } // namespace imgui_fetch_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(ImguiFetchSystem),
+    REQUIRE("imgui"),
+    BEFORE("ImguiPassSystem"),
+    AFTER("WindowSystem")
+)
 
 ImguiFetchSystem::ImguiFetchSystem(World& world) noexcept
         : NormalSystem(world) {

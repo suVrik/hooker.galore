@@ -17,9 +17,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_0
-    EditorComponent:
+    NameComponent:
       name: sphere_0_0
-      guid: 1
   - TransformComponent:
       translation:
         x: -10.5
@@ -38,9 +37,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_1
-    EditorComponent:
+    NameComponent:
       name: sphere_0_1
-      guid: 2
   - TransformComponent:
       translation:
         x: -10.5
@@ -59,9 +57,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_2
-    EditorComponent:
+    NameComponent:
       name: sphere_0_2
-      guid: 3
   - TransformComponent:
       translation:
         x: -10.5
@@ -80,9 +77,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_3
-    EditorComponent:
+    NameComponent:
       name: sphere_0_3
-      guid: 4
   - TransformComponent:
       translation:
         x: -10.5
@@ -101,9 +97,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_4
-    EditorComponent:
+    NameComponent:
       name: sphere_0_4
-      guid: 5
   - TransformComponent:
       translation:
         x: -10.5
@@ -122,9 +117,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_5
-    EditorComponent:
+    NameComponent:
       name: sphere_0_5
-      guid: 6
   - TransformComponent:
       translation:
         x: -10.5
@@ -143,9 +137,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_6
-    EditorComponent:
+    NameComponent:
       name: sphere_0_6
-      guid: 7
   - TransformComponent:
       translation:
         x: -10.5
@@ -164,9 +157,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_0_7
-    EditorComponent:
+    NameComponent:
       name: sphere_0_7
-      guid: 8
   - TransformComponent:
       translation:
         x: -7.5
@@ -185,9 +177,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_0
-    EditorComponent:
+    NameComponent:
       name: sphere_1_0
-      guid: 9
   - TransformComponent:
       translation:
         x: -7.5
@@ -206,9 +197,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_1
-    EditorComponent:
-      name: sphere_1_1
-      guid: 10
+    NameComponent:
+      name: sphere_1_10
   - TransformComponent:
       translation:
         x: -7.5
@@ -227,9 +217,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_2
-    EditorComponent:
-      name: sphere_1_2
-      guid: 11
+    NameComponent:
+      name: sphere_1_21
   - TransformComponent:
       translation:
         x: -7.5
@@ -248,9 +237,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_3
-    EditorComponent:
-      name: sphere_1_3
-      guid: 12
+    NameComponent:
+      name: sphere_1_32
   - TransformComponent:
       translation:
         x: -7.5
@@ -269,9 +257,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_4
-    EditorComponent:
-      name: sphere_1_4
-      guid: 13
+    NameComponent:
+      name: sphere_1_43
   - TransformComponent:
       translation:
         x: -7.5
@@ -290,9 +277,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_5
-    EditorComponent:
-      name: sphere_1_5
-      guid: 14
+    NameComponent:
+      name: sphere_1_54
   - TransformComponent:
       translation:
         x: -7.5
@@ -311,9 +297,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_6
-    EditorComponent:
-      name: sphere_1_6
-      guid: 15
+    NameComponent:
+      name: sphere_1_65
   - TransformComponent:
       translation:
         x: -7.5
@@ -332,9 +317,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_1_7
-    EditorComponent:
-      name: sphere_1_7
-      guid: 16
+    NameComponent:
+      name: sphere_1_76
   - TransformComponent:
       translation:
         x: -4.5
@@ -353,9 +337,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_0
-    EditorComponent:
-      name: sphere_2_0
-      guid: 17
+    NameComponent:
+      name: sphere_2_07
   - TransformComponent:
       translation:
         x: -4.5
@@ -374,9 +357,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_1
-    EditorComponent:
-      name: sphere_2_1
-      guid: 18
+    NameComponent:
+      name: sphere_2_18
   - TransformComponent:
       translation:
         x: -4.5
@@ -395,9 +377,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_2
-    EditorComponent:
-      name: sphere_2_2
-      guid: 19
+    NameComponent:
+      name: sphere_2_29
   - TransformComponent:
       translation:
         x: -4.5
@@ -416,9 +397,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_3
-    EditorComponent:
-      name: sphere_2_3
-      guid: 20
+    NameComponent:
+      name: sphere_2_30
   - TransformComponent:
       translation:
         x: -4.5
@@ -437,9 +417,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_4
-    EditorComponent:
-      name: sphere_2_4
-      guid: 21
+    NameComponent:
+      name: sphere_2_41
   - TransformComponent:
       translation:
         x: -4.5
@@ -458,9 +437,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_5
-    EditorComponent:
-      name: sphere_2_5
-      guid: 22
+    NameComponent:
+      name: sphere_2_52
   - TransformComponent:
       translation:
         x: -4.5
@@ -479,9 +457,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_6
-    EditorComponent:
-      name: sphere_2_6
-      guid: 23
+    NameComponent:
+      name: sphere_2_63
   - TransformComponent:
       translation:
         x: -4.5
@@ -500,9 +477,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_2_7
-    EditorComponent:
-      name: sphere_2_7
-      guid: 24
+    NameComponent:
+      name: sphere_2_74
   - TransformComponent:
       translation:
         x: -1.5
@@ -521,9 +497,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_0
-    EditorComponent:
-      name: sphere_3_0
-      guid: 25
+    NameComponent:
+      name: sphere_3_05
   - TransformComponent:
       translation:
         x: -1.5
@@ -542,9 +517,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_1
-    EditorComponent:
-      name: sphere_3_1
-      guid: 26
+    NameComponent:
+      name: sphere_3_16
   - TransformComponent:
       translation:
         x: -1.5
@@ -563,9 +537,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_2
-    EditorComponent:
-      name: sphere_3_2
-      guid: 27
+    NameComponent:
+      name: sphere_3_27
   - TransformComponent:
       translation:
         x: -1.5
@@ -584,9 +557,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_3
-    EditorComponent:
-      name: sphere_3_3
-      guid: 28
+    NameComponent:
+      name: sphere_3_38
   - TransformComponent:
       translation:
         x: -1.5
@@ -605,9 +577,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_4
-    EditorComponent:
-      name: sphere_3_4
-      guid: 29
+    NameComponent:
+      name: sphere_3_49
   - TransformComponent:
       translation:
         x: -1.5
@@ -626,9 +597,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_5
-    EditorComponent:
-      name: sphere_3_5
-      guid: 30
+    NameComponent:
+      name: sphere_3_50
   - TransformComponent:
       translation:
         x: -1.5
@@ -647,9 +617,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_6
-    EditorComponent:
-      name: sphere_3_6
-      guid: 31
+    NameComponent:
+      name: sphere_3_61
   - TransformComponent:
       translation:
         x: -1.5
@@ -668,9 +637,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_3_7
-    EditorComponent:
-      name: sphere_3_7
-      guid: 32
+    NameComponent:
+      name: sphere_3_72
   - TransformComponent:
       translation:
         x: 1.5
@@ -689,9 +657,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_0
-    EditorComponent:
-      name: sphere_4_0
-      guid: 33
+    NameComponent:
+      name: sphere_4_03
   - TransformComponent:
       translation:
         x: 1.5
@@ -710,9 +677,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_1
-    EditorComponent:
-      name: sphere_4_1
-      guid: 34
+    NameComponent:
+      name: sphere_4_14
   - TransformComponent:
       translation:
         x: 1.5
@@ -731,9 +697,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_2
-    EditorComponent:
-      name: sphere_4_2
-      guid: 35
+    NameComponent:
+      name: sphere_4_25
   - TransformComponent:
       translation:
         x: 1.5
@@ -752,9 +717,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_3
-    EditorComponent:
-      name: sphere_4_3
-      guid: 36
+    NameComponent:
+      name: sphere_4_36
   - TransformComponent:
       translation:
         x: 1.5
@@ -773,9 +737,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_4
-    EditorComponent:
-      name: sphere_4_4
-      guid: 37
+    NameComponent:
+      name: sphere_4_47
   - TransformComponent:
       translation:
         x: 1.5
@@ -794,9 +757,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_5
-    EditorComponent:
-      name: sphere_4_5
-      guid: 38
+    NameComponent:
+      name: sphere_4_58
   - TransformComponent:
       translation:
         x: 1.5
@@ -815,9 +777,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_6
-    EditorComponent:
-      name: sphere_4_6
-      guid: 39
+    NameComponent:
+      name: sphere_4_69
   - TransformComponent:
       translation:
         x: 1.5
@@ -836,9 +797,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_4_7
-    EditorComponent:
-      name: sphere_4_7
-      guid: 40
+    NameComponent:
+      name: sphere_4_70
   - TransformComponent:
       translation:
         x: 4.5
@@ -857,9 +817,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_0
-    EditorComponent:
-      name: sphere_5_0
-      guid: 41
+    NameComponent:
+      name: sphere_5_01
   - TransformComponent:
       translation:
         x: 4.5
@@ -878,9 +837,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_1
-    EditorComponent:
-      name: sphere_5_1
-      guid: 42
+    NameComponent:
+      name: sphere_5_12
   - TransformComponent:
       translation:
         x: 4.5
@@ -899,9 +857,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_2
-    EditorComponent:
-      name: sphere_5_2
-      guid: 43
+    NameComponent:
+      name: sphere_5_23
   - TransformComponent:
       translation:
         x: 4.5
@@ -920,9 +877,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_3
-    EditorComponent:
-      name: sphere_5_3
-      guid: 44
+    NameComponent:
+      name: sphere_5_34
   - TransformComponent:
       translation:
         x: 4.5
@@ -941,9 +897,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_4
-    EditorComponent:
-      name: sphere_5_4
-      guid: 45
+    NameComponent:
+      name: sphere_5_45
   - TransformComponent:
       translation:
         x: 4.5
@@ -962,9 +917,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_5
-    EditorComponent:
-      name: sphere_5_5
-      guid: 46
+    NameComponent:
+      name: sphere_5_56
   - TransformComponent:
       translation:
         x: 4.5
@@ -983,9 +937,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_6
-    EditorComponent:
-      name: sphere_5_6
-      guid: 47
+    NameComponent:
+      name: sphere_5_67
   - TransformComponent:
       translation:
         x: 4.5
@@ -1004,9 +957,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_5_7
-    EditorComponent:
-      name: sphere_5_7
-      guid: 48
+    NameComponent:
+      name: sphere_5_78
   - TransformComponent:
       translation:
         x: 7.5
@@ -1025,9 +977,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_0
-    EditorComponent:
-      name: sphere_6_0
-      guid: 49
+    NameComponent:
+      name: sphere_6_09
   - TransformComponent:
       translation:
         x: 7.5
@@ -1046,9 +997,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_1
-    EditorComponent:
-      name: sphere_6_1
-      guid: 50
+    NameComponent:
+      name: sphere_6_10
   - TransformComponent:
       translation:
         x: 7.5
@@ -1067,9 +1017,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_2
-    EditorComponent:
-      name: sphere_6_2
-      guid: 51
+    NameComponent:
+      name: sphere_6_21
   - TransformComponent:
       translation:
         x: 7.5
@@ -1088,9 +1037,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_3
-    EditorComponent:
-      name: sphere_6_3
-      guid: 52
+    NameComponent:
+      name: sphere_6_32
   - TransformComponent:
       translation:
         x: 7.5
@@ -1109,9 +1057,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_4
-    EditorComponent:
-      name: sphere_6_4
-      guid: 53
+    NameComponent:
+      name: sphere_6_43
   - TransformComponent:
       translation:
         x: 7.5
@@ -1130,9 +1077,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_5
-    EditorComponent:
-      name: sphere_6_5
-      guid: 54
+    NameComponent:
+      name: sphere_6_54
   - TransformComponent:
       translation:
         x: 7.5
@@ -1151,9 +1097,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_6
-    EditorComponent:
-      name: sphere_6_6
-      guid: 55
+    NameComponent:
+      name: sphere_6_65
   - TransformComponent:
       translation:
         x: 7.5
@@ -1172,9 +1117,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_6_7
-    EditorComponent:
-      name: sphere_6_7
-      guid: 56
+    NameComponent:
+      name: sphere_6_76
   - TransformComponent:
       translation:
         x: 10.5
@@ -1193,9 +1137,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_0
-    EditorComponent:
-      name: sphere_7_0
-      guid: 57
+    NameComponent:
+      name: sphere_7_07
   - TransformComponent:
       translation:
         x: 10.5
@@ -1214,9 +1157,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_1
-    EditorComponent:
-      name: sphere_7_1
-      guid: 58
+    NameComponent:
+      name: sphere_7_18
   - TransformComponent:
       translation:
         x: 10.5
@@ -1235,9 +1177,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_2
-    EditorComponent:
-      name: sphere_7_2
-      guid: 59
+    NameComponent:
+      name: sphere_7_29
   - TransformComponent:
       translation:
         x: 10.5
@@ -1256,9 +1197,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_3
-    EditorComponent:
-      name: sphere_7_3
-      guid: 60
+    NameComponent:
+      name: sphere_7_30
   - TransformComponent:
       translation:
         x: 10.5
@@ -1277,9 +1217,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_4
-    EditorComponent:
-      name: sphere_7_4
-      guid: 61
+    NameComponent:
+      name: sphere_7_41
   - TransformComponent:
       translation:
         x: 10.5
@@ -1298,9 +1237,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_5
-    EditorComponent:
-      name: sphere_7_5
-      guid: 62
+    NameComponent:
+      name: sphere_7_52
   - TransformComponent:
       translation:
         x: 10.5
@@ -1319,9 +1257,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_6
-    EditorComponent:
-      name: sphere_7_6
-      guid: 63
+    NameComponent:
+      name: sphere_7_63
   - TransformComponent:
       translation:
         x: 10.5
@@ -1340,9 +1277,8 @@ entities:
       path: sphere.glb
     MaterialComponent:
       material: sphere/sphere_7_7
-    EditorComponent:
-      name: sphere_7_7
-      guid: 64
+    NameComponent:
+      name: sphere_7_74
   - TransformComponent:
       translation:
         x: 2
@@ -1361,9 +1297,8 @@ entities:
       path: blockout.glb
     MaterialComponent:
       material: grass
-    EditorComponent:
-      name: grass-cube
-      guid: 65
+    NameComponent:
+      name: grass-cube5
   - TransformComponent:
       translation:
         x: -2
@@ -1382,9 +1317,8 @@ entities:
       path: blockout.glb
     MaterialComponent:
       material: parallax
-    EditorComponent:
-      name: parallax-cube
-      guid: 66
+    NameComponent:
+      name: parallax-cube6
   - TransformComponent:
       translation:
         x: 4
@@ -1403,9 +1337,8 @@ entities:
       path: duck.glb
     MaterialComponent:
       material: sphere/sphere_0_0
-    EditorComponent:
-      name: duck
-      guid: 67
+    NameComponent:
+      name: duck7
   - TransformComponent:
       translation:
         x: 0
@@ -1424,9 +1357,8 @@ entities:
       path: flight_helmet.glb
     MaterialComponent:
       material: flight_helmet
-    EditorComponent:
-      name: flight_helmet
-      guid: 68
+    NameComponent:
+      name: flight_helmet8
   - TransformComponent:
       translation:
         x: 0
@@ -1445,9 +1377,8 @@ entities:
       path: flight_helmet_1.glb
     MaterialComponent:
       material: flight_helmet_1
-    EditorComponent:
-      name: flight_helmet_1
-      guid: 69
+    NameComponent:
+      name: flight_helmet_19
   - TransformComponent:
       translation:
         x: 0
@@ -1466,9 +1397,8 @@ entities:
       path: flight_helmet_2.glb
     MaterialComponent:
       material: flight_helmet_2
-    EditorComponent:
-      name: flight_helmet_2
-      guid: 70
+    NameComponent:
+      name: flight_helmet_20
   - TransformComponent:
       translation:
         x: 0
@@ -1487,9 +1417,8 @@ entities:
       path: flight_helmet_3.glb
     MaterialComponent:
       material: flight_helmet_3
-    EditorComponent:
-      name: flight_helmet_3
-      guid: 71
+    NameComponent:
+      name: flight_helmet_31
   - TransformComponent:
       translation:
         x: 0
@@ -1508,9 +1437,8 @@ entities:
       path: flight_helmet_4.glb
     MaterialComponent:
       material: flight_helmet_4
-    EditorComponent:
-      name: flight_helmet_4
-      guid: 72
+    NameComponent:
+      name: flight_helmet_42
   - TransformComponent:
       translation:
         x: 0
@@ -1532,9 +1460,8 @@ entities:
         z: 150
     ModelComponent:
       path: sphere.glb
-    EditorComponent:
-      name: LIGHT
-      guid: 73
+    NameComponent:
+      name: LIGHT3
   - TransformComponent:
       translation:
         x: 6
@@ -1553,9 +1480,8 @@ entities:
       path: damaged_helmet.glb
     MaterialComponent:
       material: damaged_helmet
-    EditorComponent:
-      name: damaged_helmet
-      guid: 74
+    NameComponent:
+      name: damaged_helmet4
   - TransformComponent:
       translation:
         x: 0
@@ -1574,7 +1500,6 @@ entities:
       path: blockout.glb
     MaterialComponent:
       material: blockout_gray
-    EditorComponent:
-      name: wall_1
-      guid: 75
+    NameComponent:
+      name: wall_15
     BlockoutComponent: {}

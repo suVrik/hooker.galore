@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/camera_system.h"
@@ -5,6 +6,12 @@
 #include "world/shared/window_single_component.h"
 
 namespace hg {
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(CameraSystem),
+    REQUIRE("render"),
+    AFTER("WindowSystem")
+)
 
 CameraSystem::CameraSystem(World& world) noexcept
         : NormalSystem(world) {

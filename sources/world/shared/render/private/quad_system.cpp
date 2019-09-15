@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "shaders/quad_pass/quad_pass.fragment.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
@@ -38,6 +39,13 @@ static const bgfx::EmbeddedShader QUAD_PASS_SHADER[] = {
 
 } // namespace quad_system_details
 
+SYSTEM_DESCRIPTOR(
+    SYSTEM(QuadSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("RenderFetchSystem")
+)
+
 QuadSystem::QuadSystem(World& world)
         : NormalSystem(world) {
     using namespace quad_system_details;
@@ -67,6 +75,7 @@ QuadSystem::~QuadSystem() {
 }
 
 void QuadSystem::update(float /*elapsed_time*/) {
+    // Nothing to do here.
 }
 
 } // namespace hg

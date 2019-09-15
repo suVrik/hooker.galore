@@ -1,13 +1,19 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/window_single_component.h"
 #include "world/shared/window_system.h"
 
+#include <SDL2/SDL.h>
 #include <fmt/format.h>
 #include <iostream>
-#include <SDL2/SDL.h>
 
 namespace hg {
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(WindowSystem),
+    REQUIRE("render")
+)
 
 WindowSystem::WindowSystem(World& world)
         : NormalSystem(world) {

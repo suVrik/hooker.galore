@@ -1,8 +1,9 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/outline_pass/outline_pass.vertex.h"
 #include "shaders/picking_pass/picking_pass.fragment.h"
-#include "world/editor/editor_component.h"
+#include "world/shared/name_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/picking_pass_single_component.h"
@@ -29,6 +30,13 @@ static const uint64_t RT_ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_P
 
 } // namespace picking_pass_system
 
+SYSTEM_DESCRIPTOR(
+    SYSTEM(PickingPassSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
+)
+
 PickingPassSystem::PickingPassSystem(World& world) noexcept
         : NormalSystem(world) {
     using namespace picking_pass_system_details;
@@ -46,7 +54,7 @@ PickingPassSystem::PickingPassSystem(World& world) noexcept
 
     picking_pass_single_component.object_index_uniform = bgfx::createUniform("u_object_index", bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(PICKING_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.f, 0);
+    bgfx::setViewClear(PICKING_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xFFFFFFFF, 1.f, 0);
     bgfx::setViewName(PICKING_PASS, "picking_pass");
 }
 
@@ -84,13 +92,13 @@ void PickingPassSystem::update(float /*elapsed_time*/) {
 
     bgfx::setViewTransform(PICKING_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
 
-    world.view<ModelComponent, TransformComponent, EditorComponent>().each([&](entt::entity entity, ModelComponent& model_component, TransformComponent& transform_component, EditorComponent& editor_component) {
+    world.view<ModelComponent, TransformComponent>().each([&](const entt::entity entity, ModelComponent& model_component, TransformComponent& transform_component) {
         glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
         transform = transform * glm::mat4_cast(transform_component.rotation);
         transform = glm::scale(transform, transform_component.scale);
 
         for (const Model::Node& node : model_component.model.children) {
-            draw_node(picking_pass_single_component, node, transform, editor_component.guid);
+            draw_node(picking_pass_single_component, node, transform, static_cast<uint32_t>(entity));
         }
     });
 
@@ -143,7 +151,7 @@ void PickingPassSystem::draw_node(const PickingPassSingleComponent& picking_pass
             uniform_value.x = ((object_index >> 16) & 0xFF) / 255.f;
             uniform_value.y = ((object_index >> 8) & 0xFF) / 255.f;
             uniform_value.z = (object_index & 0xFF) / 255.f;
-            uniform_value.w = 1.f;
+            uniform_value.w = ((object_index >> 24) & 0xFF) / 255.f;
             bgfx::setUniform(picking_pass_single_component.object_index_uniform, glm::value_ptr(uniform_value));
 
             bgfx::setTransform(glm::value_ptr(world_transform), 1);

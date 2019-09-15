@@ -1,13 +1,13 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_camera_system.h"
 #include "world/editor/editor_file_system.h"
-#include "world/editor/entity_selection_system.h"
-#include "world/editor/gizmo_system.h"
-#include "world/editor/grid_system.h"
-#include "world/editor/history_system.h"
-#include "world/editor/menu_system.h"
-#include "world/editor/preset_system.h"
-#include "world/editor/property_editor_system.h"
+#include "world/editor/editor_gizmo_system.h"
+#include "world/editor/editor_grid_system.h"
+#include "world/editor/editor_history_system.h"
+#include "world/editor/editor_menu_system.h"
+#include "world/editor/editor_preset_system.h"
+#include "world/editor/editor_property_editor_system.h"
+#include "world/editor/editor_selection_system.h"
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/physics/physics_fetch_system.h"
 #include "world/shared/physics/physics_initialization_system.h"
@@ -40,16 +40,18 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(DebugDrawPassSystem);
     REGISTER_SYSTEM(EditorCameraSystem);
     REGISTER_SYSTEM(EditorFileSystem);
-    REGISTER_SYSTEM(EntitySelectionSystem);
+    REGISTER_SYSTEM(EditorGizmoSystem);
+    REGISTER_SYSTEM(EditorGridSystem);
+    REGISTER_SYSTEM(EditorHistorySystem);
+    REGISTER_SYSTEM(EditorMenuSystem);
+    REGISTER_SYSTEM(EditorPresetSystem);
+    REGISTER_SYSTEM(EditorPropertyEditorSystem);
+    REGISTER_SYSTEM(EditorSelectionSystem);
     REGISTER_SYSTEM(GeometryPassSystem);
-    REGISTER_SYSTEM(GizmoSystem);
-    REGISTER_SYSTEM(GridSystem);
     REGISTER_SYSTEM(HDRPassSystem);
-    REGISTER_SYSTEM(HistorySystem);
     REGISTER_SYSTEM(ImguiFetchSystem);
     REGISTER_SYSTEM(ImguiPassSystem);
     REGISTER_SYSTEM(LightingPassSystem);
-    REGISTER_SYSTEM(MenuSystem);
     REGISTER_SYSTEM(OutlinePassSystem);
     REGISTER_SYSTEM(PhysicsFetchSystem);
     REGISTER_SYSTEM(PhysicsInitializationSystem);
@@ -57,8 +59,6 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(PhysicsShapeSystem);
     REGISTER_SYSTEM(PhysicsSimulateSystem);
     REGISTER_SYSTEM(PickingPassSystem);
-    REGISTER_SYSTEM(PresetSystem);
-    REGISTER_SYSTEM(PropertyEditorSystem);
     REGISTER_SYSTEM(QuadSystem);
     REGISTER_SYSTEM(RenderFetchSystem);
     REGISTER_SYSTEM(RenderSystem);

@@ -11,8 +11,8 @@ namespace hg {
 
 class World;
 
-/** `HistorySingleComponent` contains history of changes on the level. */
-struct HistorySingleComponent final {
+/** `EditorHistorySingleComponent` contains history of changes on the level. */
+struct EditorHistorySingleComponent final {
     static constexpr size_t HISTORY_BUFFER_SIZE = 512;
 
     /** All possible action types performed in editor. */
@@ -27,7 +27,7 @@ struct HistorySingleComponent final {
     /** `HistoryAction` contains data needed to perform an action of `ActionType`. */
     struct HistoryAction final {
         ActionType action_type;
-        uint32_t entity_guid;
+        std::string entity_name;
         std::vector<entt::meta_any> components;
     };
 

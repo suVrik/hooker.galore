@@ -1,13 +1,13 @@
 #pragma once
 
 #include <entt/meta/factory.hpp>
+#include <entt/entity/registry.hpp>
 #include <map>
-#include <string>
 
 namespace hg {
 
-/** `PresetSingleComponent` contains editor presets. */
-struct PresetSingleComponent final {
+/** `EditorPresetSingleComponent` contains editor presets. */
+struct EditorPresetSingleComponent final {
     std::map<std::string, std::vector<entt::meta_any>> presets;
     entt::entity placed_entity = entt::null;
 };

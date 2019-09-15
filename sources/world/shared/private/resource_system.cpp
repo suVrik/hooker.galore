@@ -1,6 +1,7 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/resource/texture.h"
-#include "world/editor/preset_single_component.h"
+#include "world/editor/editor_preset_single_component.h"
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
@@ -120,6 +121,15 @@ void destroy_model_node(Model::Node& node) noexcept {
 static const uint8_t RED_TEXTURE[4] = { 0xFF, 0x00, 0x00, 0xFF };
 
 } // namespace resource_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(ResourceSystem),
+     // TODO: Split ResourceSystem to several systems. RenderResourceSystem may load textures and meshes.
+    //        EditorResourceSystem may load presets. ResourceSystem may load physical meshes and level.
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("RenderFetchSystem")
+)
 
 ResourceSystem::ResourceSystem(World& world)
         : NormalSystem(world)
@@ -624,7 +634,7 @@ void ResourceSystem::load_model_primitive(const glm::mat4& parent_transform, Mod
 }
 
 void ResourceSystem::load_presets() const {
-    if (auto* preset_single_component = world.try_ctx<PresetSingleComponent>(); preset_single_component != nullptr) {
+    if (auto* editor_preset_single_component = world.try_ctx<EditorPresetSingleComponent>(); editor_preset_single_component != nullptr) {
         std::mutex preset_single_component_mutex;
 
         const ghc::filesystem::path directory = ghc::filesystem::path(ResourceUtils::get_resource_directory()) / "presets";
@@ -635,7 +645,7 @@ void ResourceSystem::load_presets() const {
             load_preset(preset, file.string());
 
             std::lock_guard<std::mutex> guard(preset_single_component_mutex);
-            preset_single_component->presets.emplace(name, std::move(preset));
+            editor_preset_single_component->presets.emplace(name, std::move(preset));
         });
     }
 }

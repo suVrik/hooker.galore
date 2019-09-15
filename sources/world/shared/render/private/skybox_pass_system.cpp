@@ -1,3 +1,4 @@
+#include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "core/render/render_pass.h"
 #include "shaders/skybox_pass/skybox_pass.fragment.h"
@@ -31,6 +32,13 @@ static const bgfx::EmbeddedShader SKYBOX_PASS_SHADER[] = {
 static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
 
 } // namespace skybox_pass_system_details
+
+SYSTEM_DESCRIPTOR(
+    SYSTEM(SkyboxPassSystem),
+    REQUIRE("render"),
+    BEFORE("RenderSystem"),
+    AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "GeometryPassSystem", "LightingPassSystem")
+)
 
 SkyboxPassSystem::SkyboxPassSystem(World& world)
         : NormalSystem(world) {
@@ -88,7 +96,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
 
     const Texture& skybox_texture = texture_single_component.get("house.dds");
     if (!skybox_texture.is_cube_map) {
-        // Skybox texture are missing.
+        // Skybox texture is missing.
         return;
     }
 
