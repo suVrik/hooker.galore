@@ -116,6 +116,15 @@ class basic_registry {
             }
         }
 
+        void notify(basic_registry& registry, const Entity entt) {
+            if constexpr (std::is_empty_v<Component>) {
+                ENTT_ASSERT((storage<Entity, Component>::has(entt)));
+                update.publish(entt, registry, Component{});
+            } else {
+                update.publish(entt, registry, storage<Entity, Component>::get(entt));
+            }
+        }
+
     private:
         using reference_type = std::conditional_t<std::is_empty_v<Component>, const Component &, Component &>;
         sigh<void(const Entity, basic_registry &, reference_type)> construction{};
@@ -893,6 +902,13 @@ public:
     decltype(auto) replace(const entity_type entity, Args &&... args) {
         ENTT_ASSERT(valid(entity));
         return pool<Component>()->replace(*this, entity, std::forward<Args>(args)...);
+    }
+
+    /** Call `on_replace` callbacks for specified entity and component without actually replacing component. */
+    template<typename Component>
+    void notify(const entity_type entity) {
+        ENTT_ASSERT(valid(entity));
+        return pool<Component>()->notify(*this, entity);
     }
 
     /**

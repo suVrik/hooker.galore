@@ -3,9 +3,9 @@
 namespace hg {
 
 /** `PhysicsStaticRigidBodyComponent` marks entity as static rigid body. */
-struct PhysicsStaticRigidBodyComponent final {
+class PhysicsStaticRigidBodyComponent final {
 private:
-    bool dummy = false;
+    bool m_dummy = false;
 };
 
 } // namespace hg

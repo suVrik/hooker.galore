@@ -8,9 +8,13 @@ class PxRigidStatic;
 
 namespace hg {
 
+class PhysicsRigidBodySystem;
+class PhysicsShapeSystem;
+
 /** `PhysicsStaticRigidBodyPrivateComponent` is added, updated and removed automatically by `PhysicsRigidBodySystem`.
     To mark an entity as static rigid body use `PhysicsStaticRigidBodyComponent` instead. */
-struct PhysicsStaticRigidBodyPrivateComponent final {
+class PhysicsStaticRigidBodyPrivateComponent final {
+public:
     PhysicsStaticRigidBodyPrivateComponent() = default;
     PhysicsStaticRigidBodyPrivateComponent(const PhysicsStaticRigidBodyPrivateComponent& original) = delete;
     PhysicsStaticRigidBodyPrivateComponent(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept;
@@ -18,7 +22,11 @@ struct PhysicsStaticRigidBodyPrivateComponent final {
     PhysicsStaticRigidBodyPrivateComponent& operator=(const PhysicsStaticRigidBodyPrivateComponent& original) = delete;
     PhysicsStaticRigidBodyPrivateComponent& operator=(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept;
 
-    physx::PxRigidStatic* rigid_actor = nullptr;
+private:
+    physx::PxRigidStatic* m_rigid_actor = nullptr;
+
+    friend class PhysicsRigidBodySystem;
+    friend class PhysicsShapeSystem;
 };
 
 } // namespace hg

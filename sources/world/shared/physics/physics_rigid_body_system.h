@@ -6,8 +6,8 @@
 
 namespace hg {
 
-struct PhysicsStaticRigidBodyComponent;
-struct PhysicsSingleComponent;
+class PhysicsSingleComponent;
+class PhysicsStaticRigidBodyComponent;
 
 /** `PhysicsRigidBodySystem` synchronizes the World rigid body transforms with PhysX rigid body transforms. */
 class PhysicsRigidBodySystem final : public FixedSystem {

@@ -19,9 +19,7 @@ PhysicsFetchSystem::PhysicsFetchSystem(World& world)
 
 void PhysicsFetchSystem::update(float /*elapsed_time*/) {
     auto& physics_single_component = world.ctx<PhysicsSingleComponent>();
-
-    assert(physics_single_component.scene != nullptr);
-    physics_single_component.scene->fetchResults(true);
+    physics_single_component.get_scene().fetchResults(true);
 }
 
 } // namespace hg

@@ -8,9 +8,13 @@ class PxShape;
 
 namespace hg {
 
+class PhysicsRigidBodySystem;
+class PhysicsShapeSystem;
+
 /** `PhysicsBoxShapePrivateComponent` is added, updated and removed automatically by `PhysicsShapeSystem`.
     To add a physical box shape to entity use `PhysicsBoxShapeComponent` instead. */
-struct PhysicsBoxShapePrivateComponent final {
+class PhysicsBoxShapePrivateComponent final {
+public:
     PhysicsBoxShapePrivateComponent() = default;
     PhysicsBoxShapePrivateComponent(const PhysicsBoxShapePrivateComponent& original) = delete;
     PhysicsBoxShapePrivateComponent(PhysicsBoxShapePrivateComponent&& original) noexcept;
@@ -18,7 +22,11 @@ struct PhysicsBoxShapePrivateComponent final {
     PhysicsBoxShapePrivateComponent& operator=(const PhysicsBoxShapePrivateComponent& original) = delete;
     PhysicsBoxShapePrivateComponent& operator=(PhysicsBoxShapePrivateComponent&& original) noexcept;
 
-    physx::PxShape* shape = nullptr;
+private:
+    physx::PxShape* m_shape = nullptr;
+
+    friend class PhysicsRigidBodySystem;
+    friend class PhysicsShapeSystem;
 };
 
 } // namespace hg

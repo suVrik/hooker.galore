@@ -20,9 +20,7 @@ PhysicsSimulateSystem::PhysicsSimulateSystem(World& world)
 
 void PhysicsSimulateSystem::update(float elapsed_time) {
     auto& physics_single_component = world.ctx<PhysicsSingleComponent>();
-
-    assert(physics_single_component.scene != nullptr);
-    physics_single_component.scene->simulate(elapsed_time);
+    physics_single_component.get_scene().simulate(elapsed_time);
 }
 
 } // namespace hg

@@ -21,102 +21,83 @@ SYSTEM_DESCRIPTOR(
     AFTER("PhysicsInitializationSystem")
 )
 
-namespace physics_shape_system_details {
-
-physx::PxBoxGeometry box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* const transform_component) noexcept {
-    if (transform_component != nullptr) {
-        return physx::PxBoxGeometry(physics_box_shape_component.size.x * transform_component->scale.x / 2.f,
-                                    physics_box_shape_component.size.y * transform_component->scale.y / 2.f,
-                                    physics_box_shape_component.size.z * transform_component->scale.z / 2.f);
-    }
-    return physx::PxBoxGeometry(physics_box_shape_component.size.x / 2.f, physics_box_shape_component.size.y / 2.f, physics_box_shape_component.size.z / 2.f);
-}
-
-void attach_shape_to_rigid_body(const entt::entity entity, entt::registry& registry, physx::PxShape* const shape) noexcept {
-    assert(shape != nullptr);
-
-    const auto* const physics_static_rigid_body_private_component = registry.try_get<PhysicsStaticRigidBodyPrivateComponent>(entity);
-    if (physics_static_rigid_body_private_component != nullptr) {
-        assert(physics_static_rigid_body_private_component->rigid_actor != nullptr);
-        [[maybe_unused]] const bool result = physics_static_rigid_body_private_component->rigid_actor->attachShape(*shape);
-        assert(result);
-    }
-}
-
-void detach_shape_from_rigid_body(const entt::entity entity, entt::registry& registry, physx::PxShape* const shape) noexcept {
-    assert(shape != nullptr);
-
-    const auto* const physics_static_rigid_body_private_component = registry.try_get<PhysicsStaticRigidBodyPrivateComponent>(entity);
-    if (physics_static_rigid_body_private_component != nullptr) {
-        assert(physics_static_rigid_body_private_component->rigid_actor != nullptr);
-        physics_static_rigid_body_private_component->rigid_actor->detachShape(*shape);
-    }
-}
-
-} // namespace physics_shape_system_details
-
 PhysicsShapeSystem::PhysicsShapeSystem(World& world)
         : FixedSystem(world)
         , m_physics_single_component(world.ctx<PhysicsSingleComponent>())
-        , m_box_shape_transform_observer(entt::observer(world, entt::collector.replace<TransformComponent>().where<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent>().group<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>())) {
+        , m_box_shape_transform_observer(entt::observer(world, entt::collector.group<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>()
+                                                                              .replace<TransformComponent>().where<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>()
+                                                                              .replace<PhysicsBoxShapeComponent>().where<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>())) {
     world.on_construct<PhysicsBoxShapeComponent>().connect<&PhysicsShapeSystem::box_shape_constructed>(*this);
     world.on_destroy<PhysicsBoxShapeComponent>().connect<&PhysicsShapeSystem::box_shape_destroyed>(*this);
     world.on_destroy<PhysicsBoxShapePrivateComponent>().connect<&PhysicsShapeSystem::box_shape_private_destroyed>(*this);
 }
 
 PhysicsShapeSystem::~PhysicsShapeSystem() {
-    // After disconnecting `on_destroy` callbacks, `PhysicsBoxShapePrivateComponent::shape` will never be released.
-    world.view<PhysicsBoxShapePrivateComponent>().each([&](const entt::entity entity, PhysicsBoxShapePrivateComponent& /*physics_box_shape_private_component*/) {
-        world.remove<PhysicsBoxShapePrivateComponent>(entity);
-    });
+    // After disconnecting `on_destroy` callbacks, `PhysicsBoxShapePrivateComponent::m_shape` will never be released.
+    world.reset<PhysicsBoxShapePrivateComponent>();
 
     world.on_construct<PhysicsBoxShapeComponent>().disconnect<&PhysicsShapeSystem::box_shape_constructed>(*this);
     world.on_destroy<PhysicsBoxShapeComponent>().disconnect<&PhysicsShapeSystem::box_shape_destroyed>(*this);
     world.on_destroy<PhysicsBoxShapePrivateComponent>().disconnect<&PhysicsShapeSystem::box_shape_private_destroyed>(*this);
+    
     m_box_shape_transform_observer.disconnect();
 }
 
 void PhysicsShapeSystem::update(float /*elapsed_time*/) {
-    using namespace physics_shape_system_details;
-
     m_box_shape_transform_observer.each([&](const entt::entity entity) {
-        auto& [physics_box_shape_component, physics_box_shape_private_component] = world.get<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent>(entity);
+        auto& [physics_box_shape_component, physics_box_shape_private_component, transform_component] = world.get<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>(entity);
 
-        assert(physics_box_shape_private_component.shape != nullptr);
-        physics_box_shape_private_component.shape->setGeometry(box_shape_component_to_physx_box_geometry(physics_box_shape_component, world.try_get<TransformComponent>(entity)));
+        assert(physics_box_shape_private_component.m_shape != nullptr);
+        physics_box_shape_private_component.m_shape->setGeometry(box_shape_component_to_physx_box_geometry(physics_box_shape_component, &transform_component));
     });
 }
 
 void PhysicsShapeSystem::box_shape_constructed(const entt::entity entity, entt::registry& registry, PhysicsBoxShapeComponent& physics_box_shape_component) noexcept {
-    using namespace physics_shape_system_details;
-
     assert(!registry.has<PhysicsBoxShapePrivateComponent>(entity));
     auto& physics_box_shape_private_component = registry.assign<PhysicsBoxShapePrivateComponent>(entity);
-    physics_box_shape_private_component.shape = m_physics_single_component.physics->createShape(box_shape_component_to_physx_box_geometry(physics_box_shape_component, world.try_get<TransformComponent>(entity)), *m_physics_single_component.default_material, true);
-    assert(physics_box_shape_private_component.shape != nullptr);
+    physics_box_shape_private_component.m_shape = m_physics_single_component.get_physics().createShape(box_shape_component_to_physx_box_geometry(physics_box_shape_component, world.try_get<TransformComponent>(entity)), *m_physics_single_component.get_default_material(), true);
+    assert(physics_box_shape_private_component.m_shape != nullptr);
 
-    physics_box_shape_private_component.shape->userData = reinterpret_cast<void*>(static_cast<uintptr_t>(entity));
+    physics_box_shape_private_component.m_shape->userData = reinterpret_cast<void*>(static_cast<uintptr_t>(entity));
 
-    attach_shape_to_rigid_body(entity, registry, physics_box_shape_private_component.shape);
-}
-
-void PhysicsShapeSystem::box_shape_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
-    // `PhysicsBoxShapePrivateComponent` could be already removed when entity is being destroyed, because component destroy order is not specified.
-    if (registry.has<PhysicsBoxShapePrivateComponent>(entity)) {
-        registry.remove<PhysicsBoxShapePrivateComponent>(entity);
+    const auto* const physics_static_rigid_body_private_component = registry.try_get<PhysicsStaticRigidBodyPrivateComponent>(entity);
+    if (physics_static_rigid_body_private_component != nullptr) {
+        assert(physics_static_rigid_body_private_component->m_rigid_actor != nullptr);
+        [[maybe_unused]] const bool result = physics_static_rigid_body_private_component->m_rigid_actor->attachShape(*physics_box_shape_private_component.m_shape);
+        assert(result);
     }
 }
 
+void PhysicsShapeSystem::box_shape_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+    registry.reset<PhysicsBoxShapePrivateComponent>(entity);
+}
+
 void PhysicsShapeSystem::box_shape_private_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
-    using namespace physics_shape_system_details;
-
     auto& physics_box_shape_private_component = world.get<PhysicsBoxShapePrivateComponent>(entity);
-    assert(physics_box_shape_private_component.shape != nullptr);
+    assert(physics_box_shape_private_component.m_shape != nullptr);
 
-    detach_shape_from_rigid_body(entity, registry, physics_box_shape_private_component.shape);
+    const auto* const physics_static_rigid_body_private_component = registry.try_get<PhysicsStaticRigidBodyPrivateComponent>(entity);
+    if (physics_static_rigid_body_private_component != nullptr) {
+        assert(physics_static_rigid_body_private_component->m_rigid_actor != nullptr);
+        physics_static_rigid_body_private_component->m_rigid_actor->detachShape(*physics_box_shape_private_component.m_shape);
+    }
 
-    physics_box_shape_private_component.shape->release();
-    physics_box_shape_private_component.shape = nullptr;
+    physics_box_shape_private_component.m_shape->release();
+    physics_box_shape_private_component.m_shape = nullptr;
+}
+
+physx::PxBoxGeometry PhysicsShapeSystem::box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* const transform_component) noexcept {
+    glm::vec3 box_size = physics_box_shape_component.get_size() / 2.f;
+
+    if (transform_component != nullptr) {
+        box_size = glm::max(box_size * transform_component->scale, glm::vec3(glm::epsilon<float>(), glm::epsilon<float>(), glm::epsilon<float>()));
+    }
+
+    assert(box_size.x > 0.f);
+    assert(box_size.y > 0.f);
+    assert(box_size.z > 0.f);
+
+    return physx::PxBoxGeometry(box_size.x, box_size.y, box_size.z);
 }
 
 } // namespace hg

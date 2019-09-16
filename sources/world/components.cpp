@@ -12,6 +12,9 @@
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/physics/physics_box_shape_component.h"
 #include "world/shared/physics/physics_box_shape_private_component.h"
+#include "world/shared/physics/physics_character_controller_component.h"
+#include "world/shared/physics/physics_character_controller_private_component.h"
+#include "world/shared/physics/physics_character_controller_single_component.h"
 #include "world/shared/physics/physics_single_component.h"
 #include "world/shared/physics/physics_static_rigid_body_component.h"
 #include "world/shared/physics/physics_static_rigid_body_private_component.h"
@@ -58,6 +61,7 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(NameSingleComponent);
     REGISTER_COMPONENT(NormalInputSingleComponent);
     REGISTER_COMPONENT(OutlinePassSingleComponent);
+    REGISTER_COMPONENT(PhysicsCharacterControllerSingleComponent);
     REGISTER_COMPONENT(PhysicsSingleComponent);
     REGISTER_COMPONENT(PickingPassSingleComponent);
     REGISTER_COMPONENT(QuadSingleComponent);
@@ -76,6 +80,8 @@ void register_components(World& world) noexcept {
     REGISTER_COMPONENT(OutlineComponent);
     REGISTER_COMPONENT(PhysicsBoxShapeComponent);
     REGISTER_COMPONENT(PhysicsBoxShapePrivateComponent);
+    REGISTER_COMPONENT(PhysicsCharacterControllerComponent);
+    REGISTER_COMPONENT(PhysicsCharacterControllerPrivateComponent);
     REGISTER_COMPONENT(PhysicsStaticRigidBodyComponent);
     REGISTER_COMPONENT(PhysicsStaticRigidBodyPrivateComponent);
     REGISTER_COMPONENT(TransformComponent);
