@@ -12,6 +12,7 @@
     SYSTEM_DESCRIPTOR(
         SYSTEM(FooSystem),
         REQUIRE("foo", "boo"),
+        EXCLUSIVE("bar"),
         BEFORE("Following0System", "Following1System", "Following2System"),
         AFTER("Preceding0System", "Preceding1System")
     )
@@ -36,6 +37,10 @@
 #undef REQUIRE
 #endif 
 
+#ifdef EXCLUSIVE
+#undef EXCLUSIVE
+#endif 
+
 #ifdef BEFORE
 #undef BEFORE
 #endif 
@@ -46,5 +51,6 @@
 
 #define SYSTEM(system) system
 #define REQUIRE(...)   std::make_pair("require"_hs, std::vector<const char*>{ __VA_ARGS__ })
+#define EXCLUSIVE(...) std::make_pair("exclusive"_hs, std::vector<const char*>{ __VA_ARGS__ })
 #define BEFORE(...)    std::make_pair("before"_hs, std::vector<const char*>{ __VA_ARGS__ })
 #define AFTER(...)     std::make_pair("after"_hs, std::vector<const char*>{ __VA_ARGS__ })

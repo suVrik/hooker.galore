@@ -1,4 +1,4 @@
-#include "core/ecs/world.h"
+#include "core/ecs/system_manager.h"
 #include "world/editor/editor_camera_system.h"
 #include "world/editor/editor_file_system.h"
 #include "world/editor/editor_gizmo_system.h"
@@ -31,11 +31,11 @@
 #include "world/shared/resource_system.h"
 #include "world/shared/window_system.h"
 
-#define REGISTER_SYSTEM(name) world.register_system<name>(#name)
+#define REGISTER_SYSTEM(name) SystemManager::register_system<name>(#name)
 
 namespace hg {
 
-void register_systems(World& world) noexcept {
+void register_systems() noexcept {
     REGISTER_SYSTEM(AAPassSystem);
     REGISTER_SYSTEM(CameraSystem);
     REGISTER_SYSTEM(DebugDrawPassSystem);
@@ -67,6 +67,8 @@ void register_systems(World& world) noexcept {
     REGISTER_SYSTEM(ResourceSystem);
     REGISTER_SYSTEM(SkyboxPassSystem);
     REGISTER_SYSTEM(WindowSystem);
+
+    SystemManager::commit();
 }
 
 } // namespace hg

@@ -1,3 +1,4 @@
+#include "core/ecs/component_manager.h"
 #include "core/ecs/world.h"
 #include "world/editor/editor_camera_component.h"
 #include "world/editor/editor_file_single_component.h"
@@ -5,6 +6,7 @@
 #include "world/editor/editor_history_single_component.h"
 #include "world/editor/editor_preset_single_component.h"
 #include "world/editor/editor_selection_single_component.h"
+#include "world/registration.h"
 #include "world/shared/imgui_single_component.h"
 #include "world/shared/level_single_component.h"
 #include "world/shared/name_component.h"
@@ -39,11 +41,11 @@
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
-#define REGISTER_COMPONENT(name) world.register_component<name>()
+#define REGISTER_COMPONENT(name) ComponentManager::register_component<name>()
 
 namespace hg {
 
-void register_components(World& world) noexcept {
+void register_components() noexcept {
     REGISTER_COMPONENT(AAPassSingleComponent);
     REGISTER_COMPONENT(CameraSingleComponent);
     REGISTER_COMPONENT(DebugDrawPassSingleComponent);
