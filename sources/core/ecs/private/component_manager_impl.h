@@ -97,7 +97,7 @@ void ComponentManager::register_component() noexcept {
             static T instance;
             return entt::meta_handle(instance);
         } else {
-            return entt::meta_handle(*const_cast<World*>(world)->try_get<T>(entity));
+            return entt::meta_handle(*const_cast<entt::registry*>(registry)->try_get<T>(entity));
         }
     };
 
@@ -124,7 +124,7 @@ void ComponentManager::each_registered(T callback) noexcept {
 template <typename T>
 void ComponentManager::each_editable(T callback) noexcept {
     for (const auto& [type, descriptor] : descriptors) {
-        if (is_component_editable(type)) {
+        if (is_editable(type)) {
             callback(type);
         }
     }

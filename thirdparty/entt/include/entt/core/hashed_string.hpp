@@ -6,6 +6,12 @@
 #include "../config/config.h"
 
 
+#ifdef _MSC_VER
+// MSVC gives a lot of warnings for constexpr hashed strings.
+#pragma warning(disable : 4307)
+#endif
+
+
 namespace entt {
 
 

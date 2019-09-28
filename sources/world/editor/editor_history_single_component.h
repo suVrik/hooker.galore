@@ -47,6 +47,7 @@ struct EditorHistorySingleComponent final {
         /** Replace specified component in given entity and remember it in history. */
         entt::meta_handle replace_component_copy(World& world, entt::entity entity, entt::meta_handle component) noexcept;
         entt::meta_handle replace_component_move(World& world, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle replace_component_move_or_copy(World& world, entt::entity entity, entt::meta_handle component) noexcept;
 
         /** Remove specified component from given entity and remember it in history. */
         void remove_component(World& world, entt::entity entity, entt::meta_type component_type) noexcept;

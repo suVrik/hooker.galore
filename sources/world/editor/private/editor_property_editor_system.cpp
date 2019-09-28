@@ -50,7 +50,7 @@ void EditorPropertyEditorSystem::edit_entities(EditorSelectionSingleComponent& e
     if (ImGui::BeginChildFrame(ImGui::GetID("property_editor_child"), ImVec2(0.f, window_size.y - 60.f), ImGuiWindowFlags_NoBackground)) {
         std::map<std::string, entt::meta_type> component_types;
 
-        world.each_editable_entity_component(editor_selection_single_component.selected_entities.front(), [&](const entt::meta_handle component) {
+        world.each_editable_component(editor_selection_single_component.selected_entities.front(), [&](const entt::meta_handle component) {
             for (const entt::entity entity : editor_selection_single_component.selected_entities) {
                 if (!world.has(entity, component.type())) {
                     // All selected entities must have this component.
@@ -64,7 +64,7 @@ void EditorPropertyEditorSystem::edit_entities(EditorSelectionSingleComponent& e
             }
 
             // Sort components by name.
-            component_types[world.get_component_name(component.type())] = component.type();
+            component_types[ComponentManager::get_name(component.type())] = component.type();
         });
 
         if (!component_types.empty()) {
@@ -94,7 +94,7 @@ void EditorPropertyEditorSystem::edit_component(EditorHistorySingleComponent& ed
                                                 NameSingleComponent& name_single_component, 
                                                 EditorSelectionSingleComponent& editor_selection_single_component,
                                                 const entt::meta_type component_type) const noexcept {
-    const char* const component_name = world.get_component_name(component_type);
+    const char* const component_name = ComponentManager::get_name(component_type);
     assert(component_name != nullptr);
 
     const bool is_tree_node_open = ImGui::TreeNode(component_name);
@@ -126,7 +126,7 @@ void EditorPropertyEditorSystem::edit_component(EditorHistorySingleComponent& ed
                 const entt::meta_handle component = world.get(entity, component_type);
                 assert(component);
 
-                entt::meta_any component_copy = world.copy_component(component);
+                entt::meta_any component_copy = ComponentManager::copy(component);
                 assert(component_copy);
 
                 component_copies.push_back(std::move(component_copy));
@@ -136,11 +136,7 @@ void EditorPropertyEditorSystem::edit_component(EditorHistorySingleComponent& ed
                 auto* const change = editor_history_single_component.begin(world, fmt::format("Change component \"{}\"", component_name));
                 if (change != nullptr) {
                     for (size_t i = 0; i < component_copies.size(); i++) {
-                        if (world.is_move_assignable(component_type)) {
-                            change->replace_component_move(world, editor_selection_single_component.selected_entities[i], component_copies[i]);
-                        } else {
-                            change->replace_component_copy(world, editor_selection_single_component.selected_entities[i], component_copies[i]);
-                        }
+                        change->replace_component_move_or_copy(world, editor_selection_single_component.selected_entities[i], component_copies[i]);
                     }
                 }
             }
@@ -163,7 +159,7 @@ void EditorPropertyEditorSystem::show_add_component_popup(EditorHistorySingleCom
 
         if (!editor_selection_single_component.selected_component_to_add || any_has(editor_selection_single_component.selected_component_to_add)) {
             editor_selection_single_component.selected_component_to_add = entt::meta_type();
-            world.each_editable_component_type([&](const entt::meta_type component_type) {
+            ComponentManager::each_editable([&](const entt::meta_type component_type) {
                 if (!editor_selection_single_component.selected_component_to_add && !any_has(component_type)) {
                     editor_selection_single_component.selected_component_to_add = component_type;
                 }
@@ -171,14 +167,14 @@ void EditorPropertyEditorSystem::show_add_component_popup(EditorHistorySingleCom
         }
 
         if (editor_selection_single_component.selected_component_to_add) {
-            assert(world.is_component_editable(editor_selection_single_component.selected_component_to_add));
+            assert(ComponentManager::is_editable(editor_selection_single_component.selected_component_to_add));
             assert(!any_has(editor_selection_single_component.selected_component_to_add));
 
-            if (ImGui::BeginCombo("Components", world.get_component_name(editor_selection_single_component.selected_component_to_add))) {
-                world.each_editable_component_type([&](const entt::meta_type component_type) {
+            if (ImGui::BeginCombo("Components", ComponentManager::get_name(editor_selection_single_component.selected_component_to_add))) {
+                ComponentManager::each_editable([&](const entt::meta_type component_type) {
                     if (!any_has(component_type)) {
                         const bool is_selected = component_type == editor_selection_single_component.selected_component_to_add;
-                        if (ImGui::Selectable(world.get_component_name(component_type), is_selected)) {
+                        if (ImGui::Selectable(ComponentManager::get_name(component_type), is_selected)) {
                             editor_selection_single_component.selected_component_to_add = component_type;
                         }
                     }
@@ -196,18 +192,18 @@ void EditorPropertyEditorSystem::show_add_component_popup(EditorHistorySingleCom
         }
 
         if (editor_selection_single_component.selected_component_to_add) {
-            assert(world.is_component_editable(editor_selection_single_component.selected_component_to_add));
+            assert(ComponentManager::is_editable(editor_selection_single_component.selected_component_to_add));
             assert(!any_has(editor_selection_single_component.selected_component_to_add));
 
             ImGui::SameLine();
             if (ImGui::Button("Add Component")) {
-                const char* const component_name = world.get_component_name(editor_selection_single_component.selected_component_to_add);
+                const char* const component_name = ComponentManager::get_name(editor_selection_single_component.selected_component_to_add);
                 auto* const change = editor_history_single_component.begin(world, fmt::format("Add component \"{}\"", component_name));
                 if (change != nullptr) {
                     for (const entt::entity entity : editor_selection_single_component.selected_entities) {
                         assert(!world.has(entity, editor_selection_single_component.selected_component_to_add));
 
-                        entt::meta_any component = world.construct_component(editor_selection_single_component.selected_component_to_add);
+                        entt::meta_any component = ComponentManager::construct(editor_selection_single_component.selected_component_to_add);
                         change->assign_component_move(world, entity, component);
                     }
                 }

@@ -200,7 +200,7 @@ void EditorGizmoSystem::process_single_entity(CameraSingleComponent& camera_sing
                         editor_selection_single_component.clear_selection(world);
 
                         const entt::entity new_entity = change->create_entity(world, name_component.name);
-                        world.each_editable_entity_component(selected_entity, [&](const entt::meta_handle component) {
+                        world.each_editable_component(selected_entity, [&](const entt::meta_handle component) {
                             if (component.type() != entt::resolve<NameComponent>()) {
                                 change->assign_component_copy(world, new_entity, component);
                             }
@@ -303,7 +303,7 @@ void EditorGizmoSystem::process_multiple_entities(CameraSingleComponent& camera_
                         const NameComponent original_editor_component = world.get<NameComponent>(original_entity);
 
                         const entt::entity new_entity = change->create_entity(world, original_editor_component.name);
-                        world.each_editable_entity_component(original_entity, [&](const entt::meta_handle component) {
+                        world.each_editable_component(original_entity, [&](const entt::meta_handle component) {
                             if (component.type() != entt::resolve<NameComponent>()) {
                                 change->assign_component_copy(world, new_entity, component);
                             }
