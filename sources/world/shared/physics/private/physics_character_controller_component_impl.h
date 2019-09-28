@@ -81,7 +81,11 @@ inline PhysicsCharacterControllerComponent::ClimbingMode PhysicsCharacterControl
 }
 
 inline void PhysicsCharacterControllerComponent::move(const glm::vec3& offset) noexcept {
-    m_offset = offset;
+    if (m_offset) {
+        m_offset = *m_offset + offset;
+    } else {
+        m_offset = offset;
+    }
 }
 
 inline bool PhysicsCharacterControllerComponent::is_grounded() const noexcept {

@@ -33,7 +33,6 @@ PhysicsRigidBodySystem::PhysicsRigidBodySystem(World& world)
 }
 
 PhysicsRigidBodySystem::~PhysicsRigidBodySystem() {
-    // After disconnecting `on_destroy` callbacks, `PhysicsStaticRigidBodyPrivateComponent::m_rigid_actor` will never be released.
     world.reset<PhysicsStaticRigidBodyPrivateComponent>();
 
     world.on_construct<PhysicsStaticRigidBodyComponent>().disconnect<&PhysicsRigidBodySystem::rigid_body_constructed>(*this);

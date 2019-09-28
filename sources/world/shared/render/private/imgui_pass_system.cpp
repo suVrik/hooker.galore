@@ -86,6 +86,8 @@ void ImguiPassSystem::update(float /*elapsed_time*/) {
 
     ImGui::Render();
 
+    bgfx::touch(IMGUI_PASS);
+
     ImDrawData* draw_data = ImGui::GetDrawData();
     for (int i = 0; i < draw_data->CmdListsCount; i++) {
         const ImDrawList* draw_list = draw_data->CmdLists[i];

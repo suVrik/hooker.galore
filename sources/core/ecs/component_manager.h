@@ -70,18 +70,18 @@ public:
 
 private:
     struct ComponentDescriptor final {
-        entt::meta_any(*construct)();
-        entt::meta_any(*copy)(entt::meta_handle component);
-        entt::meta_any(*move)(entt::meta_handle component);
-        entt::meta_handle(*assign_default)(entt::registry* registry, entt::entity entity);
-        entt::meta_handle(*assign_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
-        entt::meta_handle(*assign_move)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
-        entt::meta_handle(*replace_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
-        entt::meta_handle(*replace_move)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
-        void(*remove)(entt::registry* registry, entt::entity entity);
-        bool(*has)(const entt::registry* registry, entt::entity entity);
-        entt::meta_handle(*get)(const entt::registry* registry, entt::entity entity);
-        entt::meta_handle(*get_or_assign)(entt::registry* registry, entt::entity entity);
+        entt::meta_any(*construct)() noexcept;
+        entt::meta_any(*copy)(entt::meta_handle component) noexcept;
+        entt::meta_any(*move)(entt::meta_handle component) noexcept;
+        entt::meta_handle(*assign_default)(entt::registry* registry, entt::entity entity) noexcept;
+        entt::meta_handle(*assign_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle(*assign_move)(entt::registry* registry, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle(*replace_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component) noexcept;
+        entt::meta_handle(*replace_move)(entt::registry* registry, entt::entity entity, entt::meta_handle component) noexcept;
+        void(*remove)(entt::registry* registry, entt::entity entity) noexcept;
+        bool(*has)(const entt::registry* registry, entt::entity entity) noexcept;
+        entt::meta_handle(*get)(const entt::registry* registry, entt::entity entity) noexcept;
+        entt::meta_handle(*get_or_assign)(entt::registry* registry, entt::entity entity) noexcept;
     };
 
     static std::unordered_map<entt::meta_type, ComponentDescriptor> descriptors;

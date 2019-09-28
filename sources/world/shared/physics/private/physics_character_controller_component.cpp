@@ -3,7 +3,7 @@
 
 namespace hg {
 
-REFLECTION_REGISTRATION{
+REFLECTION_REGISTRATION {
     entt::reflect<PhysicsCharacterControllerComponent>("PhysicsCharacterControllerComponent")
             .data<&PhysicsCharacterControllerComponent::set_step_offset, &PhysicsCharacterControllerComponent::get_step_offset>("step_offset")
             .data<&PhysicsCharacterControllerComponent::set_non_walkable_mode, &PhysicsCharacterControllerComponent::get_non_walkable_mode>("non_walkable_mode")

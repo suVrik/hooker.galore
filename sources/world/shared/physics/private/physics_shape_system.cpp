@@ -33,7 +33,6 @@ PhysicsShapeSystem::PhysicsShapeSystem(World& world)
 }
 
 PhysicsShapeSystem::~PhysicsShapeSystem() {
-    // After disconnecting `on_destroy` callbacks, `PhysicsBoxShapePrivateComponent::m_shape` will never be released.
     world.reset<PhysicsBoxShapePrivateComponent>();
 
     world.on_construct<PhysicsBoxShapeComponent>().disconnect<&PhysicsShapeSystem::box_shape_constructed>(*this);
