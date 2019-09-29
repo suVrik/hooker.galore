@@ -23,8 +23,8 @@ EditorHistorySystem::EditorHistorySystem(World& world) noexcept
     editor_history_single_component.redo_action = std::make_shared<bool>(false);
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("1Edit/0Undo", EditorMenuSingleComponent::MenuItem(editor_history_single_component.undo_action, "Ctrl+Z"));
-    editor_menu_single_component.items.emplace("1Edit/1Redo", EditorMenuSingleComponent::MenuItem(editor_history_single_component.redo_action, "Ctrl+Shift+Z"));
+    editor_menu_single_component.add_item("1Edit/0Undo", editor_history_single_component.undo_action, "Ctrl+Z");
+    editor_menu_single_component.add_item("1Edit/1Redo", editor_history_single_component.redo_action, "Ctrl+Shift+Z");
 }
 
 void EditorHistorySystem::update(float /*elapsed_time*/) {

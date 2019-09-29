@@ -6,21 +6,24 @@
 
 namespace hg {
 
-/** `EditorMenuSingleComponent` is an interface to editor menu. You can create menu items with it. */
-struct EditorMenuSingleComponent final {
-    struct MenuItem final {
-        explicit MenuItem(const std::shared_ptr<bool>& selected, const std::string& shortcut = {}, bool enabled = true) noexcept
-                : selected(selected)
-                , shortcut(shortcut)
-                , enabled(enabled) {
-        }
+class EditorMenuSystem;
 
-        std::shared_ptr<bool> selected;
+/** `EditorMenuSingleComponent` is an interface to editor menu. You can create menu items with it. */
+class EditorMenuSingleComponent final {
+public:
+    /** Add menu item with the specified `name`. */
+    void add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut = {}, bool enabled = true) noexcept;
+
+private:
+    struct MenuItem final {
+        std::weak_ptr<bool> selected;
         std::string shortcut;
         bool enabled;
     };
 
-    std::map<std::string, MenuItem> items;
+    std::map<std::string, MenuItem> m_items;
+
+    friend class EditorMenuSystem;
 };
 
 } // namespace hg

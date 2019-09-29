@@ -35,9 +35,9 @@ EditorSelectionSystem::EditorSelectionSystem(World& world) noexcept
     editor_selection_single_component.delete_selected_entities = std::make_shared<bool>(false);
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("1Edit/2Select all entities", EditorMenuSingleComponent::MenuItem(editor_selection_single_component.select_all_entities, "Ctrl+A"));
-    editor_menu_single_component.items.emplace("1Edit/3Clear selected entities", EditorMenuSingleComponent::MenuItem(editor_selection_single_component.clear_selected_entities, "Ctrl+D"));
-    editor_menu_single_component.items.emplace("1Edit/4Delete selected entities", EditorMenuSingleComponent::MenuItem(editor_selection_single_component.delete_selected_entities, "Del"));
+    editor_menu_single_component.add_item("1Edit/2Select all entities",      editor_selection_single_component.select_all_entities,      "Ctrl+A");
+    editor_menu_single_component.add_item("1Edit/3Clear selected entities",  editor_selection_single_component.clear_selected_entities,  "Ctrl+D");
+    editor_menu_single_component.add_item("1Edit/4Delete selected entities", editor_selection_single_component.delete_selected_entities, "Del");
 }
 
 void EditorSelectionSystem::update(float /*elapsed_time*/) {

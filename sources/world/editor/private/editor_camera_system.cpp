@@ -41,7 +41,7 @@ EditorCameraSystem::EditorCameraSystem(World& world) noexcept
     editor_camera_component.reset_camera_position = std::make_shared<bool>();
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("2View/Reset camera position", EditorMenuSingleComponent::MenuItem(editor_camera_component.reset_camera_position, "Home"));
+    editor_menu_single_component.add_item("2View/Reset camera position", editor_camera_component.reset_camera_position, "Home");
 }
 
 void EditorCameraSystem::update(float elapsed_time) {

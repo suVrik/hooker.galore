@@ -36,11 +36,11 @@ EditorGizmoSystem::EditorGizmoSystem(World& world) noexcept
     editor_gizmo_single_component.bounds_tool    = std::make_shared<bool>(false);
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("5Tools/0Switch space", EditorMenuSingleComponent::MenuItem(editor_gizmo_single_component.switch_space, "~"));
-    editor_menu_single_component.items.emplace("5Tools/1Translate", EditorMenuSingleComponent::MenuItem(editor_gizmo_single_component.translate_tool, "1"));
-    editor_menu_single_component.items.emplace("5Tools/2Rotate", EditorMenuSingleComponent::MenuItem(editor_gizmo_single_component.rotate_tool, "2"));
-    editor_menu_single_component.items.emplace("5Tools/3Scale", EditorMenuSingleComponent::MenuItem(editor_gizmo_single_component.scale_tool, "3"));
-    editor_menu_single_component.items.emplace("5Tools/4Bounds", EditorMenuSingleComponent::MenuItem(editor_gizmo_single_component.bounds_tool, "4"));
+    editor_menu_single_component.add_item("5Tools/0Switch space", editor_gizmo_single_component.switch_space,   "~");
+    editor_menu_single_component.add_item("5Tools/1Translate",    editor_gizmo_single_component.translate_tool, "1");
+    editor_menu_single_component.add_item("5Tools/2Rotate",       editor_gizmo_single_component.rotate_tool,    "2");
+    editor_menu_single_component.add_item("5Tools/3Scale",        editor_gizmo_single_component.scale_tool,     "3");
+    editor_menu_single_component.add_item("5Tools/4Bounds",       editor_gizmo_single_component.bounds_tool,    "4");
 }
 
 void EditorGizmoSystem::update(float /*elapsed_time*/) {

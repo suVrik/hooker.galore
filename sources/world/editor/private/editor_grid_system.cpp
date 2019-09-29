@@ -21,7 +21,7 @@ EditorGridSystem::EditorGridSystem(World& world) noexcept
     editor_grid_single_component.is_shown = std::make_shared<bool>(true);
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("2View/Grid", editor_grid_single_component.is_shown);
+    editor_menu_single_component.add_item("2View/Grid", editor_grid_single_component.is_shown);
 }
 
 void EditorGridSystem::update(float /*elapsed_time*/) {

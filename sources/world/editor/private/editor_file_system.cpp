@@ -35,10 +35,10 @@ EditorFileSystem::EditorFileSystem(World& world) noexcept
     editor_file_single_component.save_level_as = std::make_shared<bool>(false);
 
     auto& editor_menu_single_component = world.ctx<EditorMenuSingleComponent>();
-    editor_menu_single_component.items.emplace("0File/New Level",        EditorMenuSingleComponent::MenuItem(editor_file_single_component.new_level,     "Ctrl+N"));
-    editor_menu_single_component.items.emplace("0File/Open Level...",    EditorMenuSingleComponent::MenuItem(editor_file_single_component.open_level,    "Ctrl+O"));
-    editor_menu_single_component.items.emplace("0File/Save Level",       EditorMenuSingleComponent::MenuItem(editor_file_single_component.save_level,    "Ctrl+S"));
-    editor_menu_single_component.items.emplace("0File/Save Level As...", EditorMenuSingleComponent::MenuItem(editor_file_single_component.save_level_as, "Ctrl+Shift+S"));
+    editor_menu_single_component.add_item("0File/New Level",        editor_file_single_component.new_level,     "Ctrl+N");
+    editor_menu_single_component.add_item("0File/Open Level...",    editor_file_single_component.open_level,    "Ctrl+O");
+    editor_menu_single_component.add_item("0File/Save Level",       editor_file_single_component.save_level,    "Ctrl+S");
+    editor_menu_single_component.add_item("0File/Save Level As...", editor_file_single_component.save_level_as, "Ctrl+Shift+S");
 }
 
 void EditorFileSystem::update(float /*elapsed_time*/) {
