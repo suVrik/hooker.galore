@@ -11,6 +11,8 @@ World::World() {
     for (size_t i = 0; i < std::size(m_systems); i++) {
         m_systems[i].resize(SystemManager::m_systems[i].size());
     }
+
+    m_tags.assign(SystemManager::m_tags_mapping.size(), 0);
 }
 
 World::~World() {

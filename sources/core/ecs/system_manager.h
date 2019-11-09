@@ -2,7 +2,7 @@
 
 #include "core/ecs/system.h"
 
-#include <entt/meta/meta.hpp>
+#include <entt/meta/factory.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>

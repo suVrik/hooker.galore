@@ -1,4 +1,5 @@
 #include "core/ecs/world.h"
+#include "world/registration.h"
 #include "world/shared/level_single_component.h"
 
 #include <SDL2/SDL_messagebox.h>
@@ -8,6 +9,10 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
+    // Initialize `SystemManager` and `ComponentManager`.
+    hg::register_systems();
+    hg::register_components();
+
     try {
         bool is_editor         = false;
         std::string level_file = "default.yaml";

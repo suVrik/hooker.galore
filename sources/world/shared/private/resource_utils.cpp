@@ -181,11 +181,11 @@ void ResourceUtils::serialize_entity(World& world, const entt::entity entity, YA
     assert(world.valid(entity));
     assert(node.IsMap());
 
-    world.each_editable_entity_component(entity, [&](const entt::meta_handle component_handle) {
+    world.each_editable_component(entity, [&](const entt::meta_handle component_handle) {
         assert(component_handle);
         const entt::meta_type component_type = component_handle.type();
         if (component_type != entt::resolve<NameComponent>() || serialize_editor_component) {
-            const std::string component_name = world.get_component_name(component_type);
+            const std::string component_name = ComponentManager::get_name(component_type);
             YAML::Node& component_node = node[component_name] = YAML::Node(YAML::NodeType::Map);
             serialize_structure_property(component_handle, component_node);
         }
@@ -203,8 +203,8 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
         if (component_it->second.IsMap()) {
             const entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
             if (component_type) {
-                if (world.is_component_registered(component_type)) {
-                    if (world.is_component_editable(component_type)) {
+                if (ComponentManager::is_registered(component_type)) {
+                    if (ComponentManager::is_editable(component_type)) {
                         if (!world.has(entity, component_type)) {
                             const bool is_editor_component = component_type == entt::resolve<NameComponent>();
                             const bool allow_editor_component = name_single_component != nullptr;
@@ -212,7 +212,7 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
                                 continue;
                             }
 
-                            entt::meta_any component = world.construct_component(component_type);
+                            entt::meta_any component = ComponentManager::construct(component_type);
                             assert(component && "Failed to construct editable component.");
 
                             deserialize_structure_property(component, component_it->second);
@@ -228,11 +228,7 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
                                 }
                             }
 
-                            if (world.is_move_constructible(component_type)) {
-                                world.assign_move(entity, component);
-                            } else {
-                                world.assign_copy(entity, component);
-                            }
+                            world.assign_move_or_copy(entity, component);
                         } else {
                             RESOURCE_WARNING << "Component \"" << component_name << "\" is already assigned." << std::endl;
                         }

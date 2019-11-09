@@ -662,9 +662,9 @@ void ResourceSystem::load_preset(std::vector<entt::meta_any>& result, const std:
                 if (component_it->second.IsMap()) {
                     const entt::meta_type component_type = entt::resolve(entt::hashed_string(component_name.c_str()));
                     if (component_type) {
-                        if (world.is_component_registered(component_type)) {
-                            if (world.is_component_editable(component_type)) {
-                                entt::meta_any component = world.construct_component(component_type);
+                        if (ComponentManager::is_registered(component_type)) {
+                            if (ComponentManager::is_editable(component_type)) {
+                                entt::meta_any component = ComponentManager::construct(component_type);
                                 assert(component && "Failed to construct editable component.");
 
                                 ResourceUtils::deserialize_structure_property(component, component_it->second);

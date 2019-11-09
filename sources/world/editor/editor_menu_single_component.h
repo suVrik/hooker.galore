@@ -26,4 +26,9 @@ private:
     friend class EditorMenuSystem;
 };
 
+// TODO: Move to a separate source file.
+inline void EditorMenuSingleComponent::add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut, bool enabled) noexcept {
+    m_items[name] = MenuItem{ std::weak_ptr<bool>(selected), shortcut, enabled };
+}
+
 } // namespace hg
