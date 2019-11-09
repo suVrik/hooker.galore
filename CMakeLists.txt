@@ -36,19 +36,41 @@ endif()
 
 # Include thirdparty libraries.
 
+function(include_source_directory TARGET DIRECTORY)
+	target_include_directories(hooker_galore PRIVATE ${DIRECTORY})
+	
+	# Add thirdparty headers to Visual Studio as well.
+	if(WIN32)
+		file(GLOB_RECURSE TARGET_SOURCES "${DIRECTORY}/*.h" "${DIRECTORY}/*.hpp")
+		
+		add_library(${TARGET} STATIC EXCLUDE_FROM_ALL ${TARGET_SOURCES})
+		set_target_properties(${TARGET} PROPERTIES 
+				LINKER_LANGUAGE CXX
+				FOLDER "BuildAndDeploy"
+		)
+		
+		foreach(FILE ${TARGET_SOURCES}) 
+			get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
+			string(REPLACE "${DIRECTORY}" "" GROUP "${PARENT_DIR}")
+			string(REPLACE "/" "\\" GROUP "${GROUP}")
+			source_group("Header Files${GROUP}" FILES "${FILE}")
+		endforeach()
+	endif()
+endfunction()
+
 target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/sources/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/${CMAKE_HOST_SYSTEM_NAME}/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/imgui/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/Clara/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/debug-draw/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/entt/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/glm/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/tiny-gltf/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/ghc-filesystem/include/")
-target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/include/")
+include_source_directory(bgfx "${CMAKE_SOURCE_DIR}/thirdparty/bgfx/include")
+include_source_directory(SDL2 "${CMAKE_SOURCE_DIR}/thirdparty/SDL2/${CMAKE_HOST_SYSTEM_NAME}/include")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/imgui/include")
+include_source_directory(Clara "${CMAKE_SOURCE_DIR}/thirdparty/Clara/include")
+include_source_directory(yaml-cpp "${CMAKE_SOURCE_DIR}/thirdparty/yaml-cpp/include")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/debug-draw/include")
+include_source_directory(entt "${CMAKE_SOURCE_DIR}/thirdparty/entt/include")
+include_source_directory(glm "${CMAKE_SOURCE_DIR}/thirdparty/glm/include")
+include_source_directory(libfmt "${CMAKE_SOURCE_DIR}/thirdparty/libfmt/include")
+target_include_directories(hooker_galore PRIVATE "${CMAKE_SOURCE_DIR}/thirdparty/tiny-gltf/include")
+include_source_directory(ghc-filesystem "${CMAKE_SOURCE_DIR}/thirdparty/ghc-filesystem/include")
+include_source_directory(PhysX "${CMAKE_SOURCE_DIR}/thirdparty/PhysX/include")
 
 # Link thirdpary libraries.
 
