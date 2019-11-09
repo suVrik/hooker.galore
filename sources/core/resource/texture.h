@@ -11,9 +11,9 @@ public:
     Texture() = default;
     ~Texture();
     Texture(const Texture& another) = delete;
-    Texture(Texture&& another) noexcept;
+    Texture(Texture&& another);
     Texture& operator=(const Texture& another) = delete;
-    Texture& operator=(Texture&& another) noexcept;
+    Texture& operator=(Texture&& another);
 
     bgfx::TextureHandle handle = BGFX_INVALID_HANDLE;
     uint16_t width   = 0;

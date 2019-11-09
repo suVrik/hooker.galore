@@ -107,7 +107,7 @@ void PhysicsCharacterControllerSystem::update(float elapsed_time) {
     m_transform_observer.clear();
 }
 
-void PhysicsCharacterControllerSystem::character_controller_constructed(const entt::entity entity, entt::registry& registry, PhysicsCharacterControllerComponent& physics_character_controller_component) noexcept {
+void PhysicsCharacterControllerSystem::character_controller_constructed(const entt::entity entity, entt::registry& registry, PhysicsCharacterControllerComponent& physics_character_controller_component) {
     physx::PxCapsuleControllerDesc capsule_descriptor;
 
     assert(physics_character_controller_component.m_step_offset > 0.f);
@@ -147,11 +147,11 @@ void PhysicsCharacterControllerSystem::character_controller_constructed(const en
     physics_character_controller_private_component.m_controller->setUserData(reinterpret_cast<void*>(static_cast<uintptr_t>(entity)));
 }
 
-void PhysicsCharacterControllerSystem::character_controller_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsCharacterControllerSystem::character_controller_destroyed(const entt::entity entity, entt::registry& registry) {
     registry.reset<PhysicsCharacterControllerPrivateComponent>(entity);
 }
 
-void PhysicsCharacterControllerSystem::character_controller_private_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsCharacterControllerSystem::character_controller_private_destroyed(const entt::entity entity, entt::registry& registry) {
     auto& physics_character_controller_private_component = world.get<PhysicsCharacterControllerPrivateComponent>(entity);
     assert(physics_character_controller_private_component.m_controller != nullptr);
     physics_character_controller_private_component.m_controller->release();

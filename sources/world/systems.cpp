@@ -35,7 +35,7 @@
 
 namespace hg {
 
-void register_systems() noexcept {
+void register_systems() {
     REGISTER_SYSTEM(AAPassSystem);
     REGISTER_SYSTEM(CameraSystem);
     REGISTER_SYSTEM(DebugDrawPassSystem);

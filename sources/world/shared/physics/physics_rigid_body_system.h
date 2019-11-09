@@ -17,9 +17,9 @@ public:
     void update(float elapsed_time) override;
 
 private:
-    void rigid_body_constructed(entt::entity entity, entt::registry& registry, PhysicsStaticRigidBodyComponent& physics_static_rigid_body_component) noexcept;
-    void rigid_body_destroyed(entt::entity entity, entt::registry& registry) noexcept;
-    void rigid_body_private_destroyed(entt::entity entity, entt::registry& registry) noexcept;
+    void rigid_body_constructed(entt::entity entity, entt::registry& registry, PhysicsStaticRigidBodyComponent& physics_static_rigid_body_component);
+    void rigid_body_destroyed(entt::entity entity, entt::registry& registry);
+    void rigid_body_private_destroyed(entt::entity entity, entt::registry& registry);
 
     PhysicsSingleComponent& m_physics_single_component;
 

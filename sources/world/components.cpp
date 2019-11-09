@@ -45,7 +45,7 @@
 
 namespace hg {
 
-void register_components() noexcept {
+void register_components() {
     REGISTER_COMPONENT(AAPassSingleComponent);
     REGISTER_COMPONENT(CameraSingleComponent);
     REGISTER_COMPONENT(DebugDrawPassSingleComponent);

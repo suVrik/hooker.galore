@@ -8,7 +8,7 @@ namespace hg {
 std::vector<SystemManager::SystemDescriptor> SystemManager::m_systems[2];
 std::unordered_map<std::string, size_t> SystemManager::m_tags_mapping;
 
-void SystemManager::commit() noexcept {
+void SystemManager::commit() {
     size_t current_tag_index = 0;
 
     for (std::vector<SystemDescriptor>& systems : m_systems) {

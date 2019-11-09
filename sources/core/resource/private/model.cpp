@@ -13,7 +13,7 @@ const bgfx::VertexDecl Model::BasicModelVertex::DECLARATION = []{
     return result;
 }();
 
-Model::Primitive::Primitive(Primitive&& another) noexcept
+Model::Primitive::Primitive(Primitive&& another)
         : index_buffer(another.index_buffer)
         , vertex_buffer(another.vertex_buffer)
         , num_vertices(another.num_vertices)
@@ -24,7 +24,7 @@ Model::Primitive::Primitive(Primitive&& another) noexcept
     another.num_indices   = 0;
 }
 
-Model::Primitive& Model::Primitive::operator=(Primitive&& another) noexcept {
+Model::Primitive& Model::Primitive::operator=(Primitive&& another) {
     index_buffer  = another.index_buffer;
     vertex_buffer = another.vertex_buffer;
     num_vertices  = another.num_vertices;

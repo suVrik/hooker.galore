@@ -15,13 +15,13 @@ struct OutlinePassSingleComponent;
 /** `OutlinePassSystem` performs outline pass for all objects with `OutlineComponent` and presents it on the screen. */
 class OutlinePassSystem final : public NormalSystem {
 public:
-    explicit OutlinePassSystem(World& world) noexcept;
+    explicit OutlinePassSystem(World& world);
     ~OutlinePassSystem() override;
     void update(float elapsed_time) override;
 
 private:
-    void reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const noexcept;
-    void draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const noexcept;
+    void reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const;
+    void draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const;
 
     entt::basic_group<entt::entity, entt::exclude_t<>, entt::get_t<ModelComponent, TransformComponent>, OutlineComponent> m_group;
 };

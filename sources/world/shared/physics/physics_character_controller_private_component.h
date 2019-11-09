@@ -16,10 +16,10 @@ class PhysicsCharacterControllerPrivateComponent final {
 public:
     PhysicsCharacterControllerPrivateComponent() = default;
     PhysicsCharacterControllerPrivateComponent(const PhysicsCharacterControllerPrivateComponent& original) = delete;
-    PhysicsCharacterControllerPrivateComponent(PhysicsCharacterControllerPrivateComponent&& original) noexcept;
+    PhysicsCharacterControllerPrivateComponent(PhysicsCharacterControllerPrivateComponent&& original);
     ~PhysicsCharacterControllerPrivateComponent();
     PhysicsCharacterControllerPrivateComponent& operator=(const PhysicsCharacterControllerPrivateComponent& original) = delete;
-    PhysicsCharacterControllerPrivateComponent& operator=(PhysicsCharacterControllerPrivateComponent&& original) noexcept;
+    PhysicsCharacterControllerPrivateComponent& operator=(PhysicsCharacterControllerPrivateComponent&& original);
 
 private:
     physx::PxCapsuleController* m_controller = nullptr;

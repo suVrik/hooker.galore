@@ -17,10 +17,10 @@ class PhysicsStaticRigidBodyPrivateComponent final {
 public:
     PhysicsStaticRigidBodyPrivateComponent() = default;
     PhysicsStaticRigidBodyPrivateComponent(const PhysicsStaticRigidBodyPrivateComponent& original) = delete;
-    PhysicsStaticRigidBodyPrivateComponent(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept;
+    PhysicsStaticRigidBodyPrivateComponent(PhysicsStaticRigidBodyPrivateComponent&& original);
     ~PhysicsStaticRigidBodyPrivateComponent();
     PhysicsStaticRigidBodyPrivateComponent& operator=(const PhysicsStaticRigidBodyPrivateComponent& original) = delete;
-    PhysicsStaticRigidBodyPrivateComponent& operator=(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept;
+    PhysicsStaticRigidBodyPrivateComponent& operator=(PhysicsStaticRigidBodyPrivateComponent&& original);
 
 private:
     physx::PxRigidStatic* m_rigid_actor = nullptr;

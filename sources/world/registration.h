@@ -3,9 +3,9 @@
 namespace hg {
 
 /** Register all systems into `SystemManager`. */
-void register_systems() noexcept;
+void register_systems();
 
 /** Register all components into `ComponentManager`. */
-void register_components() noexcept;
+void register_components();
 
 } // namespace hg

@@ -14,7 +14,7 @@ public:
     explicit DebugDrawPassSystem(World& world);
     ~DebugDrawPassSystem() override;
     void update(float elapsed_time) override;
-    void reset(DebugDrawPassSingleComponent& debug_draw_pass_single_component, uint16_t width, uint16_t height) const noexcept;
+    void reset(DebugDrawPassSingleComponent& debug_draw_pass_single_component, uint16_t width, uint16_t height) const;
 
     dd::GlyphTextureHandle createGlyphTexture(int width, int height, const void* pixels) override;
     void destroyGlyphTexture(dd::GlyphTextureHandle glyph_texture) override;

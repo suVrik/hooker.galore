@@ -24,10 +24,10 @@ public:
     void update(float elapsed_time) override;
 
 private:
-    void box_shape_constructed(entt::entity entity, entt::registry& registry, PhysicsBoxShapeComponent& physics_box_shape_component) noexcept;
-    void box_shape_destroyed(entt::entity entity, entt::registry& registry) noexcept;
-    void box_shape_private_destroyed(entt::entity entity, entt::registry& registry) noexcept;
-    physx::PxBoxGeometry box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* transform_component) noexcept;
+    void box_shape_constructed(entt::entity entity, entt::registry& registry, PhysicsBoxShapeComponent& physics_box_shape_component);
+    void box_shape_destroyed(entt::entity entity, entt::registry& registry);
+    void box_shape_private_destroyed(entt::entity entity, entt::registry& registry);
+    physx::PxBoxGeometry box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* transform_component);
 
     PhysicsSingleComponent& m_physics_single_component;
 

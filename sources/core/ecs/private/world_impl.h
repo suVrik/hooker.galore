@@ -5,7 +5,7 @@
 namespace hg {
 
 template <typename T>
-void World::each_registered_component(const entt::entity entity, T callback) const noexcept {
+void World::each_registered_component(const entt::entity entity, T callback) const {
     ComponentManager::each_registered([&](const entt::meta_type component_type) {
         const entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
@@ -15,7 +15,7 @@ void World::each_registered_component(const entt::entity entity, T callback) con
 }
 
 template <typename T>
-void World::each_editable_component(const entt::entity entity, T callback) const noexcept {
+void World::each_editable_component(const entt::entity entity, T callback) const {
     ComponentManager::each_editable([&](const entt::meta_type component_type) {
         const entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
@@ -25,17 +25,17 @@ void World::each_editable_component(const entt::entity entity, T callback) const
 }
 
 template <typename... Tags>
-void World::add_tags(Tags&& ... tags) noexcept {
+void World::add_tags(Tags&& ... tags) {
     (add_tag(tags), ...);
 }
 
 template <typename... Tags>
-void World::remove_tags(Tags&& ... tags) noexcept {
+void World::remove_tags(Tags&& ... tags) {
     (remove_tag(tags), ...);
 }
 
 template <typename... Tags>
-bool World::check_tags(Tags&& ... tags) noexcept {
+bool World::check_tags(Tags&& ... tags) {
     return (check_tag(tags) && ...);
 }
 

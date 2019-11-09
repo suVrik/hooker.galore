@@ -22,7 +22,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem", "WindowSystem", "EditorSelectionSystem")
 )
 
-EditorCameraSystem::EditorCameraSystem(World& world) noexcept
+EditorCameraSystem::EditorCameraSystem(World& world)
         : NormalSystem(world) {
     // TODO: Create `CameraSingleComponent` in `CameraSystem`?
     auto& camera_single_component = world.set<CameraSingleComponent>();
@@ -90,7 +90,7 @@ void EditorCameraSystem::update_attached_camera(CameraSingleComponent& camera_si
                                                 EditorSelectionSingleComponent& editor_selection_single_component,
                                                 EditorCameraComponent& editor_camera_component,
                                                 TransformComponent& transform_component,
-                                                const float speed) const noexcept {
+                                                const float speed) const {
     glm::vec3 middle_translation(0.f, 0.f, 0.f);
     size_t selected_entities_with_transform_component = 0;
     for (entt::entity selected_entity : editor_selection_single_component.selected_entities) {
@@ -147,7 +147,7 @@ void EditorCameraSystem::update_free_camera(CameraSingleComponent& camera_single
                                             NormalInputSingleComponent& normal_input_single_component,
                                             EditorCameraComponent& editor_camera_component, 
                                             TransformComponent& transform_component, 
-                                            const float speed) const noexcept {
+                                            const float speed) const {
     float delta_x = 0.f;
     if (!normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_down(Control::KEY_D)) {
         delta_x = speed;

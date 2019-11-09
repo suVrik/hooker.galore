@@ -26,7 +26,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem", "CameraSystem", "EditorSelectionSystem")
 )
 
-EditorGizmoSystem::EditorGizmoSystem(World& world) noexcept
+EditorGizmoSystem::EditorGizmoSystem(World& world)
         : NormalSystem(world) {
     auto& editor_gizmo_single_component = world.set<EditorGizmoSingleComponent>();
     editor_gizmo_single_component.switch_space   = std::make_shared<bool>(false);
@@ -52,7 +52,7 @@ void EditorGizmoSystem::update(float /*elapsed_time*/) {
 }
 
 void EditorGizmoSystem::show_gizmo_window(EditorGizmoSingleComponent& editor_gizmo_single_component, 
-                                          NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                          NormalInputSingleComponent& normal_input_single_component) const {
     if (ImGui::Begin("Gizmo", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         const ImVec2 window_size = ImGui::GetWindowSize();
 
@@ -97,7 +97,7 @@ void EditorGizmoSystem::show_gizmo_window(EditorGizmoSingleComponent& editor_giz
 }
 
 void EditorGizmoSystem::process_gizmo(EditorGizmoSingleComponent& editor_gizmo_single_component, 
-                                      NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                      NormalInputSingleComponent& normal_input_single_component) const {
     auto& camera_single_component = world.ctx<CameraSingleComponent>();
     auto& editor_history_single_component = world.ctx<EditorHistorySingleComponent>();
     auto& editor_selection_single_component = world.ctx<EditorSelectionSingleComponent>();
@@ -127,7 +127,7 @@ void EditorGizmoSystem::process_single_entity(CameraSingleComponent& camera_sing
                                               EditorGizmoSingleComponent& editor_gizmo_single_component,
                                               EditorHistorySingleComponent& editor_history_single_component,
                                               NormalInputSingleComponent& normal_input_single_component,
-                                              EditorSelectionSingleComponent& editor_selection_single_component) const noexcept {
+                                              EditorSelectionSingleComponent& editor_selection_single_component) const {
     const bool was_using = ImGuizmo::IsUsing();
     const bool is_snapping = normal_input_single_component.is_down(Control::KEY_CTRL);
 
@@ -242,7 +242,7 @@ void EditorGizmoSystem::process_multiple_entities(CameraSingleComponent& camera_
                                                   EditorGizmoSingleComponent& editor_gizmo_single_component, 
                                                   EditorHistorySingleComponent& editor_history_single_component,
                                                   NormalInputSingleComponent& normal_input_single_component, 
-                                                  EditorSelectionSingleComponent& editor_selection_single_component) const noexcept {
+                                                  EditorSelectionSingleComponent& editor_selection_single_component) const {
     if (editor_gizmo_single_component.operation == ImGuizmo::BOUNDS || editor_gizmo_single_component.operation == ImGuizmo::SCALE) {
         return;
     }

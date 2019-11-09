@@ -4,7 +4,7 @@
 
 namespace hg {
 
-void EditorSelectionSingleComponent::select_entity(World& world, const entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::select_entity(World& world, const entt::entity entity) {
     clear_selection(world);
     if (world.valid(entity)) {
         selected_entities.push_back(entity);
@@ -13,7 +13,7 @@ void EditorSelectionSingleComponent::select_entity(World& world, const entt::ent
     }
 }
 
-void EditorSelectionSingleComponent::add_to_selection(World& world, const entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::add_to_selection(World& world, const entt::entity entity) {
     if (std::find(selected_entities.begin(), selected_entities.end(), entity) == selected_entities.end()) {
         if (world.valid(entity)) {
             selected_entities.push_back(entity);
@@ -23,7 +23,7 @@ void EditorSelectionSingleComponent::add_to_selection(World& world, const entt::
     }
 }
 
-void EditorSelectionSingleComponent::remove_from_selection(World& world, const entt::entity entity) noexcept {
+void EditorSelectionSingleComponent::remove_from_selection(World& world, const entt::entity entity) {
     auto it = std::remove(selected_entities.begin(), selected_entities.end(), entity);
     if (it != selected_entities.end()) {
         world.reset<OutlineComponent>(entity);
@@ -31,7 +31,7 @@ void EditorSelectionSingleComponent::remove_from_selection(World& world, const e
     }
 }
 
-void EditorSelectionSingleComponent::clear_selection(World& world) noexcept {
+void EditorSelectionSingleComponent::clear_selection(World& world) {
     for (entt::entity entity : selected_entities) {
         if (world.valid(entity)) {
             world.reset<OutlineComponent>(entity);

@@ -2,7 +2,7 @@
 
 namespace hg {
 
-std::string NameSingleComponent::acquire_unique_name(entt::entity entity, const std::string& prototype) noexcept {
+std::string NameSingleComponent::acquire_unique_name(entt::entity entity, const std::string& prototype) {
 #ifndef NDEBUG
     for (auto& [name, another_entity] : name_to_entity) {
         assert(entity != another_entity && "Unregister the previous name first.");

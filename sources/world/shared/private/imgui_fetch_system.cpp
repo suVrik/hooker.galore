@@ -38,7 +38,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem")
 )
 
-ImguiFetchSystem::ImguiFetchSystem(World& world) noexcept
+ImguiFetchSystem::ImguiFetchSystem(World& world)
         : NormalSystem(world) {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();

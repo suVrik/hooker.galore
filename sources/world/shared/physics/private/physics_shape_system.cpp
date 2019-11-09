@@ -51,7 +51,7 @@ void PhysicsShapeSystem::update(float /*elapsed_time*/) {
     });
 }
 
-void PhysicsShapeSystem::box_shape_constructed(const entt::entity entity, entt::registry& registry, PhysicsBoxShapeComponent& physics_box_shape_component) noexcept {
+void PhysicsShapeSystem::box_shape_constructed(const entt::entity entity, entt::registry& registry, PhysicsBoxShapeComponent& physics_box_shape_component) {
     assert(!registry.has<PhysicsBoxShapePrivateComponent>(entity));
     auto& physics_box_shape_private_component = registry.assign<PhysicsBoxShapePrivateComponent>(entity);
     physics_box_shape_private_component.m_shape = m_physics_single_component.get_physics().createShape(box_shape_component_to_physx_box_geometry(physics_box_shape_component, world.try_get<TransformComponent>(entity)), *m_physics_single_component.get_default_material(), true);
@@ -67,11 +67,11 @@ void PhysicsShapeSystem::box_shape_constructed(const entt::entity entity, entt::
     }
 }
 
-void PhysicsShapeSystem::box_shape_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsShapeSystem::box_shape_destroyed(const entt::entity entity, entt::registry& registry) {
     registry.reset<PhysicsBoxShapePrivateComponent>(entity);
 }
 
-void PhysicsShapeSystem::box_shape_private_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsShapeSystem::box_shape_private_destroyed(const entt::entity entity, entt::registry& registry) {
     auto& physics_box_shape_private_component = world.get<PhysicsBoxShapePrivateComponent>(entity);
     assert(physics_box_shape_private_component.m_shape != nullptr);
 
@@ -85,7 +85,7 @@ void PhysicsShapeSystem::box_shape_private_destroyed(const entt::entity entity, 
     physics_box_shape_private_component.m_shape = nullptr;
 }
 
-physx::PxBoxGeometry PhysicsShapeSystem::box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* const transform_component) noexcept {
+physx::PxBoxGeometry PhysicsShapeSystem::box_shape_component_to_physx_box_geometry(PhysicsBoxShapeComponent& physics_box_shape_component, const TransformComponent* const transform_component) {
     glm::vec3 box_size = physics_box_shape_component.get_size() / 2.f;
 
     if (transform_component != nullptr) {

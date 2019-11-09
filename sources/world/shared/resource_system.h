@@ -32,7 +32,7 @@ public:
 
 private:
     void load_textures() const;
-    Texture load_texture(const std::string &path) const noexcept;
+    Texture load_texture(const std::string &path) const;
 
     void load_models() const;
     void load_model(Model& result, const std::string &path) const;

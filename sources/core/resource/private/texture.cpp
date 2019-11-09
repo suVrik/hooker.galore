@@ -8,7 +8,7 @@ Texture::~Texture() {
     }
 }
 
-Texture::Texture(Texture&& another) noexcept
+Texture::Texture(Texture&& another)
         : handle(another.handle)
         , width(another.width)
         , height(another.height)
@@ -19,7 +19,7 @@ Texture::Texture(Texture&& another) noexcept
     another.is_cube_map = false;
 }
 
-Texture& Texture::operator=(Texture&& another) noexcept {
+Texture& Texture::operator=(Texture&& another) {
     handle      = another.handle;
     width       = another.width;
     height      = another.height;

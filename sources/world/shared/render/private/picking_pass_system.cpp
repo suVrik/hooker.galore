@@ -37,7 +37,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )
 
-PickingPassSystem::PickingPassSystem(World& world) noexcept
+PickingPassSystem::PickingPassSystem(World& world)
         : NormalSystem(world) {
     using namespace picking_pass_system_details;
 
@@ -106,7 +106,7 @@ void PickingPassSystem::update(float /*elapsed_time*/) {
     picking_pass_single_component.target_frame = bgfx::readTexture(picking_pass_single_component.color_texture, picking_pass_single_component.target_data.data());
 }
 
-void PickingPassSystem::reset(PickingPassSingleComponent& picking_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void PickingPassSystem::reset(PickingPassSingleComponent& picking_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace picking_pass_system_details;
 
     if (bgfx::isValid(picking_pass_single_component.color_texture)) {
@@ -132,7 +132,7 @@ void PickingPassSystem::reset(PickingPassSingleComponent& picking_pass_single_co
     bgfx::setViewRect(PICKING_PASS, 0, 0, width, height);
 }
 
-void PickingPassSystem::draw_node(const PickingPassSingleComponent& picking_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t object_index) const noexcept {
+void PickingPassSystem::draw_node(const PickingPassSingleComponent& picking_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t object_index) const {
     glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
     local_transform = local_transform * glm::mat4_cast(node.rotation);
     local_transform = glm::scale(local_transform, node.scale);

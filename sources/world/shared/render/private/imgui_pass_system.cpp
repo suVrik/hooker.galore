@@ -30,7 +30,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem", "RenderFetchSystem", "ImguiFetchSystem")
 )
 
-ImguiPassSystem::ImguiPassSystem(World& world) noexcept
+ImguiPassSystem::ImguiPassSystem(World& world)
         : NormalSystem(world) {
     auto& imgui_context_single_component = world.ctx<ImguiSingleComponent>();
 

@@ -12,7 +12,7 @@ class EditorMenuSystem;
 class EditorMenuSingleComponent final {
 public:
     /** Add menu item with the specified `name`. */
-    void add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut = {}, bool enabled = true) noexcept;
+    void add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut = {}, bool enabled = true);
 
 private:
     struct MenuItem final {
@@ -27,7 +27,7 @@ private:
 };
 
 // TODO: Move to a separate source file.
-inline void EditorMenuSingleComponent::add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut, bool enabled) noexcept {
+inline void EditorMenuSingleComponent::add_item(const std::string& name, const std::shared_ptr<bool>& selected, const std::string& shortcut, bool enabled) {
     m_items[name] = MenuItem{ std::weak_ptr<bool>(selected), shortcut, enabled };
 }
 

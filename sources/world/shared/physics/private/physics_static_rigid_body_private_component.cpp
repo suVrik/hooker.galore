@@ -4,7 +4,7 @@
 
 namespace hg {
 
-PhysicsStaticRigidBodyPrivateComponent::PhysicsStaticRigidBodyPrivateComponent(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept 
+PhysicsStaticRigidBodyPrivateComponent::PhysicsStaticRigidBodyPrivateComponent(PhysicsStaticRigidBodyPrivateComponent&& original) 
         : m_rigid_actor(original.m_rigid_actor) {
     original.m_rigid_actor = nullptr;
 }
@@ -13,7 +13,7 @@ PhysicsStaticRigidBodyPrivateComponent::~PhysicsStaticRigidBodyPrivateComponent(
     assert(m_rigid_actor == nullptr);
 }
 
-PhysicsStaticRigidBodyPrivateComponent& PhysicsStaticRigidBodyPrivateComponent::operator=(PhysicsStaticRigidBodyPrivateComponent&& original) noexcept {
+PhysicsStaticRigidBodyPrivateComponent& PhysicsStaticRigidBodyPrivateComponent::operator=(PhysicsStaticRigidBodyPrivateComponent&& original) {
     assert(this != &original);
     assert(m_rigid_actor == nullptr);
 

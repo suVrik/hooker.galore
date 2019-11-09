@@ -7,7 +7,7 @@ namespace hg {
 /** `CameraSystem` updates camera matrices in `CameraSingleComponent`. */
 class CameraSystem final : public NormalSystem {
 public:
-    explicit CameraSystem(World& world) noexcept;
+    explicit CameraSystem(World& world);
     void update(float elapsed_time) override;
 };
 

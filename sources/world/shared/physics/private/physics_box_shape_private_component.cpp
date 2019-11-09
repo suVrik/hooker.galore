@@ -4,7 +4,7 @@
 
 namespace hg {
 
-PhysicsBoxShapePrivateComponent::PhysicsBoxShapePrivateComponent(PhysicsBoxShapePrivateComponent&& original) noexcept
+PhysicsBoxShapePrivateComponent::PhysicsBoxShapePrivateComponent(PhysicsBoxShapePrivateComponent&& original)
         : m_shape(original.m_shape) {
     original.m_shape = nullptr;
 }
@@ -13,7 +13,7 @@ PhysicsBoxShapePrivateComponent::~PhysicsBoxShapePrivateComponent() {
     assert(m_shape == nullptr);
 }
 
-PhysicsBoxShapePrivateComponent& PhysicsBoxShapePrivateComponent::operator=(PhysicsBoxShapePrivateComponent&& original) noexcept {
+PhysicsBoxShapePrivateComponent& PhysicsBoxShapePrivateComponent::operator=(PhysicsBoxShapePrivateComponent&& original) {
     assert(this != &original);
     assert(m_shape == nullptr);
 

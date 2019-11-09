@@ -13,7 +13,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem")
 )
 
-CameraSystem::CameraSystem(World& world) noexcept
+CameraSystem::CameraSystem(World& world)
         : NormalSystem(world) {
 }
 

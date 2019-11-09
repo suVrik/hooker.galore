@@ -27,7 +27,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem")
 )
 
-EditorSelectionSystem::EditorSelectionSystem(World& world) noexcept
+EditorSelectionSystem::EditorSelectionSystem(World& world)
         : NormalSystem(world) {
     auto& editor_selection_single_component = world.set<EditorSelectionSingleComponent>();
     editor_selection_single_component.select_all_entities = std::make_shared<bool>(false);
@@ -56,7 +56,7 @@ void EditorSelectionSystem::update(float /*elapsed_time*/) {
 }
 
 void EditorSelectionSystem::show_level_window(EditorSelectionSingleComponent& editor_selection_single_component, 
-                                              NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                              NormalInputSingleComponent& normal_input_single_component) const {
     if (ImGui::Begin("Level", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
@@ -95,7 +95,7 @@ void EditorSelectionSystem::show_level_window(EditorSelectionSingleComponent& ed
 }
 
 void EditorSelectionSystem::perform_picking(EditorSelectionSingleComponent& editor_selection_single_component,
-                                            NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                            NormalInputSingleComponent& normal_input_single_component) const {
     auto& picking_pass_single_component = world.ctx<PickingPassSingleComponent>();
     auto& render_single_component = world.ctx<RenderSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
@@ -151,7 +151,7 @@ void EditorSelectionSystem::perform_picking(EditorSelectionSingleComponent& edit
 }
 
 void EditorSelectionSystem::delete_selected(EditorSelectionSingleComponent& editor_selection_single_component,
-                                            NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                            NormalInputSingleComponent& normal_input_single_component) const {
     auto& editor_history_single_component = world.ctx<EditorHistorySingleComponent>();
 
     if ((*editor_selection_single_component.delete_selected_entities || normal_input_single_component.is_pressed(Control::KEY_DELETE)) && !editor_selection_single_component.selected_entities.empty()) {
@@ -182,7 +182,7 @@ void EditorSelectionSystem::delete_selected(EditorSelectionSingleComponent& edit
 }
 
 void EditorSelectionSystem::select_all(EditorSelectionSingleComponent& editor_selection_single_component,
-                                       NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                       NormalInputSingleComponent& normal_input_single_component) const {
     if (*editor_selection_single_component.select_all_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_A))) {
         *editor_selection_single_component.select_all_entities = false;
 
@@ -195,7 +195,7 @@ void EditorSelectionSystem::select_all(EditorSelectionSingleComponent& editor_se
 }
 
 void EditorSelectionSystem::clear_selection(EditorSelectionSingleComponent& editor_selection_single_component, 
-                                            NormalInputSingleComponent& normal_input_single_component) const noexcept {
+                                            NormalInputSingleComponent& normal_input_single_component) const {
     if (*editor_selection_single_component.clear_selected_entities || (normal_input_single_component.is_down(Control::KEY_CTRL) && normal_input_single_component.is_pressed(Control::KEY_D))) {
         *editor_selection_single_component.clear_selected_entities = false;
 

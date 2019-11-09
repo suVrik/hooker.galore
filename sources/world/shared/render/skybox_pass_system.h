@@ -12,7 +12,7 @@ public:
     explicit SkyboxPassSystem(World& world);
     ~SkyboxPassSystem() override;
     void update(float elapsed_time) override;
-    void reset(SkyboxPassSingleComponent& lighting_pass_single_component, uint16_t width, uint16_t height) const noexcept;
+    void reset(SkyboxPassSingleComponent& lighting_pass_single_component, uint16_t width, uint16_t height) const;
 };
 
 } // namespace hg

@@ -7,7 +7,7 @@ namespace hg {
 /** `ImguiPassSystem` displays ImGui on the screen. */
 class ImguiPassSystem final : public NormalSystem {
 public:
-    explicit ImguiPassSystem(World& world) noexcept;
+    explicit ImguiPassSystem(World& world);
     ~ImguiPassSystem() override;
     void update(float elapsed_time) override;
 };

@@ -26,42 +26,42 @@ public:
     };
 
     /** Get/Set character controller step offset. */
-    float get_step_offset() const noexcept;
-    void set_step_offset(float value) noexcept;
+    float get_step_offset() const;
+    void set_step_offset(float value);
 
     /** Get/Set character controller non walkable mode. */
-    NonWalkableMode get_non_walkable_mode() const noexcept;
-    void set_non_walkable_mode(NonWalkableMode value) noexcept;
+    NonWalkableMode get_non_walkable_mode() const;
+    void set_non_walkable_mode(NonWalkableMode value);
 
     /** Get/Set character controller contact offset. */
-    float get_contact_offset() const noexcept;
-    void set_contact_offset(float value) noexcept;
+    float get_contact_offset() const;
+    void set_contact_offset(float value);
 
     /** Get/Set character controller up direction. */
-    const glm::vec3& get_up_direction() const noexcept;
-    void set_up_direction(const glm::vec3& value) noexcept;
+    const glm::vec3& get_up_direction() const;
+    void set_up_direction(const glm::vec3& value);
 
     /** Get/Set character controller slope limit. */
-    float get_slope_limit() const noexcept;
-    void set_slope_limit(float value) noexcept;
+    float get_slope_limit() const;
+    void set_slope_limit(float value);
 
     /** Get/Set character controller capsule radius. */
-    float get_radius() const noexcept;
-    void set_radius(float value) noexcept;
+    float get_radius() const;
+    void set_radius(float value);
 
     /** Get/Set character controller capsule height. */
-    float get_height() const noexcept;
-    void set_height(float value) noexcept;
+    float get_height() const;
+    void set_height(float value);
 
     /** Get/Set character controller capsule climbing mode. */
-    ClimbingMode get_climbing_mode() const noexcept;
-    void set_climbing_mode(ClimbingMode value) noexcept;
+    ClimbingMode get_climbing_mode() const;
+    void set_climbing_mode(ClimbingMode value);
 
     /** Move character controller by specified `offset` with all the collision detection. */
-    void move(const glm::vec3& offset) noexcept;
+    void move(const glm::vec3& offset);
 
     /** Check whether the character controller is grounded. */
-    bool is_grounded() const noexcept;
+    bool is_grounded() const;
 
 private:
     float m_step_offset = 0.5f;

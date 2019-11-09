@@ -11,13 +11,13 @@ struct PickingPassSingleComponent;
     a texture stored in `PickingPassSingleComponent`. */
 class PickingPassSystem final : public NormalSystem {
 public:
-    explicit PickingPassSystem(World& world) noexcept;
+    explicit PickingPassSystem(World& world);
     ~PickingPassSystem() override;
     void update(float elapsed_time) override;
 
 private:
-    void reset(PickingPassSingleComponent& picking_pass_single_component, uint16_t width, uint16_t height) const noexcept;
-    void draw_node(const PickingPassSingleComponent& picking_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t object_index) const noexcept;
+    void reset(PickingPassSingleComponent& picking_pass_single_component, uint16_t width, uint16_t height) const;
+    void draw_node(const PickingPassSingleComponent& picking_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t object_index) const;
 };
 
 } // namespace hg

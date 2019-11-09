@@ -10,7 +10,7 @@ namespace hg {
 struct NameSingleComponent final {
     /** Check whether the specified name `prototype` is free and if so, register the given `entity` with this name.
         Otherwise come up with a similar name and register this entity with it. */
-    std::string acquire_unique_name(entt::entity entity, const std::string& prototype) noexcept;
+    std::string acquire_unique_name(entt::entity entity, const std::string& prototype);
 
     std::unordered_map<std::string, entt::entity> name_to_entity;
 };

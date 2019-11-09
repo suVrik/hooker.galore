@@ -19,10 +19,10 @@ public:
 
     /** Register system `T` with member function `update` and specified `name`. */
     template <typename T>
-    static void register_system(const std::string& name) noexcept;
+    static void register_system(const std::string& name);
 
     /** Link all the registered systems among themselves. */
-    static void commit() noexcept;
+    static void commit();
 
 private:
     struct SystemDescriptor final {

@@ -51,7 +51,7 @@ void PhysicsRigidBodySystem::update(float /*elapsed_time*/) {
     });
 }
 
-void PhysicsRigidBodySystem::rigid_body_constructed(const entt::entity entity, entt::registry& registry, PhysicsStaticRigidBodyComponent& physics_static_rigid_body_component) noexcept {
+void PhysicsRigidBodySystem::rigid_body_constructed(const entt::entity entity, entt::registry& registry, PhysicsStaticRigidBodyComponent& physics_static_rigid_body_component) {
     assert(!registry.has<PhysicsStaticRigidBodyPrivateComponent>(entity));
     auto& physics_static_rigid_body_private_component = registry.assign<PhysicsStaticRigidBodyPrivateComponent>(entity);
     physics_static_rigid_body_private_component.m_rigid_actor = m_physics_single_component.get_physics().createRigidStatic(transform_component_to_physx_transform(world.try_get<TransformComponent>(entity)));
@@ -69,11 +69,11 @@ void PhysicsRigidBodySystem::rigid_body_constructed(const entt::entity entity, e
     }
 }
 
-void PhysicsRigidBodySystem::rigid_body_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsRigidBodySystem::rigid_body_destroyed(const entt::entity entity, entt::registry& registry) {
     registry.reset<PhysicsStaticRigidBodyPrivateComponent>(entity);
 }
 
-void PhysicsRigidBodySystem::rigid_body_private_destroyed(const entt::entity entity, entt::registry& registry) noexcept {
+void PhysicsRigidBodySystem::rigid_body_private_destroyed(const entt::entity entity, entt::registry& registry) {
     auto& physics_static_rigid_body_private_component = registry.get<PhysicsStaticRigidBodyPrivateComponent>(entity);
     assert(physics_static_rigid_body_private_component.m_rigid_actor != nullptr);
 

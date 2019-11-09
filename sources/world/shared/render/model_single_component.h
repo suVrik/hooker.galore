@@ -20,7 +20,7 @@ public:
     ~ModelSingleComponent();
 
     /** Return model with the specified name or nullptr if such model doesn't exists. */
-    const Model* get(const std::string& name) const noexcept;
+    const Model* get(const std::string& name) const;
 
 private:
     std::unordered_map<std::string, std::unique_ptr<Model>> m_models;

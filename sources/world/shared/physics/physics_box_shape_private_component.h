@@ -17,10 +17,10 @@ class PhysicsBoxShapePrivateComponent final {
 public:
     PhysicsBoxShapePrivateComponent() = default;
     PhysicsBoxShapePrivateComponent(const PhysicsBoxShapePrivateComponent& original) = delete;
-    PhysicsBoxShapePrivateComponent(PhysicsBoxShapePrivateComponent&& original) noexcept;
+    PhysicsBoxShapePrivateComponent(PhysicsBoxShapePrivateComponent&& original);
     ~PhysicsBoxShapePrivateComponent();
     PhysicsBoxShapePrivateComponent& operator=(const PhysicsBoxShapePrivateComponent& original) = delete;
-    PhysicsBoxShapePrivateComponent& operator=(PhysicsBoxShapePrivateComponent&& original) noexcept;
+    PhysicsBoxShapePrivateComponent& operator=(PhysicsBoxShapePrivateComponent&& original);
 
 private:
     physx::PxShape* m_shape = nullptr;

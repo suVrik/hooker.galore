@@ -5,7 +5,7 @@
 namespace hg {
 
 template <typename T>
-void SystemManager::register_system(const std::string& name) noexcept {
+void SystemManager::register_system(const std::string& name) {
     size_t type;
     if constexpr (std::is_base_of_v<NormalSystem, T>) {
         type = 0;

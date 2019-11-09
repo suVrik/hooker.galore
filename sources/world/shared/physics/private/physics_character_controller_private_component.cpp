@@ -4,7 +4,7 @@
 
 namespace hg {
 
-PhysicsCharacterControllerPrivateComponent::PhysicsCharacterControllerPrivateComponent(PhysicsCharacterControllerPrivateComponent&& original) noexcept
+PhysicsCharacterControllerPrivateComponent::PhysicsCharacterControllerPrivateComponent(PhysicsCharacterControllerPrivateComponent&& original)
         : m_controller(original.m_controller) {
     original.m_controller = nullptr;
 }
@@ -13,7 +13,7 @@ PhysicsCharacterControllerPrivateComponent::~PhysicsCharacterControllerPrivateCo
     assert(m_controller == nullptr);
 }
 
-PhysicsCharacterControllerPrivateComponent& PhysicsCharacterControllerPrivateComponent::operator=(PhysicsCharacterControllerPrivateComponent&& original) noexcept {
+PhysicsCharacterControllerPrivateComponent& PhysicsCharacterControllerPrivateComponent::operator=(PhysicsCharacterControllerPrivateComponent&& original) {
     assert(this != &original);
     assert(m_controller == nullptr);
 

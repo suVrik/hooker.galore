@@ -25,72 +25,72 @@ World::~World() {
     }
 }
 
-entt::meta_handle World::assign_default(const entt::entity entity, const entt::meta_type component_type) noexcept {
+entt::meta_handle World::assign_default(const entt::entity entity, const entt::meta_type component_type) {
     assert(ComponentManager::is_registered(component_type));
     assert(ComponentManager::is_default_constructible(component_type));
     return ComponentManager::descriptors[component_type].assign_default(this, entity);
 }
 
-entt::meta_handle World::assign_copy(const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle World::assign_copy(const entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_registered(component.type()));
     assert(ComponentManager::is_copy_constructible(component.type()));
     return ComponentManager::descriptors[component.type()].assign_copy(this, entity, component);
 }
 
-entt::meta_handle World::assign_move(entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle World::assign_move(entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_registered(component.type()));
     assert(ComponentManager::is_move_constructible(component.type()));
     return ComponentManager::descriptors[component.type()].assign_move(this, entity, component);
 }
 
-entt::meta_handle World::assign_move_or_copy(entt::entity entity, entt::meta_handle component) noexcept {
+entt::meta_handle World::assign_move_or_copy(entt::entity entity, entt::meta_handle component) {
     if (ComponentManager::is_move_constructible(component.type())) {
         return assign_move(entity, component);
     }
     return assign_copy(entity, component);
 }
 
-entt::meta_handle World::replace_copy(const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle World::replace_copy(const entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_registered(component.type()));
     assert(ComponentManager::is_copy_assignable(component.type()));
     return ComponentManager::descriptors[component.type()].replace_copy(this, entity, component);
 }
 
-entt::meta_handle World::replace_move(const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle World::replace_move(const entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_registered(component.type()));
     assert(ComponentManager::is_move_assignable(component.type()));
     return ComponentManager::descriptors[component.type()].replace_move(this, entity, component);
 }
 
-entt::meta_handle World::replace_move_or_copy(const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle World::replace_move_or_copy(const entt::entity entity, const entt::meta_handle component) {
     if (ComponentManager::is_move_assignable(component.type())) {
         return replace_move(entity, component);
     }
     return replace_copy(entity, component);
 }
 
-void World::remove(const entt::entity entity, const entt::meta_type component_type) noexcept {
+void World::remove(const entt::entity entity, const entt::meta_type component_type) {
     assert(ComponentManager::is_registered(component_type));
     ComponentManager::descriptors[component_type].remove(this, entity);
 }
 
-bool World::has(const entt::entity entity, const entt::meta_type component_type) const noexcept {
+bool World::has(const entt::entity entity, const entt::meta_type component_type) const {
     assert(ComponentManager::is_registered(component_type));
     return ComponentManager::descriptors[component_type].has(this, entity);
 }
 
-entt::meta_handle World::get(const entt::entity entity, const entt::meta_type component_type) const noexcept {
+entt::meta_handle World::get(const entt::entity entity, const entt::meta_type component_type) const {
     assert(ComponentManager::is_registered(component_type));
     return ComponentManager::descriptors[component_type].get(this, entity);
 }
 
-entt::meta_handle World::get_or_assign(const entt::entity entity, const entt::meta_type component_type) noexcept {
+entt::meta_handle World::get_or_assign(const entt::entity entity, const entt::meta_type component_type) {
     assert(ComponentManager::is_registered(component_type));
     assert(ComponentManager::is_default_constructible(component_type));
     return ComponentManager::descriptors[component_type].get_or_assign(this, entity);
 }
 
-void World::clear_tags() noexcept {
+void World::clear_tags() {
     for (uint8_t& tag_enabled : m_tags) {
         if (tag_enabled != 0) {
             tag_enabled = false;
@@ -99,7 +99,7 @@ void World::clear_tags() noexcept {
     }
 }
 
-void World::add_tag(const char* const tag) noexcept {
+void World::add_tag(const char* const tag) {
     if (auto it = SystemManager::m_tags_mapping.find(tag); it != SystemManager::m_tags_mapping.end()) {
         assert(it->second < m_tags.size());
         if (!m_tags[it->second]) {
@@ -109,7 +109,7 @@ void World::add_tag(const char* const tag) noexcept {
     }
 }
 
-void World::remove_tag(const char* const tag) noexcept {
+void World::remove_tag(const char* const tag) {
     if (auto it = SystemManager::m_tags_mapping.find(tag); it != SystemManager::m_tags_mapping.end()) {
         assert(it->second < m_tags.size());
         if (m_tags[it->second]) {
@@ -119,7 +119,7 @@ void World::remove_tag(const char* const tag) noexcept {
     }
 }
 
-bool World::check_tag(const char* const tag) noexcept {
+bool World::check_tag(const char* const tag) {
     if (auto it = SystemManager::m_tags_mapping.find(tag); it != SystemManager::m_tags_mapping.end()) {
         assert(it->second < m_tags.size());
         return m_tags[it->second];
@@ -127,7 +127,7 @@ bool World::check_tag(const char* const tag) noexcept {
     return false;
 }
 
-bool World::update_normal(const float elapsed_time) noexcept {
+bool World::update_normal(const float elapsed_time) {
     if (m_tags_changed[0]) {
         sort_systems(0);
         m_tags_changed[0] = false;
@@ -146,7 +146,7 @@ bool World::update_normal(const float elapsed_time) noexcept {
     return true;
 }
 
-void World::update_fixed(const float elapsed_time) noexcept {
+void World::update_fixed(const float elapsed_time) {
     if (m_tags_changed[1]) {
         sort_systems(1);
         m_tags_changed[1] = false;
@@ -160,7 +160,7 @@ void World::update_fixed(const float elapsed_time) noexcept {
     }
 }
 
-void World::sort_systems(const size_t system_type) noexcept {
+void World::sort_systems(const size_t system_type) {
     [[maybe_unused]] const std::chrono::steady_clock::time_point before_sort = std::chrono::steady_clock::now();
 
     assert(system_type < 2);
@@ -244,7 +244,7 @@ void World::sort_systems(const size_t system_type) noexcept {
 #endif
 }
 
-bool World::check_tag_indices(const std::vector<size_t>& require, const std::vector<size_t>& exclusive) noexcept {
+bool World::check_tag_indices(const std::vector<size_t>& require, const std::vector<size_t>& exclusive) {
     for (const size_t required_tag : require) {
         assert(required_tag < m_tags.size());
         if (!m_tags[required_tag]) {
@@ -260,7 +260,7 @@ bool World::check_tag_indices(const std::vector<size_t>& require, const std::vec
     return true;
 }
 
-void World::propagate_system(const size_t system_type, const size_t system_index) noexcept {
+void World::propagate_system(const size_t system_type, const size_t system_index) {
     assert(system_type < 2);
 
     std::vector<SystemManager::SystemDescriptor>& systems = SystemManager::m_systems[system_type];

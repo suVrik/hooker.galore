@@ -33,12 +33,12 @@ const std::vector<entt::meta_type> REGISTERED_TYPES = {
 
 } // namespace resource_utils_details
 
-bool ResourceUtils::is_registered_type(const entt::meta_type type) noexcept {
+bool ResourceUtils::is_registered_type(const entt::meta_type type) {
     using namespace resource_utils_details;
     return std::find(REGISTERED_TYPES.begin(), REGISTERED_TYPES.end(), type) != REGISTERED_TYPES.end();
 }
 
-void ResourceUtils::serialize_registered_property(const entt::meta_data property, const entt::meta_handle object, YAML::Node& node) noexcept {
+void ResourceUtils::serialize_registered_property(const entt::meta_data property, const entt::meta_handle object, YAML::Node& node) {
     using namespace resource_utils_details;
 
     assert(property);
@@ -67,7 +67,7 @@ void ResourceUtils::serialize_registered_property(const entt::meta_data property
     }
 }
 
-bool ResourceUtils::deserialize_registered_property(const entt::meta_data property, const entt::meta_handle object, const YAML::Node& node) noexcept {
+bool ResourceUtils::deserialize_registered_property(const entt::meta_data property, const entt::meta_handle object, const YAML::Node& node) {
     using namespace resource_utils_details;
 
     assert(property);
@@ -93,7 +93,7 @@ bool ResourceUtils::deserialize_registered_property(const entt::meta_data proper
     }
 }
 
-void ResourceUtils::serialize_structure_property(const entt::meta_handle structure, YAML::Node& node) noexcept {
+void ResourceUtils::serialize_structure_property(const entt::meta_handle structure, YAML::Node& node) {
     assert(structure);
     assert(node.IsMap());
 
@@ -128,7 +128,7 @@ void ResourceUtils::serialize_structure_property(const entt::meta_handle structu
     });
 }
 
-void ResourceUtils::deserialize_structure_property(const entt::meta_handle structure, const YAML::Node& node) noexcept {
+void ResourceUtils::deserialize_structure_property(const entt::meta_handle structure, const YAML::Node& node) {
     assert(structure);
     assert(node.IsMap());
 
@@ -177,7 +177,7 @@ void ResourceUtils::deserialize_structure_property(const entt::meta_handle struc
     }
 }
 
-void ResourceUtils::serialize_entity(World& world, const entt::entity entity, YAML::Node& node, const bool serialize_editor_component) noexcept {
+void ResourceUtils::serialize_entity(World& world, const entt::entity entity, YAML::Node& node, const bool serialize_editor_component) {
     assert(world.valid(entity));
     assert(node.IsMap());
 
@@ -192,7 +192,7 @@ void ResourceUtils::serialize_entity(World& world, const entt::entity entity, YA
     });
 }
 
-void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, const YAML::Node& node, NameSingleComponent* const name_single_component) noexcept {
+void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, const YAML::Node& node, NameSingleComponent* const name_single_component) {
     assert(world.valid(entity));
     assert(node.IsMap());
 
@@ -247,7 +247,7 @@ void ResourceUtils::deserialize_entity(World& world, const entt::entity entity, 
     }
 }
 
-void ResourceUtils::serialize_level(World& world, YAML::Node& node, const bool serialize_editor_component) noexcept {
+void ResourceUtils::serialize_level(World& world, YAML::Node& node, const bool serialize_editor_component) {
     assert(node.IsSequence());
 
     entt::view<NameComponent> entities = world.view<NameComponent>();
@@ -260,7 +260,7 @@ void ResourceUtils::serialize_level(World& world, YAML::Node& node, const bool s
     }
 }
 
-bool ResourceUtils::serialize_level(World& world, const bool serialize_editor_component) noexcept {
+bool ResourceUtils::serialize_level(World& world, const bool serialize_editor_component) {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
     assert(!level_single_component.level_name.empty());
 
@@ -284,7 +284,7 @@ bool ResourceUtils::serialize_level(World& world, const bool serialize_editor_co
     return true;
 }
 
-void ResourceUtils::deserialize_level(World& world, const YAML::Node& node, NameSingleComponent* const name_single_component) noexcept {
+void ResourceUtils::deserialize_level(World& world, const YAML::Node& node, NameSingleComponent* const name_single_component) {
     assert(node.IsSequence());
 
     for (YAML::const_iterator entity_it = node.begin(); entity_it != node.end(); ++entity_it) {
@@ -297,7 +297,7 @@ void ResourceUtils::deserialize_level(World& world, const YAML::Node& node, Name
     }
 }
 
-bool ResourceUtils::deserialize_level(World& world) noexcept {
+bool ResourceUtils::deserialize_level(World& world) {
     auto& level_single_component = world.ctx<LevelSingleComponent>();
     auto& name_single_component = world.set<NameSingleComponent>();
 

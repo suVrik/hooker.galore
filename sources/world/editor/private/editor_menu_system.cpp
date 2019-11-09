@@ -15,7 +15,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem", "ImguiFetchSystem")
 )
 
-EditorMenuSystem::EditorMenuSystem(World& world) noexcept
+EditorMenuSystem::EditorMenuSystem(World& world)
         : NormalSystem(world) {
     world.set<EditorMenuSingleComponent>();
 }

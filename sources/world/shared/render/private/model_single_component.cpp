@@ -11,7 +11,7 @@ ModelSingleComponent& ModelSingleComponent::operator=(ModelSingleComponent&& ano
 ModelSingleComponent::~ModelSingleComponent() = default;
 
 
-const Model* ModelSingleComponent::get(const std::string& name) const noexcept {
+const Model* ModelSingleComponent::get(const std::string& name) const {
     const std::string normalized_name = ghc::filesystem::path(name).lexically_normal().string();
     if (auto result = m_models.find(normalized_name); result != m_models.end()) {
         return result->second.get();

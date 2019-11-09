@@ -25,16 +25,16 @@ class PhysicsInitializationSystem;
 class PhysicsSingleComponent final {
 public:
     /** Return physics. */
-    physx::PxPhysics& get_physics() const noexcept;
+    physx::PxPhysics& get_physics() const;
     
     /** Return physx cooking. */
-    physx::PxCooking& get_cooking() const noexcept;
+    physx::PxCooking& get_cooking() const;
     
     /** Return physx scene. */
-    physx::PxScene& get_scene() const noexcept;
+    physx::PxScene& get_scene() const;
     
     /** Return physx default material. */
-    physx::PxMaterial* get_default_material() const noexcept;
+    physx::PxMaterial* get_default_material() const;
 
 private:
     physx::PxDefaultErrorCallback m_default_error_callback;

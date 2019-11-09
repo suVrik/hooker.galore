@@ -16,7 +16,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem")
 )
 
-EditorHistorySystem::EditorHistorySystem(World& world) noexcept
+EditorHistorySystem::EditorHistorySystem(World& world)
         : NormalSystem(world) {
     auto& editor_history_single_component = world.set<EditorHistorySingleComponent>();
     editor_history_single_component.undo_action = std::make_shared<bool>(false);

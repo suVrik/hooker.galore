@@ -96,7 +96,7 @@ void AAPassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(AA_PASS, aa_pass_single_component.aa_pass_program);
 }
 
-void AAPassSystem::reset(AAPassSingleComponent &aa_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void AAPassSystem::reset(AAPassSingleComponent &aa_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace aa_pass_system_details;
 
     if (bgfx::isValid(aa_pass_single_component.buffer)) {

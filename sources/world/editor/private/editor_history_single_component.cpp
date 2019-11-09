@@ -17,7 +17,7 @@ namespace history_single_component_details {
 
 void perform_undo_redo(World& world, 
                        EditorHistorySingleComponent::HistoryChange& undo, 
-                       EditorHistorySingleComponent::HistoryChange& redo) noexcept {
+                       EditorHistorySingleComponent::HistoryChange& redo) {
     auto& editor_selection_single_component = world.ctx<EditorSelectionSingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
@@ -174,7 +174,7 @@ void perform_undo_redo(World& world,
 
 } // namespace history_single_component_details
 
-entt::entity EditorHistorySingleComponent::HistoryChange::create_entity(World& world, const std::string& name_hint) noexcept {
+entt::entity EditorHistorySingleComponent::HistoryChange::create_entity(World& world, const std::string& name_hint) {
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
     const entt::entity result = world.create();
@@ -191,7 +191,7 @@ entt::entity EditorHistorySingleComponent::HistoryChange::create_entity(World& w
     return result;
 }
 
-void EditorHistorySingleComponent::HistoryChange::delete_entity(World& world, const entt::entity entity) noexcept {
+void EditorHistorySingleComponent::HistoryChange::delete_entity(World& world, const entt::entity entity) {
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
     assert(world.valid(entity));
@@ -216,7 +216,7 @@ void EditorHistorySingleComponent::HistoryChange::delete_entity(World& world, co
     world.destroy(entity);
 }
 
-void EditorHistorySingleComponent::HistoryChange::assign_component(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+void EditorHistorySingleComponent::HistoryChange::assign_component(World& world, const entt::entity entity, const entt::meta_handle component) {
     assert(world.valid(entity));
     assert(world.has<NameComponent>(entity));
     assert(component);
@@ -231,17 +231,17 @@ void EditorHistorySingleComponent::HistoryChange::assign_component(World& world,
     action.components.push_back(ComponentManager::copy(component));
 }
 
-entt::meta_handle EditorHistorySingleComponent::HistoryChange::assign_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle EditorHistorySingleComponent::HistoryChange::assign_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) {
     assign_component(world, entity, component);
     return world.assign_copy(entity, component);
 }
 
-entt::meta_handle EditorHistorySingleComponent::HistoryChange::assign_component_move(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle EditorHistorySingleComponent::HistoryChange::assign_component_move(World& world, const entt::entity entity, const entt::meta_handle component) {
     assign_component(world, entity, component);
     return world.assign_move(entity, component);
 }
 
-void EditorHistorySingleComponent::HistoryChange::replace_component(World& world, const entt::entity entity, entt::meta_handle component) noexcept {
+void EditorHistorySingleComponent::HistoryChange::replace_component(World& world, const entt::entity entity, entt::meta_handle component) {
     assert(world.valid(entity));
     assert(world.has<NameComponent>(entity));
     assert(component);
@@ -285,19 +285,19 @@ void EditorHistorySingleComponent::HistoryChange::replace_component(World& world
     action.components.push_back(ComponentManager::copy(world.get(entity, component.type())));
 }
 
-entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_copy(World& world, const entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_move_assignable(component.type()));
     replace_component(world, entity, component);
     return world.replace_copy(entity, component);
 }
 
-entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_move(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_move(World& world, const entt::entity entity, const entt::meta_handle component) {
     assert(ComponentManager::is_copy_assignable(component.type()));
     replace_component(world, entity, component);
     return world.replace_move(entity, component);
 }
 
-entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_move_or_copy(World& world, const entt::entity entity, const entt::meta_handle component) noexcept {
+entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component_move_or_copy(World& world, const entt::entity entity, const entt::meta_handle component) {
     replace_component(world, entity, component);
     if (ComponentManager::is_move_assignable(component.type())) {
         world.replace_move(entity, component);
@@ -305,7 +305,7 @@ entt::meta_handle EditorHistorySingleComponent::HistoryChange::replace_component
     return world.replace_copy(entity, component);
 }
 
-void EditorHistorySingleComponent::HistoryChange::remove_component(World& world, const entt::entity entity, const entt::meta_type component_type) noexcept {
+void EditorHistorySingleComponent::HistoryChange::remove_component(World& world, const entt::entity entity, const entt::meta_type component_type) {
     assert(world.valid(entity));
     assert(world.has<NameComponent>(entity));
     assert(world.has(entity, component_type));
@@ -322,7 +322,7 @@ void EditorHistorySingleComponent::HistoryChange::remove_component(World& world,
     world.remove(entity, component_type);
 }
 
-EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin(World& world, const std::string& description) noexcept {
+EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin(World& world, const std::string& description) {
     if (!is_continuous) {
         undo_position = (undo_position + 1) % HISTORY_BUFFER_SIZE;
 
@@ -339,7 +339,7 @@ EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin
     return nullptr;
 }
 
-EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin_continuous(World& world, const std::string& description) noexcept {
+EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin_continuous(World& world, const std::string& description) {
     if (!is_continuous) {
         EditorHistorySingleComponent::HistoryChange* result = begin(world, description);
         is_continuous = true;
@@ -348,13 +348,13 @@ EditorHistorySingleComponent::HistoryChange* EditorHistorySingleComponent::begin
     return nullptr;
 }
 
-void EditorHistorySingleComponent::end_continuous() noexcept {
+void EditorHistorySingleComponent::end_continuous() {
     assert(is_continuous);
     is_continuous = false;
     is_level_changed = true;
 }
 
-void EditorHistorySingleComponent::perform_undo(World& world) noexcept {
+void EditorHistorySingleComponent::perform_undo(World& world) {
     if (!is_continuous && !undo[undo_position].actions.empty()) {
         EditorHistorySingleComponent::HistoryChange& change = redo.emplace_back();
         change.description = std::move(undo[undo_position].description);
@@ -368,7 +368,7 @@ void EditorHistorySingleComponent::perform_undo(World& world) noexcept {
     }
 }
 
-void EditorHistorySingleComponent::perform_redo(World& world) noexcept {
+void EditorHistorySingleComponent::perform_redo(World& world) {
     if (!is_continuous && !redo.empty()) {
         undo_position = (undo_position + 1) % HISTORY_BUFFER_SIZE;
 

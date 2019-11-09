@@ -82,7 +82,7 @@ void HDRPassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(HDR_PASS, hdr_pass_single_component.hdr_pass_program);
 }
 
-void HDRPassSystem::reset(HDRPassSingleComponent &hdr_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void HDRPassSystem::reset(HDRPassSingleComponent &hdr_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace hdr_pass_system_details;
 
     bgfx::setViewRect(HDR_PASS, 0, 0, width, height);

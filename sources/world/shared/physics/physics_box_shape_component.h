@@ -10,8 +10,8 @@ namespace hg {
 class PhysicsBoxShapeComponent final {
 public:
     /** Get/Set box shape size. */
-    const glm::vec3& get_size() const noexcept;
-    void set_size(const glm::vec3& value) noexcept;
+    const glm::vec3& get_size() const;
+    void set_size(const glm::vec3& value);
 
 private:
     glm::vec3 m_size = glm::vec3(1.f, 1.f, 1.f);

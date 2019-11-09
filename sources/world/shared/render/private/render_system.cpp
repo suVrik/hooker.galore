@@ -13,7 +13,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("RenderFetchSystem")
 )
 
-RenderSystem::RenderSystem(World& world) noexcept
+RenderSystem::RenderSystem(World& world)
         : NormalSystem(world) {
     world.set<RenderSingleComponent>();
 }

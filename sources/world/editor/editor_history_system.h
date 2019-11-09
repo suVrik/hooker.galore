@@ -7,7 +7,7 @@ namespace hg {
 /** `EditorHistorySystem` shows history overlay and performs undo-redo operations. */
 class EditorHistorySystem final : public NormalSystem {
 public:
-    explicit EditorHistorySystem(World& world) noexcept;
+    explicit EditorHistorySystem(World& world);
     void update(float elapsed_time) override;
 };
 

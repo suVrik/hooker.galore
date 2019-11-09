@@ -135,7 +135,7 @@ void DebugDrawPassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(DEBUG_DRAW_ONSCREEN_PASS, quad_single_component.program);
 }
 
-void DebugDrawPassSystem::reset(DebugDrawPassSingleComponent& debug_draw_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void DebugDrawPassSystem::reset(DebugDrawPassSingleComponent& debug_draw_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace debug_draw_pass_system_details;
 
     if (bgfx::isValid(debug_draw_pass_single_component.color_texture)) {

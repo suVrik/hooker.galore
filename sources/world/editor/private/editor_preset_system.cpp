@@ -28,7 +28,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem", "CameraSystem")
 )
 
-EditorPresetSystem::EditorPresetSystem(World& world) noexcept
+EditorPresetSystem::EditorPresetSystem(World& world)
         : NormalSystem(world) {
     world.set<EditorPresetSingleComponent>();
 }
@@ -44,7 +44,7 @@ void EditorPresetSystem::update(float /*elapsed_time*/) {
 
 void EditorPresetSystem::show_presets_window(EditorPresetSingleComponent& editor_preset_single_component, 
                                              EditorHistorySingleComponent& editor_history_single_component,
-                                             CameraSingleComponent& camera_single_component) const noexcept {
+                                             CameraSingleComponent& camera_single_component) const {
     if (ImGui::Begin("Presets", nullptr, ImGuiWindowFlags_NoFocusOnAppearing)) {
         char buffer[255] = { '\0' };
         ImGui::InputText("Filter", buffer, sizeof(buffer));
@@ -127,7 +127,7 @@ void EditorPresetSystem::show_presets_window(EditorPresetSingleComponent& editor
 
 void EditorPresetSystem::process_drag_and_drop(EditorPresetSingleComponent& editor_preset_single_component, 
                                                EditorHistorySingleComponent& editor_history_single_component,
-                                               CameraSingleComponent& camera_single_component) const noexcept {
+                                               CameraSingleComponent& camera_single_component) const {
     auto& normal_input_single_component = world.ctx<NormalInputSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
@@ -169,7 +169,7 @@ void EditorPresetSystem::process_drag_and_drop(EditorPresetSingleComponent& edit
 entt::entity EditorPresetSystem::place_preset(EditorPresetSingleComponent& editor_preset_single_component,
                                               EditorHistorySingleComponent& editor_history_single_component,
                                               CameraSingleComponent& camera_single_component, 
-                                              const std::string& preset_name, const bool is_continuous) const noexcept {
+                                              const std::string& preset_name, const bool is_continuous) const {
     auto& editor_selection_single_component = world.ctx<EditorSelectionSingleComponent>();
 
     assert(editor_preset_single_component.presets.count(preset_name) > 0);

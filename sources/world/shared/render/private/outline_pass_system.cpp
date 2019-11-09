@@ -41,7 +41,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )
 
-OutlinePassSystem::OutlinePassSystem(World& world) noexcept
+OutlinePassSystem::OutlinePassSystem(World& world)
         : NormalSystem(world)
         , m_group(world.group<OutlineComponent>(entt::get<ModelComponent, TransformComponent>)) {
     using namespace outline_pass_system_details;
@@ -124,7 +124,7 @@ void OutlinePassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(OUTLINE_BLUR_PASS, outline_pass_single_component.outline_blur_pass_program);
 }
 
-void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace outline_pass_system_details;
 
     if (bgfx::isValid(outline_pass_single_component.buffer)) {
@@ -146,7 +146,7 @@ void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_co
     bgfx::setViewRect(OUTLINE_BLUR_PASS, 0, 0, width, height);
 }
 
-void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const noexcept {
+void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const {
     glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
     local_transform = local_transform * glm::mat4_cast(node.rotation);
     local_transform = glm::scale(local_transform, node.scale);

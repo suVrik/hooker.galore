@@ -52,7 +52,7 @@ struct GeometryPassSystem::DrawNodeContext final {
     bgfx::ProgramHandle program    = BGFX_INVALID_HANDLE;
 };
 
-GeometryPassSystem::GeometryPassSystem(World& world) noexcept
+GeometryPassSystem::GeometryPassSystem(World& world)
         : NormalSystem(world)
         , m_group(world.group<ModelComponent, MaterialComponent, TransformComponent>()) {
     using namespace geometry_pass_system_details;
@@ -136,7 +136,7 @@ void GeometryPassSystem::update(float /*elapsed_time*/) {
     });
 }
 
-void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace geometry_pass_system_details;
 
     if (bgfx::isValid(geometry_pass_single_component.gbuffer)) {
@@ -168,7 +168,7 @@ void GeometryPassSystem::reset(GeometryPassSingleComponent& geometry_pass_single
     bgfx::setViewRect(GEOMETRY_PASS, 0, 0, width, height);
 }
 
-void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::Node& node, const glm::mat4& transform) const noexcept {
+void GeometryPassSystem::draw_node(const DrawNodeContext& context, const Model::Node& node, const glm::mat4& transform) const {
     glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
     local_transform = local_transform * glm::mat4_cast(node.rotation);
     local_transform = glm::scale(local_transform, node.scale);

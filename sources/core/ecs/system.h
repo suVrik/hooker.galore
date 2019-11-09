@@ -8,7 +8,7 @@ class World;
 class System {
 public:
     /** Construct `System` in specified world. */
-    explicit System(World& world) noexcept;
+    explicit System(World& world);
     virtual ~System() = 0;
 
     /** Execute system. */
@@ -22,7 +22,7 @@ protected:
 class NormalSystem : public System {
 public:
     /** Construct `NormalSystem` in specified world. */
-    explicit NormalSystem(World& world) noexcept;
+    explicit NormalSystem(World& world);
     ~NormalSystem() override;
 };
 
@@ -30,7 +30,7 @@ public:
 class FixedSystem : public System {
 public:
     /** Construct `FixedSystem` in specified world. */
-    explicit FixedSystem(World& world) noexcept;
+    explicit FixedSystem(World& world);
     ~FixedSystem() override;
 };
 

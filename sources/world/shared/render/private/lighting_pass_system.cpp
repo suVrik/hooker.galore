@@ -145,7 +145,7 @@ void LightingPassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(LIGHTING_PASS, lighting_pass_single_component.lighting_pass_program);
 }
 
-void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void LightingPassSystem::reset(LightingPassSingleComponent &lighting_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace lighting_pass_system_details;
 
     if (bgfx::isValid(lighting_pass_single_component.color_texture)) {

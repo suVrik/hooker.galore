@@ -129,7 +129,7 @@ void SkyboxPassSystem::update(float /*elapsed_time*/) {
     bgfx::submit(SKYBOX_PASS, quad_single_component.program);
 }
 
-void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_component, uint16_t width, uint16_t height) const noexcept {
+void SkyboxPassSystem::reset(SkyboxPassSingleComponent &skybox_pass_single_component, uint16_t width, uint16_t height) const {
     using namespace skybox_pass_system_details;
 
     if (bgfx::isValid(skybox_pass_single_component.color_texture)) {

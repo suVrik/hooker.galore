@@ -25,7 +25,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("ImguiFetchSystem", "EditorSelectionSystem")
 )
 
-EditorPropertyEditorSystem::EditorPropertyEditorSystem(World& world) noexcept
+EditorPropertyEditorSystem::EditorPropertyEditorSystem(World& world)
         : NormalSystem(world) {
 }
 
@@ -42,7 +42,7 @@ void EditorPropertyEditorSystem::update(float /*elapsed_time*/) {
     ImGui::End();
 }
 
-void EditorPropertyEditorSystem::edit_entities(EditorSelectionSingleComponent& editor_selection_single_component) const noexcept {
+void EditorPropertyEditorSystem::edit_entities(EditorSelectionSingleComponent& editor_selection_single_component) const {
     auto& editor_history_single_component = world.ctx<EditorHistorySingleComponent>();
     auto& name_single_component = world.ctx<NameSingleComponent>();
 
@@ -93,7 +93,7 @@ void EditorPropertyEditorSystem::edit_entities(EditorSelectionSingleComponent& e
 void EditorPropertyEditorSystem::edit_component(EditorHistorySingleComponent& editor_history_single_component,
                                                 NameSingleComponent& name_single_component, 
                                                 EditorSelectionSingleComponent& editor_selection_single_component,
-                                                const entt::meta_type component_type) const noexcept {
+                                                const entt::meta_type component_type) const {
     const char* const component_name = ComponentManager::get_name(component_type);
     assert(component_name != nullptr);
 
@@ -146,7 +146,7 @@ void EditorPropertyEditorSystem::edit_component(EditorHistorySingleComponent& ed
 }
 
 void EditorPropertyEditorSystem::show_add_component_popup(EditorHistorySingleComponent& editor_history_single_component, 
-                                                          EditorSelectionSingleComponent& editor_selection_single_component) const noexcept {
+                                                          EditorSelectionSingleComponent& editor_selection_single_component) const {
     if (ImGui::BeginPopupModal("Add Component?", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         auto any_has = [&](const entt::meta_type component_type) {
             for (const entt::entity entity : editor_selection_single_component.selected_entities) {
@@ -217,7 +217,7 @@ void EditorPropertyEditorSystem::show_add_component_popup(EditorHistorySingleCom
     }
 }
 
-void EditorPropertyEditorSystem::show_save_as_preset_popup() const noexcept {
+void EditorPropertyEditorSystem::show_save_as_preset_popup() const {
     if (ImGui::BeginPopupModal("Save As Preset?", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
         // TODO: Implement preset saving.
 
@@ -243,7 +243,7 @@ void EditorPropertyEditorSystem::show_save_as_preset_popup() const noexcept {
 }
 
 bool EditorPropertyEditorSystem::list_properties(EditorSelectionSingleComponent& editor_selection_single_component, 
-                                                 const std::string& name, std::vector<entt::meta_any>& objects, const bool is_component) const noexcept {
+                                                 const std::string& name, std::vector<entt::meta_any>& objects, const bool is_component) const {
     assert(!objects.empty());
 
     const entt::meta_type object_type = objects.front().type();

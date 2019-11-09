@@ -15,7 +15,7 @@ SYSTEM_DESCRIPTOR(
     AFTER("EditorMenuSystem")
 )
 
-EditorGridSystem::EditorGridSystem(World& world) noexcept
+EditorGridSystem::EditorGridSystem(World& world)
         : NormalSystem(world) {
     auto& editor_grid_single_component = world.set<EditorGridSingleComponent>();
     editor_grid_single_component.is_shown = std::make_shared<bool>(true);

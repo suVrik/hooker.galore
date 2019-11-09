@@ -32,7 +32,7 @@ namespace hg {
 
 namespace resource_system_details {
 
-bool compare_case_insensitive(const std::string& a, const std::string& b) noexcept {
+bool compare_case_insensitive(const std::string& a, const std::string& b) {
     return std::equal(a.begin(), a.end(), b.begin(), b.end(), [](char a, char b) {
         return tolower(a) == tolower(b);
     });
@@ -111,7 +111,7 @@ void iterate_recursive_parallel(const ghc::filesystem::path& directory, const st
     }
 }
 
-void destroy_model_node(Model::Node& node) noexcept {
+void destroy_model_node(Model::Node& node) {
     for (Model::Node& child_node : node.children) {
         destroy_model_node(child_node);
     }
@@ -252,7 +252,7 @@ void ResourceSystem::load_textures() const {
     }
 }
 
-Texture ResourceSystem::load_texture(const std::string &path) const noexcept {
+Texture ResourceSystem::load_texture(const std::string &path) const {
     Texture result;
     bx::FileReader file_reader;
     if (bx::open(&file_reader, path.c_str())) {

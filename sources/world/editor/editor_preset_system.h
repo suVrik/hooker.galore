@@ -14,7 +14,7 @@ struct EditorPresetSingleComponent;
 /** `EditorPresetSystem` shows UI to select preset and allows to put on the stage. */
 class EditorPresetSystem final : public NormalSystem {
 public:
-    explicit EditorPresetSystem(World& world) noexcept;
+    explicit EditorPresetSystem(World& world);
     void update(float elapsed_time) override;
 
 private:
@@ -22,14 +22,14 @@ private:
 
     void show_presets_window(EditorPresetSingleComponent& editor_preset_single_component,
                              EditorHistorySingleComponent& editor_history_single_component,
-                             CameraSingleComponent& camera_single_component) const noexcept;
+                             CameraSingleComponent& camera_single_component) const;
     void process_drag_and_drop(EditorPresetSingleComponent& editor_preset_single_component,
                                EditorHistorySingleComponent& editor_history_single_component,
-                               CameraSingleComponent& camera_single_component) const noexcept;
+                               CameraSingleComponent& camera_single_component) const;
     entt::entity place_preset(EditorPresetSingleComponent& editor_preset_single_component,
                               EditorHistorySingleComponent& editor_history_single_component,
                               CameraSingleComponent& camera_single_component,
-                              const std::string& preset_name, bool is_continuous) const noexcept;
+                              const std::string& preset_name, bool is_continuous) const;
 };
 
 } // namespace hg

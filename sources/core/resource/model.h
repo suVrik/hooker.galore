@@ -36,9 +36,9 @@ public:
     struct Primitive final {
         Primitive() = default;
         Primitive(const Primitive& another) = delete;
-        Primitive(Primitive&& another) noexcept;
+        Primitive(Primitive&& another);
         Primitive& operator=(const Primitive& another) = delete;
-        Primitive& operator=(Primitive&& another) noexcept;
+        Primitive& operator=(Primitive&& another);
         ~Primitive();
 
         bgfx::IndexBufferHandle index_buffer   = BGFX_INVALID_HANDLE;
