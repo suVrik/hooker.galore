@@ -5,7 +5,12 @@
 
 namespace hg {
 
-World::World() {
+World::World(World* const parent)
+        : m_parent(parent) {
+    if (m_parent != nullptr) {
+        m_parent->m_children.push_back(this);
+    }
+
     set<RunningWorldSingleComponent>();
 
     for (size_t i = 0; i < std::size(m_systems); i++) {
@@ -16,6 +21,13 @@ World::World() {
 }
 
 World::~World() {
+    if (m_parent != nullptr) {
+        auto it = std::find(m_parent->m_children.begin(), m_parent->m_children.end(), this);
+        assert(it != m_parent->m_children.end());
+        std::swap(*it, m_parent->m_children.back());
+        m_parent->m_children.pop_back();
+    }
+
     for (int32_t i = 1; i >= 0; i--) {
         for (auto it = m_system_order[i].rbegin(); it != m_system_order[i].rend(); ++it) {
             const size_t system_index = *it;
@@ -24,6 +36,31 @@ World::~World() {
         }
     }
 }
+
+World* World::get_parent() const {
+    return m_parent;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+entt::meta_handle World::ctx(entt::meta_type single_component_type) const {
+    assert(ComponentManager::is_registered(single_component_type));
+    const entt::meta_handle result = ComponentManager::descriptors[single_component_type].ctx(this);
+    if (!result && m_parent != nullptr) {
+        return ComponentManager::descriptors[single_component_type].ctx(m_parent);
+    }
+    return result;
+}
+
+bool World::has_ctx(entt::meta_type single_component_type) const {
+    return static_cast<bool>(ctx(single_component_type));
+}
+
+bool World::is_owned_ctx(entt::meta_type single_component_type) const {
+    return m_parent == nullptr || ctx(single_component_type) != m_parent->ctx(single_component_type);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 entt::meta_handle World::assign_default(const entt::entity entity, const entt::meta_type component_type) {
     assert(ComponentManager::is_registered(component_type));
@@ -90,6 +127,8 @@ entt::meta_handle World::get_or_assign(const entt::entity entity, const entt::me
     return ComponentManager::descriptors[component_type].get_or_assign(this, entity);
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void World::clear_tags() {
     for (uint8_t& tag_enabled : m_tags) {
         if (tag_enabled != 0) {
@@ -126,6 +165,8 @@ bool World::check_tag(const char* const tag) {
     }
     return false;
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 bool World::update_normal(const float elapsed_time) {
     if (m_tags_changed[0]) {

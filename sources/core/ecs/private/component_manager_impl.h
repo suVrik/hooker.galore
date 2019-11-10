@@ -8,7 +8,7 @@ template <typename T>
 void ComponentManager::register_component() {
     ComponentDescriptor descriptor{};
 
-    if (std::is_default_constructible_v<T>) {
+    if constexpr (std::is_default_constructible_v<T>) {
         descriptor.construct = []() -> entt::meta_any {
             return entt::meta_any(T{});
         };
@@ -31,6 +31,15 @@ void ComponentManager::register_component() {
     } else {
         descriptor.move = nullptr;
     }
+
+    descriptor.ctx = [](const entt::registry* const registry) -> entt::meta_handle {
+        if constexpr (std::is_empty_v<T>) {
+            static T instance;
+            return entt::meta_handle(instance);
+        } else {
+            return entt::meta_handle(*const_cast<entt::registry*>(registry)->try_ctx<T>());
+        }
+    };
 
     if constexpr (std::is_default_constructible_v<T>) {
         static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");

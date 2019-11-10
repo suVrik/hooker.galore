@@ -46,25 +46,30 @@ bool ComponentManager::is_registered(const entt::meta_type component_type) {
 }
 
 bool ComponentManager::is_default_constructible(const entt::meta_type component_type) {
+    assert(is_registered(component_type));
     assert((descriptors.find(component_type)->second.assign_default == nullptr) == (descriptors.find(component_type)->second.get_or_assign == nullptr));
     return descriptors.find(component_type)->second.assign_default != nullptr;
 }
 
 bool ComponentManager::is_copy_constructible(const entt::meta_type component_type) {
+    assert(is_registered(component_type));
     assert((descriptors.find(component_type)->second.assign_copy != nullptr) == (descriptors.find(component_type)->second.copy != nullptr));
     return descriptors.find(component_type)->second.assign_copy != nullptr;
 }
 
 bool ComponentManager::is_move_constructible(const entt::meta_type component_type) {
+    assert(is_registered(component_type));
     assert((descriptors.find(component_type)->second.assign_move != nullptr) == (descriptors.find(component_type)->second.move != nullptr));
     return descriptors.find(component_type)->second.assign_move != nullptr;
 }
 
 bool ComponentManager::is_copy_assignable(const entt::meta_type component_type) {
+    assert(is_registered(component_type));
     return descriptors.find(component_type)->second.replace_copy != nullptr;
 }
 
 bool ComponentManager::is_move_assignable(const entt::meta_type component_type) {
+    assert(is_registered(component_type));
     return descriptors.find(component_type)->second.replace_move != nullptr;
 }
 
@@ -76,16 +81,12 @@ bool ComponentManager::is_ignored(const entt::meta_type component_type) {
 }
 
 bool ComponentManager::is_editable(const entt::meta_type component_type) {
-    if (is_registered(component_type)) {
-        const entt::meta_prop component_name_property = component_type.prop("name"_hs);
-        if (component_name_property && component_name_property.value().type() == entt::resolve<const char*>()) {
-            const entt::meta_prop ignore_property = component_type.prop("ignore"_hs);
-            if (!ignore_property || ignore_property.value().type() != entt::resolve<bool>() || !ignore_property.value().cast<bool>()) {
-                return is_default_constructible(component_type) && is_copy_constructible(component_type) && is_copy_assignable(component_type);
-            }
-        }
-    }
-    return false;
+    return is_registered(component_type) &&
+           get_name(component_type, nullptr) != nullptr &&
+           !is_ignored(component_type) &&
+           is_default_constructible(component_type) &&
+           is_copy_constructible(component_type) &&
+           is_copy_assignable(component_type);
 }
 
 } // namespace hg

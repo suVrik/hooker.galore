@@ -11,11 +11,68 @@
 namespace hg {
 
 /** `World` is an extension over `entt::registry` that allows to work with components without knowing their compile time
-    type and allows to manage and run ECS systems. */
+    type and allows to manage and run ECS systems. A world can extend another world (they're called a child and a parent
+    world respectively). A child world may inherit some tags from its parent automatically (depends on tag's settings)
+    as well as propagate its own tags to it (depends on tag's settings as well). Child world has access to parent's
+    single components automatically using "set" and "ctx" methods, but not the other way around. */
 class World final : public entt::registry {
 public:
-    World();
+    /** Construct world. Pass nullptr to construct a root world. Child world otherwise. */
+    explicit World(World* parent = nullptr);
+
+    /** World reference is cached in systems and other places, so don't allow to copy or move the world.
+        Smart pointer is recommended if you want to store your world in some movable structure. */
+    World(const World& original) = delete;
+    World(World&& original) = delete;
     ~World();
+    World& operator=(const World& original) = delete;
+    World& operator=(World&& original) = delete;
+
+    /** Return parent world. Root world returns nullptr. */
+    World* get_parent() const;
+
+    /// SINGLE COMPONENTS ////////////////////////////////////////////////////
+
+    /** Perform `entt::registry::try_ctx`, but if single component with specified type doesn't exist in this world,
+        check it in parent world as well (and so on through hierarchy). */
+    template <typename T>
+    const T* try_ctx() const;
+    template <typename T>
+    T* try_ctx();
+
+    /** Perform `entt::registry::ctx`, but if single component with specified type doesn't exist in this world,
+        check it in parent world as well (and so on through hierarchy). */
+    template <typename T>
+    const T& ctx() const;
+    template <typename T>
+    T& ctx();
+
+    /** Perform `try_ctx` on earlier registered single component. */
+    entt::meta_handle ctx(entt::meta_type single_component_type) const;
+
+    /** Check whether single component with specified type exists. */
+    template <typename T>
+    bool has_ctx() const;
+
+    /** Perform `has_ctx` on earlier registered single component. */
+    bool has_ctx(entt::meta_type single_component_type) const;
+
+    /** Check whether specified single component type is owned by this world. */
+    template <typename T>
+    bool is_owned_ctx() const;
+
+    /** Perform `is_owned_ctx` on earlier registered single component. */
+    bool is_owned_ctx(entt::meta_type single_component_type) const;
+
+    /** Iterate over all registered single components of this world.
+
+        world.each_registered_single_component([](const entt::meta_handle component_handle) {
+            // Your code goes here
+        }); */
+    template <typename T>
+    void each_registered_single_component(T callback) const;
+
+    /// COMPONENTS ///////////////////////////////////////////////////////////
 
     /** Perform `entt::registry::assign` on earlier registered component. Component must be default-constructible. */
     entt::meta_handle assign_default(entt::entity entity, entt::meta_type component_type);
@@ -50,11 +107,19 @@ public:
     /** Perform `entt::registry::get_or_assign` on earlier registered component. Default constructor is used. */
     entt::meta_handle get_or_assign(entt::entity entity, entt::meta_type component_type);
 
-    /** Iterate over all registered components of specified `entity`. */
+    /** Iterate over all registered components of specified `entity`.
+
+        world.each_registered_component(entity, [](const entt::meta_handle component_handle) {
+            // Your code goes here
+        }); */
     template <typename T>
     void each_registered_component(entt::entity entity, T callback) const;
 
-    /** Iterate over all editable components of specified `entity`. */
+    /** Iterate over all editable components of specified `entity`. 
+
+        world.each_editable_component(entity, [](const entt::meta_handle component_handle) {
+            // Your code goes here
+        }); */
     template <typename T>
     void each_editable_component(entt::entity entity, T callback) const;
 
@@ -63,6 +128,8 @@ public:
     using entt::registry::has;
     using entt::registry::get;
     using entt::registry::get_or_assign;
+
+    /// TAGS /////////////////////////////////////////////////////////////////
 
     /** Remove all the tags from this world. */
     void clear_tags();
@@ -81,6 +148,8 @@ public:
     template <typename... Tags>
     bool check_tags(Tags&&... tags);
     bool check_tag(const char* tag);
+
+    /// EXECUTION ////////////////////////////////////////////////////////////
 
     /** Execute all systems of specified type. */
     bool update_normal(float elapsed_time);
@@ -101,6 +170,9 @@ private:
     void sort_systems(size_t system_type);
     bool check_tag_indices(const std::vector<size_t>& require, const std::vector<size_t>& exclusive);
     void propagate_system(size_t system_type, size_t system_index);
+
+    World* const m_parent;
+    std::vector<World*> m_children;
 
     std::vector<SystemInstance> m_systems[2];
     std::vector<size_t> m_system_order[2];

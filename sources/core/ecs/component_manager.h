@@ -18,11 +18,19 @@ public:
     template <typename T>
     static void register_component();
 
-    /** Iterate over all registered component types. */
+    /** Iterate over all registered component types.
+
+        ComponentManager::each_registered([](const entt::meta_type component_type) {
+            // Your code goes here
+        }); */
     template <typename T>
     static void each_registered(T callback);
 
-    /** Iterate over all editable component types. */
+    /** Iterate over all editable component types.
+
+        ComponentManager::each_editable([](const entt::meta_type component_type) {
+            // Your code goes here
+        }); */
     template <typename T>
     static void each_editable(T callback);
 
@@ -73,6 +81,7 @@ private:
         entt::meta_any(*construct)();
         entt::meta_any(*copy)(entt::meta_handle component);
         entt::meta_any(*move)(entt::meta_handle component);
+        entt::meta_handle(*ctx)(const entt::registry* registry);
         entt::meta_handle(*assign_default)(entt::registry* registry, entt::entity entity);
         entt::meta_handle(*assign_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
         entt::meta_handle(*assign_move)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
