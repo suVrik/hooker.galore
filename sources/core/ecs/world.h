@@ -33,6 +33,9 @@ public:
     /** Return parent world. Root world returns nullptr. */
     World* get_parent() const;
 
+    /** Return root world. */
+    World* get_root() const;
+
     /// SINGLE COMPONENTS ////////////////////////////////////////////////////
 
     /** Perform `entt::registry::try_ctx`, but if single component with specified type doesn't exist in this world,

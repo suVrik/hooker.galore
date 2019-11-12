@@ -52,6 +52,13 @@ World* World::get_parent() const {
     return m_parent;
 }
 
+World* World::get_root() const {
+    if (m_parent != nullptr) {
+        return m_parent->get_root();
+    }
+    return const_cast<World*>(this);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 entt::meta_handle World::ctx(entt::meta_type single_component_type) const {
