@@ -83,4 +83,4 @@ private:
 
 } // namespace hg
 
-#include "world/shared/physics/private/physics_character_controller_component_impl.h"
+#include "world/physics/private/physics_character_controller_component_impl.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/shared/physics/physics_single_component.h"
+#include "world/physics/physics_single_component.h"
 
 namespace hg {
 

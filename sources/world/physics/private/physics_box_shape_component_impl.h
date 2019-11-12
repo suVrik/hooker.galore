@@ -1,4 +1,4 @@
-#include "world/shared/physics/physics_box_shape_component.h"
+#include "world/physics/physics_box_shape_component.h"
 
 namespace hg {
 

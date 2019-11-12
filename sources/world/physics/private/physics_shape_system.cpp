@@ -1,11 +1,11 @@
 #include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/shared/physics/physics_box_shape_component.h"
-#include "world/shared/physics/physics_box_shape_private_component.h"
-#include "world/shared/physics/physics_shape_system.h"
-#include "world/shared/physics/physics_single_component.h"
-#include "world/shared/physics/physics_static_rigid_body_private_component.h"
-#include "world/shared/physics/physics_tags.h"
+#include "world/physics/physics_box_shape_component.h"
+#include "world/physics/physics_box_shape_private_component.h"
+#include "world/physics/physics_shape_system.h"
+#include "world/physics/physics_single_component.h"
+#include "world/physics/physics_static_rigid_body_private_component.h"
+#include "world/physics/physics_tags.h"
 #include "world/shared/transform_component.h"
 
 #include <PxPhysics.h>

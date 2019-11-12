@@ -1,5 +1,5 @@
 #include "core/meta/registration.h"
-#include "world/shared/physics/physics_character_controller_component.h"
+#include "world/physics/physics_character_controller_component.h"
 
 namespace hg {
 

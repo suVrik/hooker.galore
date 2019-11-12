@@ -1,4 +1,4 @@
-#include "world/shared/physics/physics_static_rigid_body_private_component.h"
+#include "world/physics/physics_static_rigid_body_private_component.h"
 
 #include <cassert>
 

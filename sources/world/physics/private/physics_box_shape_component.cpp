@@ -1,5 +1,5 @@
 #include "core/meta/registration.h"
-#include "world/shared/physics/physics_box_shape_component.h"
+#include "world/physics/physics_box_shape_component.h"
 
 #include <glm/common.hpp>
 #include <glm/gtc/constants.hpp>

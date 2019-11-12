@@ -1,4 +1,4 @@
-#include "world/shared/physics/physics_character_controller_private_component.h"
+#include "world/physics/physics_character_controller_private_component.h"
 
 #include <cassert>
 

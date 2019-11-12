@@ -1,5 +1,5 @@
 #include "core/meta/registration.h"
-#include "world/shared/physics/physics_static_rigid_body_component.h"
+#include "world/physics/physics_static_rigid_body_component.h"
 
 namespace hg {
 

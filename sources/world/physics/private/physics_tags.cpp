@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/shared/physics/physics_tags.h"
+#include "world/physics/physics_tags.h"
 
 namespace hg::tags {
 

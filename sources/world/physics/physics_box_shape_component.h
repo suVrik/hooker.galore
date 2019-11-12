@@ -19,4 +19,4 @@ private:
 
 } // namespace hg
 
-#include "world/shared/physics/private/physics_box_shape_component_impl.h"
+#include "world/physics/private/physics_box_shape_component_impl.h"
