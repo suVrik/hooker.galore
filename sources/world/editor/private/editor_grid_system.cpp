@@ -3,6 +3,7 @@
 #include "world/editor/editor_grid_single_component.h"
 #include "world/editor/editor_grid_system.h"
 #include "world/editor/editor_menu_single_component.h"
+#include "world/editor/editor_tags.h"
 
 #include <debug_draw.hpp>
 
@@ -10,7 +11,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorGridSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("DebugDrawPassSystem"),
     AFTER("EditorMenuSystem")
 )

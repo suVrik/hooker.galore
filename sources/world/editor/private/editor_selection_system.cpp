@@ -4,6 +4,7 @@
 #include "world/editor/editor_menu_single_component.h"
 #include "world/editor/editor_selection_single_component.h"
 #include "world/editor/editor_selection_system.h"
+#include "world/editor/editor_tags.h"
 #include "world/shared/name_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/outline_component.h"
@@ -22,7 +23,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorSelectionSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("ImguiPassSystem", "PickingPassSystem"),
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem")
 )

@@ -10,6 +10,7 @@
 
 namespace hg {
 
+class TagWrapper;
 class World;
 
 /** `SystemManager` contains information about systems and everything related to them. */
@@ -30,13 +31,11 @@ private:
         entt::meta_type system_type;
         std::string name;
 
-        std::vector<size_t> require;
-        std::vector<size_t> exclusive;
+        TagWrapper* tag_expression;
         std::vector<size_t> after;
     };
 
     static std::vector<SystemDescriptor> m_systems[2];
-    static std::unordered_map<std::string, size_t> m_tags_mapping;
 
     friend class World;
 };

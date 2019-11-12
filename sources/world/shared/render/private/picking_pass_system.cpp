@@ -9,6 +9,7 @@
 #include "world/shared/render/picking_pass_single_component.h"
 #include "world/shared/render/picking_pass_system.h"
 #include "world/shared/render/render_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
@@ -32,7 +33,7 @@ static const uint64_t RT_ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_P
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(PickingPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )

@@ -9,6 +9,7 @@
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/geometry_pass_system.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
@@ -37,7 +38,7 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(GeometryPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )

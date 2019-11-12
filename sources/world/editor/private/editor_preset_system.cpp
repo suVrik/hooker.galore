@@ -5,6 +5,7 @@
 #include "world/editor/editor_preset_single_component.h"
 #include "world/editor/editor_preset_system.h"
 #include "world/editor/editor_selection_single_component.h"
+#include "world/editor/editor_tags.h"
 #include "world/shared/name_component.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
@@ -23,7 +24,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorPresetSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("ImguiPassSystem", "GeometryPassSystem", "ResourceSystem"),
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem", "CameraSystem")
 )

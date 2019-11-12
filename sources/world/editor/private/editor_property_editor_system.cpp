@@ -3,6 +3,7 @@
 #include "world/editor/editor_history_single_component.h"
 #include "world/editor/editor_property_editor_system.h"
 #include "world/editor/editor_selection_single_component.h"
+#include "world/editor/editor_tags.h"
 #include "world/shared/name_component.h"
 #include "world/shared/name_single_component.h"
 
@@ -20,7 +21,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorPropertyEditorSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("ImguiPassSystem", "GeometryPassSystem"),
     AFTER("ImguiFetchSystem", "EditorSelectionSystem")
 )

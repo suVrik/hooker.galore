@@ -4,6 +4,7 @@
 #include "world/editor/editor_camera_system.h"
 #include "world/editor/editor_menu_single_component.h"
 #include "world/editor/editor_selection_single_component.h"
+#include "world/editor/editor_tags.h"
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/transform_component.h"
@@ -17,7 +18,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorCameraSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("CameraSystem"),
     AFTER("EditorMenuSystem", "WindowSystem", "EditorSelectionSystem")
 )

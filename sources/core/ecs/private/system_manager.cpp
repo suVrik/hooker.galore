@@ -1,4 +1,5 @@
 #include "core/ecs/system_manager.h"
+#include "core/ecs/tags.h"
 
 #include <entt/core/hashed_string.hpp>
 #include <entt/meta/factory.hpp>
@@ -6,7 +7,6 @@
 namespace hg {
 
 std::vector<SystemManager::SystemDescriptor> SystemManager::m_systems[2];
-std::unordered_map<std::string, size_t> SystemManager::m_tags_mapping;
 
 void SystemManager::commit() {
     size_t current_tag_index = 0;
@@ -21,42 +21,15 @@ void SystemManager::commit() {
         for (size_t i = 0; i < systems.size(); i++) {
             SystemDescriptor& system_descriptor = systems[i];
 
-            const entt::meta_prop require_property = system_descriptor.system_type.prop("require"_hs);
-            if (require_property) {
-                const entt::meta_any require_property_value = require_property.value();
+            const entt::meta_prop tags_property = system_descriptor.system_type.prop("tags"_hs);
+            if (tags_property) {
+                const entt::meta_any tags_property_value = tags_property.value();
 
-                assert(require_property_value);
-                assert(require_property_value.type() == entt::resolve<std::vector<const char*>>());
+                assert(tags_property_value);
+                assert(tags_property_value.type() == entt::resolve<std::shared_ptr<TagWrapper>>());
 
-                const std::vector<const char*>& required_tags = require_property_value.fast_cast<std::vector<const char*>>();
-                for (const char* const tag : required_tags) {
-                    if (auto it = m_tags_mapping.find(tag); it != m_tags_mapping.end()) {
-                        system_descriptor.require.push_back(it->second);
-                    } else {
-                        m_tags_mapping.emplace(tag, current_tag_index);
-                        system_descriptor.require.push_back(current_tag_index);
-                        current_tag_index++;
-                    }
-                }
-            }
-
-            const entt::meta_prop exclusive_property = system_descriptor.system_type.prop("exclusive"_hs);
-            if (exclusive_property) {
-                const entt::meta_any exclusive_property_value = exclusive_property.value();
-
-                assert(exclusive_property_value);
-                assert(exclusive_property_value.type() == entt::resolve<std::vector<const char*>>());
-
-                const std::vector<const char*>& exclusive_tags = exclusive_property_value.fast_cast<std::vector<const char*>>();
-                for (const char* const tag : exclusive_tags) {
-                    if (auto it = m_tags_mapping.find(tag); it != m_tags_mapping.end()) {
-                        system_descriptor.exclusive.push_back(it->second);
-                    } else {
-                        m_tags_mapping.emplace(tag, current_tag_index);
-                        system_descriptor.exclusive.push_back(current_tag_index);
-                        current_tag_index++;
-                    }
-                }
+                const auto& tags_expression = tags_property_value.fast_cast<std::shared_ptr<TagWrapper>>();
+                system_descriptor.tag_expression = tags_expression.get();
             }
 
             assert(!system_descriptor.name.empty());
@@ -99,14 +72,6 @@ void SystemManager::commit() {
         for (size_t i = 0; i < systems.size(); i++) {
             SystemDescriptor& system_descriptor = systems[i];
 
-            std::vector<size_t>& require = system_descriptor.require;
-            std::sort(require.begin(), require.end());
-            require.erase(std::unique(require.begin(), require.end()), require.end());
-
-            std::vector<size_t>& exclusive = system_descriptor.exclusive;
-            std::sort(exclusive.begin(), exclusive.end());
-            exclusive.erase(std::unique(exclusive.begin(), exclusive.end()), exclusive.end());
-
             std::vector<size_t>& after = system_descriptor.after;
             std::sort(after.begin(), after.end());
             after.erase(std::unique(after.begin(), after.end()), after.end());
@@ -114,10 +79,6 @@ void SystemManager::commit() {
 #ifndef NDEBUG
             for (const size_t preceding_system : after) {
                 assert(i != preceding_system);
-            }
-
-            for (const size_t required_tag : require) {
-                assert(std::find(exclusive.begin(), exclusive.end(), required_tag) == exclusive.end());
             }
 #endif
         }

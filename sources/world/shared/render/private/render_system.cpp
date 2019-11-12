@@ -2,6 +2,7 @@
 #include "core/ecs/world.h"
 #include "world/shared/render/render_single_component.h"
 #include "world/shared/render/render_system.h"
+#include "world/shared/render/render_tags.h"
 
 #include <bgfx/bgfx.h>
 
@@ -9,7 +10,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(RenderSystem),
-    REQUIRE("render"),
+    TAGS(render),
     AFTER("RenderFetchSystem")
 )
 

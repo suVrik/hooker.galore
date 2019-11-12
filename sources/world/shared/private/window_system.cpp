@@ -1,6 +1,7 @@
 #include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
 #include "world/shared/normal_input_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 #include "world/shared/window_system.h"
 
@@ -12,7 +13,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(WindowSystem),
-    REQUIRE("render")
+    TAGS(render)
 )
 
 WindowSystem::WindowSystem(World& world)

@@ -3,6 +3,7 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_menu_single_component.h"
 #include "world/editor/editor_menu_system.h"
+#include "world/editor/editor_tags.h"
 
 #include <imgui.h>
 
@@ -10,7 +11,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorMenuSystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("ImguiPassSystem"),
     AFTER("WindowSystem", "ImguiFetchSystem")
 )

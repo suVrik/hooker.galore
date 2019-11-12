@@ -7,6 +7,7 @@
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/light_component.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/render/skybox_pass_single_component.h"
 #include "world/shared/render/skybox_pass_system.h"
 #include "world/shared/render/texture_single_component.h"
@@ -35,7 +36,7 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_ANIS
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(SkyboxPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "GeometryPassSystem", "LightingPassSystem")
 )

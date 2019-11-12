@@ -3,6 +3,7 @@
 #include "world/editor/editor_history_single_component.h"
 #include "world/editor/editor_history_system.h"
 #include "world/editor/editor_menu_single_component.h"
+#include "world/editor/editor_tags.h"
 #include "world/shared/normal_input_single_component.h"
 
 #include <imgui.h>
@@ -11,7 +12,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(EditorHistorySystem),
-    REQUIRE("editor"),
+    TAGS(editor),
     BEFORE("ImguiPassSystem"),
     AFTER("EditorMenuSystem", "WindowSystem", "ImguiFetchSystem")
 )

@@ -3,6 +3,7 @@
 #include "world/shared/imgui_fetch_system.h"
 #include "world/shared/imgui_single_component.h"
 #include "world/shared/normal_input_single_component.h"
+#include "world/shared/shared_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <ImGuizmo.h>
@@ -33,7 +34,7 @@ static void set_clipboard_text(void* /*user_data*/, const char* text) {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(ImguiFetchSystem),
-    REQUIRE("imgui"),
+    TAGS(imgui),
     BEFORE("ImguiPassSystem"),
     AFTER("WindowSystem")
 )

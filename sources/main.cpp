@@ -1,4 +1,5 @@
 #include "core/ecs/world.h"
+#include "world/editor/editor_tags.h"
 #include "world/registration.h"
 #include "world/shared/level_single_component.h"
 
@@ -26,7 +27,7 @@ int main(int argc, char* argv[]) {
         }
 
         hg::World world;
-        world.add_tags("editor", "render", "imgui", "physics");
+        world.add_tags(hg::tags::editor, hg::tags::render, hg::tags::imgui, hg::tags::physics);
 
         // `hg::LevelSingleComponent` is created and initialized before any system is executed.
         // TODO: This is temporary.

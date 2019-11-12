@@ -5,6 +5,7 @@
 #include "world/shared/physics/physics_shape_system.h"
 #include "world/shared/physics/physics_single_component.h"
 #include "world/shared/physics/physics_static_rigid_body_private_component.h"
+#include "world/shared/physics/physics_tags.h"
 #include "world/shared/transform_component.h"
 
 #include <PxPhysics.h>
@@ -16,7 +17,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(PhysicsShapeSystem),
-    REQUIRE("physics"),
+    TAGS(physics),
     BEFORE("PhysicsSimulateSystem"),
     AFTER("PhysicsInitializationSystem")
 )

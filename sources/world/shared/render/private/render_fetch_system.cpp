@@ -3,6 +3,7 @@
 #include "world/shared/normal_input_single_component.h"
 #include "world/shared/render/render_fetch_system.h"
 #include "world/shared/render/render_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>
@@ -13,7 +14,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(RenderFetchSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem")
 )

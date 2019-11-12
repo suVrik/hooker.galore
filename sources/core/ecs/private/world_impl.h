@@ -87,8 +87,26 @@ void World::remove_tags(Tags&& ... tags) {
 }
 
 template <typename... Tags>
-bool World::check_tags(Tags&& ... tags) {
+bool World::check_tags(Tags&& ... tags) const {
     return (check_tag(tags) && ...);
+}
+
+template <typename T>
+void World::each_tag(T callback) const {
+    for (size_t i = 0; i < m_all_tags.size(); i++) {
+        if (m_all_tags[i]) {
+            calback(Tag::get_tag_by_index(i));
+        }
+    }
+}
+
+template <typename T>
+void World::each_owned_tag(T callback) const {
+    for (size_t i = 0; i < m_owned_tags.size(); i++) {
+        if (m_owned_tags[i]) {
+            calback(Tag::get_tag_by_index(i));
+        }
+    }
 }
 
 } // namespace hg

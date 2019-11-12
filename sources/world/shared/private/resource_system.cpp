@@ -5,6 +5,7 @@
 #include "world/shared/render/material_component.h"
 #include "world/shared/render/model_component.h"
 #include "world/shared/render/model_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/resource_system.h"
 #include "world/shared/resource_utils.h"
@@ -126,7 +127,7 @@ SYSTEM_DESCRIPTOR(
     SYSTEM(ResourceSystem),
      // TODO: Split ResourceSystem to several systems. RenderResourceSystem may load textures and meshes.
     //        EditorResourceSystem may load presets. ResourceSystem may load physical meshes and level.
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("RenderFetchSystem")
 )

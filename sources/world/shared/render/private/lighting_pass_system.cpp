@@ -9,6 +9,7 @@
 #include "world/shared/render/lighting_pass_single_component.h"
 #include "world/shared/render/lighting_pass_system.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
@@ -33,7 +34,7 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(LightingPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "GeometryPassSystem")
 )

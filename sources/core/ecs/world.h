@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/ecs/component_manager.h"
-#include "core/ecs/system.h"
+#include "core/ecs/tags.h"
 
 #include <entt/entity/registry.hpp>
 #include <entt/meta/factory.hpp>
@@ -9,6 +9,8 @@
 #include <vector>
 
 namespace hg {
+
+class System;
 
 /** `World` is an extension over `entt::registry` that allows to work with components without knowing their compile time
     type and allows to manage and run ECS systems. A world can extend another world (they're called a child and a parent
@@ -131,23 +133,42 @@ public:
 
     /// TAGS /////////////////////////////////////////////////////////////////
 
-    /** Remove all the tags from this world. */
+    /** Remove all the owned tags from this world. */
     void clear_tags();
 
     /** Add specified tags to this world. */
     template <typename... Tags>
     void add_tags(Tags&&... tags);
-    void add_tag(const char* tag);
+    void add_tag(Tag tag);
 
-    /** Remove the specified tags from this world. */
+    /** Remove specified tags from this world. */
     template <typename... Tags>
     void remove_tags(Tags&&... tags);
-    void remove_tag(const char* tag);
+    void remove_tag(Tag tag);
 
     /** Check whether the specified tags are added to this world. */
     template <typename... Tags>
-    bool check_tags(Tags&&... tags);
-    bool check_tag(const char* tag);
+    bool check_tags(Tags&&... tags) const;
+    bool check_tag(Tag tag) const;
+
+    /** Check whether the specified tag is owned by this world. */
+    bool check_owned_tag(Tag tag) const;
+
+    /** Iterate over all world tags.
+
+        world.each_tag([](const Tag tag) {
+            // Your code goes here
+        }); */
+    template <typename T>
+    void each_tag(T callback) const;
+
+    /** Iterate over all owned world tags.
+
+        world.each_owned_tag([](const Tag tag) {
+            // Your code goes here
+        }); */
+    template <typename T>
+    void each_owned_tag(T callback) const;
 
     /// EXECUTION ////////////////////////////////////////////////////////////
 
@@ -167,8 +188,14 @@ private:
         COMPLETED,
     };
 
+    static constexpr size_t NORMAL = 0;
+    static constexpr size_t FIXED = 1;
+
+    void inherit_add_tag(Tag tag);
+    void inherit_remove_tag(Tag tag);
+    void propagate_add_tag(const World* child_world, Tag tag);
+    void propagate_remove_tag(const World* child_world, Tag tag);
     void sort_systems(size_t system_type);
-    bool check_tag_indices(const std::vector<size_t>& require, const std::vector<size_t>& exclusive);
     void propagate_system(size_t system_type, size_t system_index);
 
     World* const m_parent;
@@ -178,7 +205,10 @@ private:
     std::vector<size_t> m_system_order[2];
     std::vector<PropagateState> m_propagate_state[2];
 
-    std::vector<uint8_t> m_tags;
+    std::vector<bool> m_owned_tags;
+    std::vector<bool> m_inherited_tags;
+    std::vector<size_t> m_propagated_tags;
+    std::vector<bool> m_all_tags;
     bool m_tags_changed[2]{};
 };
 

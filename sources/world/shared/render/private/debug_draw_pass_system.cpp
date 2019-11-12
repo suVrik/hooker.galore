@@ -10,6 +10,7 @@
 #include "world/shared/render/debug_draw_pass_system.h"
 #include "world/shared/render/geometry_pass_single_component.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>
@@ -57,7 +58,7 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(DebugDrawPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )

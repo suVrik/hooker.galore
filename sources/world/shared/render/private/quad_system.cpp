@@ -4,6 +4,7 @@
 #include "shaders/quad_pass/quad_pass.vertex.h"
 #include "world/shared/render/quad_single_component.h"
 #include "world/shared/render/quad_system.h"
+#include "world/shared/render/render_tags.h"
 
 #include <bgfx/embedded_shader.h>
 
@@ -41,7 +42,7 @@ static const bgfx::EmbeddedShader QUAD_PASS_SHADER[] = {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(QuadSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("RenderFetchSystem")
 )

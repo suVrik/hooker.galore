@@ -7,6 +7,7 @@
 #include "world/shared/render/aa_pass_system.h"
 #include "world/shared/render/camera_single_component.h"
 #include "world/shared/render/quad_single_component.h"
+#include "world/shared/render/render_tags.h"
 #include "world/shared/render/skybox_pass_single_component.h"
 #include "world/shared/window_single_component.h"
 
@@ -29,7 +30,7 @@ static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POIN
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(AAPassSystem),
-    REQUIRE("render"),
+    TAGS(render),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "SkyboxPassSystem")
 )

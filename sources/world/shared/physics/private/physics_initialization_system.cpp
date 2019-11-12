@@ -2,6 +2,7 @@
 #include "core/ecs/world.h"
 #include "world/shared/physics/physics_initialization_system.h"
 #include "world/shared/physics/physics_single_component.h"
+#include "world/shared/physics/physics_tags.h"
 
 #include <PxFoundation.h>
 #include <PxPhysics.h>
@@ -20,7 +21,7 @@ namespace hg {
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(PhysicsInitializationSystem),
-    REQUIRE("physics")
+    TAGS(physics)
 )
 
 PhysicsInitializationSystem::PhysicsInitializationSystem(World& world)
