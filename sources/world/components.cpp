@@ -14,7 +14,6 @@
 #include "world/physics/physics_single_component.h"
 #include "world/physics/physics_static_rigid_body_component.h"
 #include "world/physics/physics_static_rigid_body_private_component.h"
-#include "world/registration.h"
 #include "world/render/aa_pass_single_component.h"
 #include "world/render/blockout_component.h"
 #include "world/render/camera_single_component.h"

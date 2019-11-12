@@ -1,7 +1,6 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_tags.h"
 #include "world/physics/physics_tags.h"
-#include "world/registration.h"
 #include "world/render/render_tags.h"
 #include "world/shared/level_single_component.h"
 #include "world/shared/shared_tags.h"
@@ -11,6 +10,13 @@
 #include <clara.hpp>
 #include <fmt/format.h>
 #include <iostream>
+
+namespace hg {
+
+void register_systems();
+void register_components();
+
+} // namespace hg
 
 int main(int argc, char* argv[]) {
     // Initialize `SystemManager` and `ComponentManager`.
