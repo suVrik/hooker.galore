@@ -6,10 +6,10 @@
 #include "world/editor/editor_preset_system.h"
 #include "world/editor/editor_selection_single_component.h"
 #include "world/editor/editor_tags.h"
+#include "world/render/camera_single_component.h"
+#include "world/render/outline_component.h"
 #include "world/shared/name_component.h"
 #include "world/shared/normal_input_single_component.h"
-#include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/outline_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 

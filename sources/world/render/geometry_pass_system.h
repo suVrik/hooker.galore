@@ -2,8 +2,8 @@
 
 #include "core/ecs/system.h"
 #include "core/resource/model.h"
-#include "world/shared/render/material_component.h"
-#include "world/shared/render/model_component.h"
+#include "world/render/material_component.h"
+#include "world/render/model_component.h"
 #include "world/shared/transform_component.h"
 
 #include <entt/entity/group.hpp>

@@ -1,5 +1,5 @@
 #include "core/meta/registration.h"
-#include "world/shared/render/material_component.h"
+#include "world/render/material_component.h"
 
 namespace hg {
 

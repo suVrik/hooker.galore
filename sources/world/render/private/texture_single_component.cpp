@@ -1,4 +1,4 @@
-#include "world/shared/render/texture_single_component.h"
+#include "world/render/texture_single_component.h"
 
 #include <ghc/filesystem.hpp>
 

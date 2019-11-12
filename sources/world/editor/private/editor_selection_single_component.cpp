@@ -1,6 +1,6 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_selection_single_component.h"
-#include "world/shared/render/outline_component.h"
+#include "world/render/outline_component.h"
 
 namespace hg {
 

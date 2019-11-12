@@ -5,12 +5,12 @@
 #include "shaders/debug_solid_pass/debug_solid_pass.vertex.h"
 #include "shaders/debug_textured_pass/debug_textured_pass.fragment.h"
 #include "shaders/debug_textured_pass/debug_textured_pass.vertex.h"
-#include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/debug_draw_pass_single_component.h"
-#include "world/shared/render/debug_draw_pass_system.h"
-#include "world/shared/render/geometry_pass_single_component.h"
-#include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/render_tags.h"
+#include "world/render/camera_single_component.h"
+#include "world/render/debug_draw_pass_single_component.h"
+#include "world/render/debug_draw_pass_system.h"
+#include "world/render/geometry_pass_single_component.h"
+#include "world/render/quad_single_component.h"
+#include "world/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>

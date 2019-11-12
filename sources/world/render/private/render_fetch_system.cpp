@@ -1,9 +1,9 @@
 #include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
+#include "world/render/render_fetch_system.h"
+#include "world/render/render_single_component.h"
+#include "world/render/render_tags.h"
 #include "world/shared/normal_input_single_component.h"
-#include "world/shared/render/render_fetch_system.h"
-#include "world/shared/render/render_single_component.h"
-#include "world/shared/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>

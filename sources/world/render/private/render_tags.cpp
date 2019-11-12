@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/shared/render/render_tags.h"
+#include "world/render/render_tags.h"
 
 namespace hg::tags {
 

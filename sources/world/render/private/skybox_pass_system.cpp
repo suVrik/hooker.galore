@@ -3,14 +3,14 @@
 #include "core/render/render_pass.h"
 #include "shaders/skybox_pass/skybox_pass.fragment.h"
 #include "shaders/skybox_pass/skybox_pass.vertex.h"
-#include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/geometry_pass_single_component.h"
-#include "world/shared/render/light_component.h"
-#include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/render_tags.h"
-#include "world/shared/render/skybox_pass_single_component.h"
-#include "world/shared/render/skybox_pass_system.h"
-#include "world/shared/render/texture_single_component.h"
+#include "world/render/camera_single_component.h"
+#include "world/render/geometry_pass_single_component.h"
+#include "world/render/light_component.h"
+#include "world/render/quad_single_component.h"
+#include "world/render/render_tags.h"
+#include "world/render/skybox_pass_single_component.h"
+#include "world/render/skybox_pass_system.h"
+#include "world/render/texture_single_component.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
@@ -18,7 +18,7 @@
 #include <bgfx/embedded_shader.h>
 #include <entt/entity/registry.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <world/shared/render/lighting_pass_single_component.h>
+#include <world/render/lighting_pass_single_component.h>
 
 namespace hg {
 

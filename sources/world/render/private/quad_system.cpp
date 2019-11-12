@@ -2,9 +2,9 @@
 #include "core/ecs/world.h"
 #include "shaders/quad_pass/quad_pass.fragment.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
-#include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/quad_system.h"
-#include "world/shared/render/render_tags.h"
+#include "world/render/quad_single_component.h"
+#include "world/render/quad_system.h"
+#include "world/render/render_tags.h"
 
 #include <bgfx/embedded_shader.h>
 

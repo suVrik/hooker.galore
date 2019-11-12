@@ -1,9 +1,9 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_history_single_component.h"
 #include "world/editor/editor_selection_single_component.h"
+#include "world/render/outline_component.h"
 #include "world/shared/name_component.h"
 #include "world/shared/name_single_component.h"
-#include "world/shared/render/outline_component.h"
 
 #ifdef ENABLE_HISTORY_LOG
 #define HISTORY_LOG(message, ...) printf("[HISTORY] " message, ##__VA_ARGS__); fflush(stdout)

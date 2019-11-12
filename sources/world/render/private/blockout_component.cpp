@@ -1,5 +1,5 @@
 #include "core/meta/registration.h"
-#include "world/shared/render/blockout_component.h"
+#include "world/render/blockout_component.h"
 
 namespace hg {
 

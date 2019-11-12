@@ -3,11 +3,11 @@
 #include "core/render/render_pass.h"
 #include "shaders/hdr_pass/hdr_pass.fragment.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
-#include "world/shared/render/aa_pass_single_component.h"
-#include "world/shared/render/hdr_pass_single_component.h"
-#include "world/shared/render/hdr_pass_system.h"
-#include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/render_tags.h"
+#include "world/render/aa_pass_single_component.h"
+#include "world/render/hdr_pass_single_component.h"
+#include "world/render/hdr_pass_system.h"
+#include "world/render/quad_single_component.h"
+#include "world/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>

@@ -5,11 +5,11 @@
 #include "shaders/outline_pass/outline_pass.fragment.h"
 #include "shaders/outline_pass/outline_pass.vertex.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
-#include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/outline_pass_single_component.h"
-#include "world/shared/render/outline_pass_system.h"
-#include "world/shared/render/quad_single_component.h"
-#include "world/shared/render/render_tags.h"
+#include "world/render/camera_single_component.h"
+#include "world/render/outline_pass_single_component.h"
+#include "world/render/outline_pass_system.h"
+#include "world/render/quad_single_component.h"
+#include "world/render/render_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>

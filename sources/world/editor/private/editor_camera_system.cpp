@@ -5,8 +5,8 @@
 #include "world/editor/editor_menu_single_component.h"
 #include "world/editor/editor_selection_single_component.h"
 #include "world/editor/editor_tags.h"
+#include "world/render/camera_single_component.h"
 #include "world/shared/normal_input_single_component.h"
-#include "world/shared/render/camera_single_component.h"
 #include "world/shared/transform_component.h"
 
 #include <SDL2/SDL_mouse.h>

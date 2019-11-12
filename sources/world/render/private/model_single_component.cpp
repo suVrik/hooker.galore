@@ -1,5 +1,5 @@
 #include "core/resource/model.h"
-#include "world/shared/render/model_single_component.h"
+#include "world/render/model_single_component.h"
 
 #include <ghc/filesystem.hpp>
 

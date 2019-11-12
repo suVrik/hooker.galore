@@ -1,8 +1,8 @@
 #include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/shared/render/camera_single_component.h"
-#include "world/shared/render/camera_system.h"
-#include "world/shared/render/render_tags.h"
+#include "world/render/camera_single_component.h"
+#include "world/render/camera_system.h"
+#include "world/render/render_tags.h"
 #include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
