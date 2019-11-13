@@ -1,9 +1,9 @@
 #include "core/ecs/system_descriptor.h"
 #include "core/ecs/world.h"
-#include "world/shared/imgui_fetch_system.h"
-#include "world/shared/imgui_single_component.h"
+#include "world/imgui/imgui_fetch_system.h"
+#include "world/imgui/imgui_single_component.h"
+#include "world/imgui/imgui_tags.h"
 #include "world/shared/normal_input_single_component.h"
-#include "world/shared/shared_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <ImGuizmo.h>

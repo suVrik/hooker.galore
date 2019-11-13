@@ -4,4 +4,6 @@
 
 namespace hg::tags {
 
+Tag imgui("imgui");
+
 } // namespace hg::tags

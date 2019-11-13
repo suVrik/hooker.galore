@@ -4,6 +4,4 @@
 
 namespace hg::tags {
 
-extern Tag imgui;
-
 } // namespace hg::tags

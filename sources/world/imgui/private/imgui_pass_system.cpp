@@ -3,9 +3,9 @@
 #include "core/render/render_pass.h"
 #include "shaders/imgui_pass/imgui_pass.fragment.h"
 #include "shaders/imgui_pass/imgui_pass.vertex.h"
-#include "world/render/imgui_pass_system.h"
-#include "world/shared/imgui_single_component.h"
-#include "world/shared/shared_tags.h"
+#include "world/imgui/imgui_pass_system.h"
+#include "world/imgui/imgui_single_component.h"
+#include "world/imgui/imgui_tags.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/bgfx.h>

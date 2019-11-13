@@ -1,9 +1,9 @@
 #include "core/ecs/world.h"
 #include "world/editor/editor_tags.h"
+#include "world/imgui/imgui_tags.h"
 #include "world/physics/physics_tags.h"
 #include "world/render/render_tags.h"
 #include "world/shared/level_single_component.h"
-#include "world/shared/shared_tags.h"
 
 #include <SDL2/SDL_messagebox.h>
 #include <chrono>
