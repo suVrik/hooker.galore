@@ -94,7 +94,7 @@ bool World::check_tags(Tags&& ... tags) const {
 template <typename T>
 void World::each_tag(T callback) const {
     for (size_t i = 0; i < m_all_tags.size(); i++) {
-        if (m_all_tags[i]) {
+        if (m_owned_tags[i] || m_inherited_tags[i] || m_propagated_tags[i] > 0) {
             calback(Tag::get_tag_by_index(i));
         }
     }
@@ -104,6 +104,15 @@ template <typename T>
 void World::each_owned_tag(T callback) const {
     for (size_t i = 0; i < m_owned_tags.size(); i++) {
         if (m_owned_tags[i]) {
+            calback(Tag::get_tag_by_index(i));
+        }
+    }
+}
+
+template <typename T>
+void World::each_active_tag(T callback) const {
+    for (size_t i = 0; i < m_all_tags.size(); i++) {
+        if (m_all_tags[i]) {
             calback(Tag::get_tag_by_index(i));
         }
     }

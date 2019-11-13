@@ -17,7 +17,7 @@ Tag Tag::get_tag_by_index(size_t index) {
 
 Tag::Tag(const std::string& name, bool is_inheritable, bool is_propagable) 
         : m_index(descriptors.size()) {
-    descriptors.push_back(TagDescriptor{ name, is_inheritable, is_propagable });
+    descriptors.push_back(TagDescriptor{ name, nullptr, is_inheritable, is_propagable });
     assert(m_index + 1 == descriptors.size());
 }
 
@@ -34,6 +34,13 @@ size_t Tag::get_index() const {
 const std::string& Tag::get_name() const {
     assert(m_index < descriptors.size());
     return descriptors[m_index].name;
+}
+
+bool Tag::test_requirements(const std::vector<bool>& tags) const {
+    if (descriptors[m_index].requirements) {
+        return descriptors[m_index].requirements->test(tags);
+    }
+    return true;
 }
 
 bool Tag::is_inheritable() const {

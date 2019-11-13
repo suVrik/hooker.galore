@@ -148,7 +148,7 @@ entt::meta_handle World::get_or_assign(const entt::entity entity, const entt::me
 //////////////////////////////////////////////////////////////////////////
 
 void World::clear_tags() {
-    for (size_t i = 0; i < m_owned_tags.size(); i++) {
+    for (size_t i = 0, size = m_owned_tags.size(); i < size; i++) {
         if (m_owned_tags[i]) {
             remove_tag(Tag::get_tag_by_index(i));
         }
@@ -176,6 +176,8 @@ void World::add_tag(const Tag tag) {
             m_all_tags[tag_index] = true;
             m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
 
+            update_active_tags();
+
             if (tag.is_inheritable()) {
                 for (World* const child_world : m_children) {
                     child_world->inherit_add_tag(tag);
@@ -198,10 +200,12 @@ void World::remove_tag(const Tag tag) {
         m_owned_tags[tag_index] = false;
 
         const bool is_present = (tag_index < m_inherited_tags.size() && m_inherited_tags[tag_index]) ||
-            (tag_index < m_propagated_tags.size() && m_propagated_tags[tag_index] > 0);
+                                (tag_index < m_propagated_tags.size() && m_propagated_tags[tag_index] > 0);
         if (!is_present) {
             m_all_tags[tag_index] = false;
             m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
+
+            update_active_tags();
 
             if (tag.is_inheritable()) {
                 for (World* const child_world : m_children) {
@@ -224,6 +228,11 @@ bool World::check_tag(const Tag tag) const {
 bool World::check_owned_tag(const Tag tag) const {
     const size_t tag_index = tag.get_index();
     return tag_index < m_owned_tags.size() && m_owned_tags[tag_index];
+}
+
+bool World::check_active_tag(Tag tag) const {
+    const size_t tag_index = tag.get_index();
+    return tag_index < m_active_tags.size() && m_active_tags[tag_index];
 }
 
 void World::inherit_add_tag(const Tag tag) {
@@ -249,6 +258,8 @@ void World::inherit_add_tag(const Tag tag) {
         m_all_tags[tag_index] = true;
         m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
 
+        update_active_tags();
+
         for (World* const child_world : m_children) {
             child_world->inherit_add_tag(tag);
         }
@@ -272,6 +283,8 @@ void World::inherit_remove_tag(const Tag tag) {
     if (!is_present) {
         m_all_tags[tag_index] = false;
         m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
+
+        update_active_tags();
 
         for (World* const child_world : m_children) {
             child_world->inherit_remove_tag(tag);
@@ -300,6 +313,8 @@ void World::propagate_add_tag(const World* const child_world, const Tag tag) {
     if (!m_all_tags[tag_index]) {
         m_all_tags[tag_index] = true;
         m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
+
+        update_active_tags();
 
         if (tag.is_inheritable()) {
             for (World* const another_child_world : m_children) {
@@ -334,6 +349,8 @@ void World::propagate_remove_tag(const World* const child_world, const Tag tag) 
             m_all_tags[tag_index] = false;
             m_tags_changed[NORMAL] = m_tags_changed[FIXED] = true;
 
+            update_active_tags();
+
             if (tag.is_inheritable()) {
                 for (World* const another_child_world : m_children) {
                     if (child_world != another_child_world) {
@@ -345,6 +362,16 @@ void World::propagate_remove_tag(const World* const child_world, const Tag tag) 
             if (m_parent != nullptr) {
                 m_parent->propagate_remove_tag(this, tag);
             }
+        }
+    }
+}
+
+void World::update_active_tags() {
+    m_active_tags.resize(m_all_tags.size(), false);
+    for (size_t i = 0, size = m_active_tags.size(); i < size; i++) {
+        if (m_all_tags[i]) {
+            const Tag tag = Tag::get_tag_by_index(i);
+            m_active_tags[i] = tag.test_requirements(m_all_tags);
         }
     }
 }
@@ -401,10 +428,10 @@ void World::sort_systems(const size_t system_type) {
     const std::vector<size_t> old_system_order = system_order;
     system_order.clear();
 
-    for (size_t i = 0; i < system_descriptors.size(); i++) {
+    for (size_t i = 0, size = system_descriptors.size(); i < size; i++) {
         assert(propagate_state[i] != PropagateState::IN_PROGRESS);
         if (propagate_state[i] == PropagateState::NOT_VISITED) {
-            if (system_descriptors[i].tag_expression->test(m_all_tags)) {
+            if (system_descriptors[i].tag_expression->test(m_active_tags)) {
                 // For system order debugging.
                 [[maybe_unused]] const std::string& system_name = system_descriptors[i].name;
 
@@ -429,7 +456,7 @@ void World::sort_systems(const size_t system_type) {
 
     [[maybe_unused]] const std::chrono::steady_clock::time_point before_constructors = std::chrono::steady_clock::now();
 
-    for (size_t i = 0; i < system_order.size(); i++) {
+    for (size_t i = 0, size = system_order.size(); i < size; i++) {
         SystemManager::SystemDescriptor& system_descriptor = system_descriptors[system_order[i]];
         SystemInstance& system_instance = system_instances[system_order[i]];
         if (!system_instance.instance) {
@@ -455,7 +482,7 @@ void World::sort_systems(const size_t system_type) {
     } else {
         printf("[ORDER] Fixed systems had been reordered:\n");
     }
-    for (size_t i = 0; i < system_order.size(); i++) {
+    for (size_t i = 0, size = system_order.size(); i < size; i++) {
         SystemManager::SystemDescriptor& system_descriptor = system_descriptors[system_order[i]];
         SystemInstance& system_instance = system_instances[system_order[i]];
         if (system_instance.construction_duration > 1e-5f && constructors_duration > 1e-5f) {
@@ -475,7 +502,7 @@ void World::propagate_system(const size_t system_type, const size_t system_index
     assert(system_index < systems.size());
 
     SystemManager::SystemDescriptor& system = systems[system_index];
-    assert(system.tag_expression->test(m_all_tags));
+    assert(system.tag_expression->test(m_active_tags));
 
     // For system order debugging.
     [[maybe_unused]] const std::string& following_system_name = system.name;
@@ -495,7 +522,7 @@ void World::propagate_system(const size_t system_type, const size_t system_index
 
         assert(propagate_state[preceding_system_index] != PropagateState::IN_PROGRESS && "System order loop. Please, reorder your systems manually.");
         if (propagate_state[preceding_system_index] == PropagateState::NOT_VISITED) {
-            if (systems[preceding_system_index].tag_expression->test(m_all_tags)) {
+            if (systems[preceding_system_index].tag_expression->test(m_active_tags)) {
                 propagate_system(system_type, preceding_system_index);
             }
         }

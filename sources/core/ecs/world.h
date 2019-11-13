@@ -157,7 +157,10 @@ public:
     /** Check whether the specified tag is owned by this world. */
     bool check_owned_tag(Tag tag) const;
 
-    /** Iterate over all world tags.
+    /** Check whether the specified tag is active in this world. */
+    bool check_active_tag(Tag tag) const;
+
+    /** Iterate over all world tags. Tag may be inherited, propagated or owned. Tag may be active or not.
 
         world.each_tag([](const Tag tag) {
             // Your code goes here
@@ -165,13 +168,21 @@ public:
     template <typename T>
     void each_tag(T callback) const;
 
-    /** Iterate over all owned world tags.
+    /** Iterate over all owned world tags. Tag may be active or not.
 
         world.each_owned_tag([](const Tag tag) {
             // Your code goes here
         }); */
     template <typename T>
     void each_owned_tag(T callback) const;
+
+    /** Iterate over all active tags. Tag may be inherited, propagated or owned.
+
+        world.each_active_tag([](const Tag tag) {
+            // Your code goes here
+        }); */
+    template <typename T>
+    void each_active_tag(T callback) const;
 
     /// EXECUTION ////////////////////////////////////////////////////////////
 
@@ -198,6 +209,7 @@ private:
     void inherit_remove_tag(Tag tag);
     void propagate_add_tag(const World* child_world, Tag tag);
     void propagate_remove_tag(const World* child_world, Tag tag);
+    void update_active_tags();
     void sort_systems(size_t system_type);
     void propagate_system(size_t system_type, size_t system_index);
 
@@ -212,6 +224,7 @@ private:
     std::vector<bool> m_inherited_tags;
     std::vector<size_t> m_propagated_tags;
     std::vector<bool> m_all_tags;
+    std::vector<bool> m_active_tags;
     bool m_tags_changed[2]{};
 };
 

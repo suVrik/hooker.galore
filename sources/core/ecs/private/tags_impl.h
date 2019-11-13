@@ -5,6 +5,13 @@
 namespace hg {
 
 template <typename T>
+Tag::Tag(const std::string& name, const T& requirements, bool is_inheritable, bool is_propagable) 
+        : Tag(name, is_inheritable, is_propagable)
+{
+    descriptors[m_index].requirements = std::unique_ptr<TagWrapper>(new TagWrapperTemplate<T>(requirements));
+}
+
+template <typename T>
 TagAnd<Tag, T> Tag::operator&&(const T& t) const {
     return TagAnd<Tag, T>(*this, t);
 }

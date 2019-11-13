@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -11,6 +12,7 @@ template <typename U, typename V>
 class TagOr;
 template <typename U>
 class TagNot;
+class TagWrapper;
 
 /** Each World has a set of tags. Each ECS system defines its own "tag expression": an expression that checks whether
     this system should be executed in a World based on its tags. A tag, in turn, is just a unique identifier.
@@ -33,11 +35,20 @@ public:
         If tag is propagable, it automatically goes from child World to parent World. */
     explicit Tag(const std::string& name, bool is_inheritable = false, bool is_propagable = false);
 
+    /** Same but with requirements. Tag activates only if all the requirements are met.
+
+        Tag editor("editor", render && imgui); */
+    template <typename T>
+    Tag(const std::string& name, const T& requirements, bool is_inheritable = false, bool is_propagable = false);
+
     /** Return unique tag index. */
     size_t get_index() const;
 
     /** Return name of this tag. */
     const std::string& get_name() const;
+
+    /** Check whether this tag is active side by side with specified tags. */
+    bool test_requirements(const std::vector<bool>& tags) const;
 
     /** Check whether this tag is inheritable, which means it automatically goes from parent World to child World. */
     bool is_inheritable() const;
@@ -64,6 +75,7 @@ public:
 private:
     struct TagDescriptor final {
         std::string name;
+        std::unique_ptr<TagWrapper> requirements;
         bool is_inheritable;
         bool is_propagable;
     };
