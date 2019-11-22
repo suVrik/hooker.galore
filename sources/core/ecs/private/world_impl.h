@@ -6,7 +6,7 @@ namespace hg {
 
 template <typename T>
 const T* World::try_ctx() const {
-    const T* const result = entt::registry::try_ctx<T>();
+    const T* result = entt::registry::try_ctx<T>();
     if (result == nullptr && m_parent != nullptr) {
         return m_parent->try_ctx<T>();
     }
@@ -20,7 +20,7 @@ T* World::try_ctx() {
 
 template <typename T>
 const T& World::ctx() const {
-    const T* const result = entt::registry::try_ctx<T>();
+    const T* result = entt::registry::try_ctx<T>();
     if (result == nullptr && m_parent != nullptr) {
         return m_parent->ctx<T>();
     }
@@ -44,8 +44,8 @@ bool World::is_owned_ctx() const {
 
 template <typename T>
 void World::each_registered_single_component(T callback) const {
-    ComponentManager::each_registered([&](const entt::meta_type component_type) {
-        const entt::meta_handle single_component_handle = ctx(entity, component_type);
+    ComponentManager::each_registered([&](entt::meta_type component_type) {
+        entt::meta_handle single_component_handle = ctx(entity, component_type);
         if (single_component_handle) {
             callback(single_component_handle);
         }
@@ -55,9 +55,9 @@ void World::each_registered_single_component(T callback) const {
 //////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-void World::each_registered_component(const entt::entity entity, T callback) const {
-    ComponentManager::each_registered([&](const entt::meta_type component_type) {
-        const entt::meta_handle component_handle = get(entity, component_type);
+void World::each_registered_component(entt::entity entity, T callback) const {
+    ComponentManager::each_registered([&](entt::meta_type component_type) {
+        entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
             callback(component_handle);
         }
@@ -65,9 +65,9 @@ void World::each_registered_component(const entt::entity entity, T callback) con
 }
 
 template <typename T>
-void World::each_editable_component(const entt::entity entity, T callback) const {
-    ComponentManager::each_editable([&](const entt::meta_type component_type) {
-        const entt::meta_handle component_handle = get(entity, component_type);
+void World::each_editable_component(entt::entity entity, T callback) const {
+    ComponentManager::each_editable([&](entt::meta_type component_type) {
+        entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
             callback(component_handle);
         }

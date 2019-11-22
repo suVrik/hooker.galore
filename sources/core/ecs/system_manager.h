@@ -14,7 +14,7 @@ class TagWrapper;
 class World;
 
 /** `SystemManager` contains information about systems and everything related to them. */
-class SystemManager final {
+class SystemManager {
 public:
     SystemManager() = delete;
 
@@ -26,7 +26,7 @@ public:
     static void commit();
 
 private:
-    struct SystemDescriptor final {
+    struct SystemDescriptor {
         std::unique_ptr<System>(*construct)(World& world);
         entt::meta_type system_type;
         std::string name;

@@ -21,9 +21,9 @@ void SystemManager::commit() {
         for (size_t i = 0; i < systems.size(); i++) {
             SystemDescriptor& system_descriptor = systems[i];
 
-            const entt::meta_prop tags_property = system_descriptor.system_type.prop("tags"_hs);
+            entt::meta_prop tags_property = system_descriptor.system_type.prop("tags"_hs);
             if (tags_property) {
-                const entt::meta_any tags_property_value = tags_property.value();
+                entt::meta_any tags_property_value = tags_property.value();
 
                 assert(tags_property_value);
                 assert(tags_property_value.type() == entt::resolve<std::shared_ptr<TagWrapper>>());
@@ -40,29 +40,29 @@ void SystemManager::commit() {
         for (size_t i = 0; i < systems.size(); i++) {
             SystemDescriptor& system_descriptor = systems[i];
 
-            const entt::meta_prop before_property = system_descriptor.system_type.prop("before"_hs);
+            entt::meta_prop before_property = system_descriptor.system_type.prop("before"_hs);
             if (before_property) {
-                const entt::meta_any before_property_value = before_property.value();
+                entt::meta_any before_property_value = before_property.value();
 
                 assert(before_property_value);
                 assert(before_property_value.type() == entt::resolve<std::vector<const char*>>());
 
-                const std::vector<const char*>& systems_before = before_property_value.fast_cast<std::vector<const char*>>();
-                for (const char* const system_name : systems_before) {
+                const auto& systems_before = before_property_value.fast_cast<std::vector<const char*>>();
+                for (const char* system_name : systems_before) {
                     assert(system_mapping.count(system_name) == 1);
                     systems[system_mapping[system_name]].after.push_back(i);
                 }
             }
 
-            const entt::meta_prop after_property = system_descriptor.system_type.prop("after"_hs);
+            entt::meta_prop after_property = system_descriptor.system_type.prop("after"_hs);
             if (after_property) {
-                const entt::meta_any after_property_value = after_property.value();
+                entt::meta_any after_property_value = after_property.value();
 
                 assert(after_property_value);
                 assert(after_property_value.type() == entt::resolve<std::vector<const char*>>());
 
-                const std::vector<const char*>& systems_after = after_property_value.fast_cast<std::vector<const char*>>();
-                for (const char* const system_name : systems_after) {
+                const auto& systems_after = after_property_value.fast_cast<std::vector<const char*>>();
+                for (const char* system_name : systems_after) {
                     assert(system_mapping.count(system_name) == 1);
                     system_descriptor.after.push_back(system_mapping[system_name]);
                 }
@@ -77,7 +77,7 @@ void SystemManager::commit() {
             after.erase(std::unique(after.begin(), after.end()), after.end());
 
 #ifndef NDEBUG
-            for (const size_t preceding_system : after) {
+            for (size_t preceding_system : after) {
                 assert(i != preceding_system);
             }
 #endif

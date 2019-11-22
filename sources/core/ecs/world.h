@@ -17,7 +17,7 @@ class System;
     world respectively). A child world may inherit some tags from its parent automatically (depends on tag's settings)
     as well as propagate its own tags to it (depends on tag's settings as well). Child world has access to parent's
     single components automatically using "set" and "ctx" methods, but not the other way around. */
-class World final : public entt::registry {
+class World : public entt::registry {
 public:
     /** Construct world. Pass nullptr to construct a root world. Child world otherwise. */
     explicit World(World* parent = nullptr);
@@ -191,7 +191,7 @@ public:
     void update_fixed(float elapsed_time);
 
 private:
-    struct SystemInstance final {
+    struct SystemInstance {
         std::unique_ptr<System> instance;
         float construction_duration = 0.f;
     };
@@ -229,7 +229,8 @@ private:
 };
 
 /** Presence of this single component means the world may keep running. */
-struct RunningWorldSingleComponent final {
+class RunningWorldSingleComponent {
+private:
     bool dummy = false;
 };
 

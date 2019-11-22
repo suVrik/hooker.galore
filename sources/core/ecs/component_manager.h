@@ -9,7 +9,7 @@ namespace hg {
 class World;
 
 /** `ComponentManager` is an interface to manipulate over components on runtime. */
-class ComponentManager final {
+class ComponentManager {
 public:
     ComponentManager() = delete;
 
@@ -77,7 +77,7 @@ public:
     static bool is_editable(entt::meta_type component_type);
 
 private:
-    struct ComponentDescriptor final {
+    struct ComponentDescriptor {
         entt::meta_any(*construct)();
         entt::meta_any(*copy)(entt::meta_handle component);
         entt::meta_any(*move)(entt::meta_handle component);

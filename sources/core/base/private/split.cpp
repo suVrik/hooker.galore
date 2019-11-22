@@ -2,7 +2,7 @@
 
 namespace hg {
 
-std::vector<std::string> split(const std::string& string, const char delimiter) {
+std::vector<std::string> split(const std::string& string, char delimiter) {
     std::vector<std::string> result;
 
     size_t last_position = 0;

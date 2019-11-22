@@ -22,7 +22,7 @@ class TagWrapper;
     Tag release("release");
     auto visual_debug_system = render && imgui && !release;
     auto another_visual_system = render && (imgui || release); */
-class Tag final {
+class Tag {
 public:
     /** Return the total number of tags registered. */
     static size_t get_tags_count();
@@ -73,7 +73,7 @@ public:
     bool test(const std::vector<bool>& tags) const;
 
 private:
-    struct TagDescriptor final {
+    struct TagDescriptor {
         std::string name;
         std::unique_ptr<TagWrapper> requirements;
         bool is_inheritable;
@@ -89,7 +89,7 @@ private:
 
 /** `TagAnd` is a tag expression that works like logical AND on two other tag expressions. */
 template <typename U, typename V>
-class TagAnd final {
+class TagAnd {
 public:
     /** Construct a tag expression that matches a tag list only if both of specified expressions match the tag list. */
     explicit TagAnd(const U& u, const V& v);
@@ -117,7 +117,7 @@ private:
 
 /** `TagOr` is a tag expression that works like logical OR on two other tag expressions. */
 template <typename U, typename V>
-class TagOr final {
+class TagOr {
 public:
     /** Construct a tag expression that matches a tag list if any of specified expressions matches the tag list. */
     explicit TagOr(const U& u, const V& v);
@@ -145,7 +145,7 @@ private:
 
 /** `TagNot` is a tag expression that inverts the result of another tag expression. */
 template <typename U>
-class TagNot final {
+class TagNot {
 public:
     /** Construct a tag expression that matches a tag list if specified tag expression doesn't match it. */
     explicit TagNot(const U& u);
@@ -185,7 +185,7 @@ public:
 
 /** `TagWrapperTemplate` is a virtual inheritor of `TagWrapper` - a template-free abstraction of any tag expression. */
 template <typename T>
-class TagWrapperTemplate final : public TagWrapper {
+class TagWrapperTemplate : public TagWrapper {
 public:
     /** Construct `TagWrapperTemplate` from specified tag expression. */
     explicit TagWrapperTemplate(const T& t);

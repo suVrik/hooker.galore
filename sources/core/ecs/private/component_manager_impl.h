@@ -32,7 +32,7 @@ void ComponentManager::register_component() {
         descriptor.move = nullptr;
     }
 
-    descriptor.ctx = [](const entt::registry* const registry) -> entt::meta_handle {
+    descriptor.ctx = [](const entt::registry* registry) -> entt::meta_handle {
         if constexpr (std::is_empty_v<T>) {
             static T instance;
             return entt::meta_handle(instance);
@@ -43,7 +43,7 @@ void ComponentManager::register_component() {
 
     if constexpr (std::is_default_constructible_v<T>) {
         static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
-        descriptor.assign_default = [](entt::registry* const registry, const entt::entity entity) -> entt::meta_handle {
+        descriptor.assign_default = [](entt::registry* registry, entt::entity entity) -> entt::meta_handle {
             return entt::meta_handle(registry->assign<T>(entity));
         };
     } else {
@@ -52,7 +52,7 @@ void ComponentManager::register_component() {
 
     if constexpr (std::is_copy_constructible_v<T>) {
         static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
-        descriptor.assign_copy = [](entt::registry* const registry, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+        descriptor.assign_copy = [](entt::registry* registry, entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
             return entt::meta_handle(registry->assign<T>(entity, *component.data<T>()));
         };
     } else {
@@ -61,7 +61,7 @@ void ComponentManager::register_component() {
 
     if constexpr (std::is_move_constructible_v<T>) {
         static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
-        descriptor.assign_move = [](entt::registry* const registry, const entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
+        descriptor.assign_move = [](entt::registry* registry, entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
             return entt::meta_handle(registry->assign<T>(entity, std::move(*component.data<T>())));
         };
     } else {
@@ -69,7 +69,7 @@ void ComponentManager::register_component() {
     }
 
     if constexpr (std::is_copy_assignable_v<T>) {
-        descriptor.replace_copy = [](entt::registry* const registry, const entt::entity entity, const entt::meta_handle component) -> entt::meta_handle {
+        descriptor.replace_copy = [](entt::registry* registry, entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
             return entt::meta_handle(registry->replace<T>(entity, *component.data<T>()));
         };
     } else {
@@ -77,22 +77,22 @@ void ComponentManager::register_component() {
     }
 
     if constexpr (std::is_move_assignable_v<T>) {
-        descriptor.replace_move = [](entt::registry* const registry, const entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
+        descriptor.replace_move = [](entt::registry* registry, entt::entity entity, entt::meta_handle component) -> entt::meta_handle {
             return entt::meta_handle(registry->replace<T>(entity, std::move(*component.data<T>())));
         };
     } else {
         descriptor.replace_move = nullptr;
     }
 
-    descriptor.remove = [](entt::registry* const registry, const entt::entity entity) {
+    descriptor.remove = [](entt::registry* registry, entt::entity entity) {
         registry->remove<T>(entity);
     };
 
-    descriptor.has = [](const entt::registry* const registry, const entt::entity entity) -> bool {
+    descriptor.has = [](const entt::registry* registry, entt::entity entity) -> bool {
         return registry->has<T>(entity);
     };
 
-    descriptor.get = [](const entt::registry* const registry, const entt::entity entity) -> entt::meta_handle {
+    descriptor.get = [](const entt::registry* registry, entt::entity entity) -> entt::meta_handle {
         if constexpr (std::is_empty_v<T>) {
             static T instance;
             return entt::meta_handle(instance);
@@ -103,7 +103,7 @@ void ComponentManager::register_component() {
 
     if (std::is_default_constructible_v<T>) {
         static_assert(std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>, "EnTT requires component type to be either copy or move assignable as well.");
-        descriptor.get_or_assign = [](entt::registry* const registry, const entt::entity entity) -> entt::meta_handle {
+        descriptor.get_or_assign = [](entt::registry* registry, entt::entity entity) -> entt::meta_handle {
             return entt::meta_handle(registry->get_or_assign<T>(entity));
         };
     } else {
@@ -115,14 +115,14 @@ void ComponentManager::register_component() {
 
 template <typename T>
 void ComponentManager::each_registered(T callback) {
-    for (const auto& [type, descriptor] : descriptors) {
+    for (auto& [type, descriptor] : descriptors) {
         callback(type);
     }
 }
 
 template <typename T>
 void ComponentManager::each_editable(T callback) {
-    for (const auto& [type, descriptor] : descriptors) {
+    for (auto& [type, descriptor] : descriptors) {
         if (is_editable(type)) {
             callback(type);
         }

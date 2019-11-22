@@ -11,10 +11,10 @@
 namespace hg {
 
 /** `Model` is a hierarchy of nodes containing geometry primitives. */
-class Model final {
+class Model {
 public:
     /** `BasicModelVertex` is used for non-skinned meshes. */
-    struct BasicModelVertex final {
+    struct BasicModelVertex {
         static const bgfx::VertexDecl DECLARATION;
 
         float x;
@@ -33,7 +33,7 @@ public:
 
     /** `Primitive` is a container for geometry data. All `Primitive` must be destroyed before `RenderFetchSystem`
         destructor. */
-    struct Primitive final {
+    struct Primitive {
         Primitive() = default;
         Primitive(const Primitive& another) = delete;
         Primitive(Primitive&& another);
@@ -48,12 +48,12 @@ public:
     };
 
     /** `Mesh` is a container for geometry primitives. */
-    struct Mesh final {
+    struct Mesh {
         std::vector<Primitive> primitives;
     };
 
     /** `Node` is a container for other nodes. `Node` may also contain a `Mesh`. */
-    struct Node final {
+    struct Node {
         std::string name;
         glm::vec3 translation;
         glm::quat rotation;
@@ -63,7 +63,7 @@ public:
     };
 
     /** `AABB` describes bounds of the model. */
-    struct AABB final {
+    struct AABB {
         float min_x = std::numeric_limits<float>::max();
         float min_y = std::numeric_limits<float>::max();
         float min_z = std::numeric_limits<float>::max();
