@@ -92,8 +92,8 @@ void ImguiPassSystem::update(float /*elapsed_time*/) {
     ImDrawData* draw_data = ImGui::GetDrawData();
     for (int i = 0; i < draw_data->CmdListsCount; i++) {
         const ImDrawList* draw_list = draw_data->CmdLists[i];
-        const auto num_vertices = uint32_t(draw_list->VtxBuffer.size());
-        const auto num_indices  = uint32_t(draw_list->IdxBuffer.size());
+        auto num_vertices = static_cast<uint32_t>(draw_list->VtxBuffer.size());
+        auto num_indices  = static_cast<uint32_t>(draw_list->IdxBuffer.size());
 
         if (!bgfx::getAvailTransientVertexBuffer(num_vertices, imgui_context_single_component.vertex_declaration) || !bgfx::getAvailTransientIndexBuffer(num_indices)) {
             break;
@@ -101,11 +101,11 @@ void ImguiPassSystem::update(float /*elapsed_time*/) {
 
         bgfx::TransientVertexBuffer vertex_buffer {};
         bgfx::allocTransientVertexBuffer(&vertex_buffer, num_vertices, imgui_context_single_component.vertex_declaration);
-        memcpy(vertex_buffer.data, draw_list->VtxBuffer.begin(), num_vertices * sizeof(ImDrawVert));
+        std::copy(draw_list->VtxBuffer.begin(), draw_list->VtxBuffer.end(), reinterpret_cast<ImDrawVert*>(vertex_buffer.data));
 
         bgfx::TransientIndexBuffer index_buffer {};
         bgfx::allocTransientIndexBuffer(&index_buffer, num_indices);
-        memcpy(index_buffer.data, draw_list->IdxBuffer.begin(), num_indices * sizeof(ImDrawIdx));
+        std::copy(draw_list->IdxBuffer.begin(), draw_list->IdxBuffer.end(), reinterpret_cast<ImDrawIdx*>(index_buffer.data));
 
         uint32_t offset = 0;
         for (const ImDrawCmd* command = draw_list->CmdBuffer.begin(); command != draw_list->CmdBuffer.end(); command++) {
@@ -117,10 +117,10 @@ void ImguiPassSystem::update(float /*elapsed_time*/) {
                     texture_handle.idx = uint16_t(reinterpret_cast<uintptr_t>(command->TextureId));
                 }
 
-                const auto x = uint16_t(std::max(command->ClipRect.x, 0.f));
-                const auto y = uint16_t(std::max(command->ClipRect.y, 0.f));
-                const auto width = uint16_t(std::min(command->ClipRect.z, float(std::numeric_limits<uint16_t>::max())) - x);
-                const auto height = uint16_t(std::min(command->ClipRect.w, float(std::numeric_limits<uint16_t>::max())) - y);
+                auto x = static_cast<uint16_t>(std::max(command->ClipRect.x, 0.f));
+                auto y = static_cast<uint16_t>(std::max(command->ClipRect.y, 0.f));
+                auto width = static_cast<uint16_t>(std::min(command->ClipRect.z, static_cast<float>(std::numeric_limits<uint16_t>::max())) - x);
+                auto height = static_cast<uint16_t>(std::min(command->ClipRect.w, static_cast<float>(std::numeric_limits<uint16_t>::max())) - y);
                 bgfx::setScissor(x, y, width, height);
 
                 bgfx::setVertexBuffer(0, &vertex_buffer, 0, num_vertices);

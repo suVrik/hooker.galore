@@ -163,6 +163,7 @@ void ImguiFetchSystem::update_imgui(float elapsed_time) const {
     ImGuizmo::BeginFrame();
 }
 
+// TODO: Make this a separate Editor system.
 void ImguiFetchSystem::build_dock_space() const {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->Pos);
@@ -171,13 +172,13 @@ void ImguiFetchSystem::build_dock_space() const {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
-    const ImGuiWindowFlags flags = ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoDocking |
-                                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar |
-                                   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoDocking |
+                             ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar |
+                             ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
     ImGui::Begin("Main", nullptr, flags);
     ImGui::PopStyleVar(3);
 
-    const ImGuiID dock_space_id = ImGui::GetID("Main");
+    ImGuiID dock_space_id = ImGui::GetID("Main");
     if (ImGui::DockBuilderGetNode(dock_space_id) == nullptr) {
         ImGui::DockBuilderRemoveNode(dock_space_id);
         ImGui::DockBuilderAddNode(dock_space_id, ImGuiDockNodeFlags_DockSpace);
