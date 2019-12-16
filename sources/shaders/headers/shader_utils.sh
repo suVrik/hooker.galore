@@ -8,24 +8,24 @@ float van_der_corpus(int n, int base) {
     float denom   = 1.0;
     float result  = 0.0;
 
-    for(int i = 0; i < 32; i++) {
+    for (int i = 0; i < 32; i++) {
         if (n > 0) {
-            denom   = mod(float(n), 2.0);
+            denom = mod(float(n), 2.0);
             result += denom * inv_base;
             inv_base = inv_base / 2.0;
-            n       = int(float(n) / 2.0);
+            n = int(float(n) / 2.0);
         }
     }
 
     return result;
 }
 
-vec2 hammersley(int i, int N) {
-    return vec2(float(i) / float(N), van_der_corpus(i, 2));
+vec2 hammersley(int i, int n) {
+    return vec2(float(i) / float(n), van_der_corpus(i, 2));
 }
 
-vec3 fresnel_schlick(float cos_theta, vec3 srz, float roughness) {
-    return srz + (max(vec3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), srz) - srz) * pow(1.0 - cos_theta, 5.0);
+vec3 fresnel_schlick(float cos_theta, vec3 f0, float roughness) {
+    return f0 + (max(vec3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), f0) - f0) * pow(1.0 - cos_theta, 5.0);
 }
 
 float distribution_ggx(vec3 normal, vec3 h, float roughness) {
@@ -39,19 +39,19 @@ float distribution_ggx(vec3 normal, vec3 h, float roughness) {
     return a2 / denom;
 }
 
-float geometry_schlick_ggx(float dot_normal_half, float roughness) {
+float geometry_schlick_ggx(float dot_normal_vec, float roughness) {
     float r = (roughness + 1.0);
     float k = (r * r) / 8.0;
 
-    float denom = dot_normal_half * (1.0 - k) + k;
-    return dot_normal_half / denom;
+    float denom = dot_normal_vec * (1.0 - k) + k;
+    return dot_normal_vec / denom;
 }
 
 float geometry_smith(vec3 normal, vec3 camera_dir, vec3 light_dir, float roughness) {
-    float dot_normal_camera = max(dot(normal, camera_dir), 0.0);
     float dot_normal_light = max(dot(normal, light_dir), 0.0);
-    float ggx2 = geometry_schlick_ggx(dot_normal_camera, roughness);
+    float dot_normal_camera = max(dot(normal, camera_dir), 0.0);
     float ggx1 = geometry_schlick_ggx(dot_normal_light, roughness);
+    float ggx2 = geometry_schlick_ggx(dot_normal_camera, roughness);
     return ggx1 * ggx2;
 }
 

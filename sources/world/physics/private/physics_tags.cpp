@@ -1,5 +1,3 @@
-#pragma once
-
 #include "world/physics/physics_tags.h"
 
 namespace hg::tags {

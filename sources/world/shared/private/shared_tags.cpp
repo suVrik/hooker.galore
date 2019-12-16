@@ -1,5 +1,3 @@
-#pragma once
-
 #include "world/imgui/imgui_tags.h"
 
 namespace hg::tags {

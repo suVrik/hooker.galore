@@ -45,7 +45,7 @@ PhysicsShapeSystem::~PhysicsShapeSystem() {
 
 void PhysicsShapeSystem::update(float /*elapsed_time*/) {
     m_box_shape_transform_observer.each([&](const entt::entity entity) {
-        auto& [physics_box_shape_component, physics_box_shape_private_component, transform_component] = world.get<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>(entity);
+        const auto& [physics_box_shape_component, physics_box_shape_private_component, transform_component] = world.get<PhysicsBoxShapeComponent, PhysicsBoxShapePrivateComponent, TransformComponent>(entity);
 
         assert(physics_box_shape_private_component.m_shape != nullptr);
         physics_box_shape_private_component.m_shape->setGeometry(box_shape_component_to_physx_box_geometry(physics_box_shape_component, &transform_component));

@@ -1,0 +1,41 @@
+entities:
+  - TransformComponent:
+      scale:
+        z: 10.4078436
+        y: 0.169427007
+        x: 6.85159636
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 0
+        y: -0.591997623
+        x: 0
+    MaterialComponent:
+      material: grass
+    ModelComponent:
+      path: blockout.glb
+    NameComponent:
+      name: grass-cube5
+  - TransformComponent:
+      scale:
+        z: 1
+        y: 1
+        x: 1
+      rotation:
+        w: 1
+        z: 0
+        y: 0
+        x: 0
+      translation:
+        z: 0
+        y: 0
+        x: 0
+    MaterialComponent:
+      material: grass
+    ModelComponent:
+      path: blockout.glb
+    NameComponent:
+      name: grass-cube5-2

@@ -27,6 +27,7 @@
 #include "world/render/quad_system.h"
 #include "world/render/render_fetch_system.h"
 #include "world/render/render_system.h"
+#include "world/render/shadow_pass_system.h"
 #include "world/render/skybox_pass_system.h"
 #include "world/shared/resource_system.h"
 #include "world/shared/window_system.h"
@@ -66,6 +67,7 @@ void register_systems() {
     REGISTER_SYSTEM(RenderSystem);
     REGISTER_SYSTEM(ResourceSystem);
     REGISTER_SYSTEM(SkyboxPassSystem);
+    REGISTER_SYSTEM(ShadowPassSystem);
     REGISTER_SYSTEM(WindowSystem);
 
     SystemManager::commit();

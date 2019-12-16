@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entity/registry.hpp>
+#include <entt/meta/factory.hpp>
 #include <entt/meta/meta.hpp>
 #include <unordered_map>
 

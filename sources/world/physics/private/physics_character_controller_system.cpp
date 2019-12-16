@@ -57,12 +57,12 @@ PhysicsCharacterControllerSystem::~PhysicsCharacterControllerSystem() {
 
 void PhysicsCharacterControllerSystem::update(float elapsed_time) {
     m_transform_observer.each([&](const entt::entity entity) {
-        auto& [physics_character_controller_private_component, transform_component] = world.get<PhysicsCharacterControllerPrivateComponent, TransformComponent>(entity);
+        const auto& [physics_character_controller_private_component, transform_component] = world.get<PhysicsCharacterControllerPrivateComponent, TransformComponent>(entity);
         physics_character_controller_private_component.m_controller->setFootPosition(glm_vec3_to_physx_extended(transform_component.translation));
     });
 
     m_character_controller_observer.each([&](const entt::entity entity) {
-        auto& [physics_character_controller_component, physics_character_controller_private_component] = world.get<PhysicsCharacterControllerComponent, PhysicsCharacterControllerPrivateComponent>(entity);
+        const auto& [physics_character_controller_component, physics_character_controller_private_component] = world.get<PhysicsCharacterControllerComponent, PhysicsCharacterControllerPrivateComponent>(entity);
 
         if (physics_character_controller_component.m_descriptor_changed) {
             assert(physics_character_controller_component.m_step_offset > 0.f);

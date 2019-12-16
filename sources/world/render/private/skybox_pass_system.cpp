@@ -5,7 +5,6 @@
 #include "shaders/skybox_pass/skybox_pass.vertex.h"
 #include "world/render/camera_single_component.h"
 #include "world/render/geometry_pass_single_component.h"
-#include "world/render/light_component.h"
 #include "world/render/quad_single_component.h"
 #include "world/render/render_tags.h"
 #include "world/render/skybox_pass_single_component.h"
@@ -16,7 +15,6 @@
 
 #include <bgfx/bgfx.h>
 #include <bgfx/embedded_shader.h>
-#include <entt/entity/registry.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <world/render/lighting_pass_single_component.h>
 

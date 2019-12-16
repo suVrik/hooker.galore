@@ -45,7 +45,7 @@ bool World::is_owned_ctx() const {
 template <typename T>
 void World::each_registered_single_component(T callback) const {
     ComponentManager::each_registered([&](entt::meta_type component_type) {
-        entt::meta_handle single_component_handle = ctx(entity, component_type);
+        const entt::meta_handle single_component_handle = ctx(component_type);
         if (single_component_handle) {
             callback(single_component_handle);
         }
@@ -57,7 +57,7 @@ void World::each_registered_single_component(T callback) const {
 template <typename T>
 void World::each_registered_component(entt::entity entity, T callback) const {
     ComponentManager::each_registered([&](entt::meta_type component_type) {
-        entt::meta_handle component_handle = get(entity, component_type);
+        const entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
             callback(component_handle);
         }
@@ -67,7 +67,7 @@ void World::each_registered_component(entt::entity entity, T callback) const {
 template <typename T>
 void World::each_editable_component(entt::entity entity, T callback) const {
     ComponentManager::each_editable([&](entt::meta_type component_type) {
-        entt::meta_handle component_handle = get(entity, component_type);
+        const entt::meta_handle component_handle = get(entity, component_type);
         if (component_handle) {
             callback(component_handle);
         }
@@ -95,7 +95,7 @@ template <typename T>
 void World::each_tag(T callback) const {
     for (size_t i = 0; i < m_all_tags.size(); i++) {
         if (m_owned_tags[i] || m_inherited_tags[i] || m_propagated_tags[i] > 0) {
-            calback(Tag::get_tag_by_index(i));
+            callback(Tag::get_tag_by_index(i));
         }
     }
 }
@@ -104,7 +104,7 @@ template <typename T>
 void World::each_owned_tag(T callback) const {
     for (size_t i = 0; i < m_owned_tags.size(); i++) {
         if (m_owned_tags[i]) {
-            calback(Tag::get_tag_by_index(i));
+            callback(Tag::get_tag_by_index(i));
         }
     }
 }
@@ -113,7 +113,7 @@ template <typename T>
 void World::each_active_tag(T callback) const {
     for (size_t i = 0; i < m_all_tags.size(); i++) {
         if (m_all_tags[i]) {
-            calback(Tag::get_tag_by_index(i));
+            callback(Tag::get_tag_by_index(i));
         }
     }
 }

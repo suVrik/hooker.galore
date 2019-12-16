@@ -1503,3 +1503,23 @@ entities:
     NameComponent:
       name: wall_15
     BlockoutComponent: {}
+  - TransformComponent:
+      translation:
+        x: 8
+        y: 4.5
+        z: 0
+      rotation:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+      scale:
+        x: 1
+        y: 1
+        z: 1
+    ModelComponent:
+      path: scifi_soldier.glb
+    MaterialComponent:
+      material: scifi_soldier
+    NameComponent:
+      name: scifi_soldier

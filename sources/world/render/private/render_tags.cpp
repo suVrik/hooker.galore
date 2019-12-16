@@ -1,5 +1,3 @@
-#pragma once
-
 #include "world/render/render_tags.h"
 
 namespace hg::tags {
