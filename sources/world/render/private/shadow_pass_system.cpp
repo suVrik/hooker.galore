@@ -110,15 +110,11 @@ void ShadowPassSystem::reset(ShadowPassSingleComponent& shadow_pass_single_compo
         bgfx::destroy(shadow_pass_single_component.gbuffer);
     }
 
-    shadow_pass_single_component.shadow_map_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::R32F, BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER | BGFX_SAMPLER_BORDER_COLOR(0xFFFFFFFF));
+    shadow_pass_single_component.shadow_map_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D32F, BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER | BGFX_SAMPLER_BORDER_COLOR(0xFFFFFFFF));
     bgfx::setName(shadow_pass_single_component.shadow_map_texture, "shadow_pass_output");
 
-    shadow_pass_single_component.depth_stencil_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
-    bgfx::setName(shadow_pass_single_component.depth_stencil_texture, "shadow_pass_output_depth_stencil");
-
     const bgfx::TextureHandle attachments[] = {
-            shadow_pass_single_component.shadow_map_texture,
-            shadow_pass_single_component.depth_stencil_texture
+            shadow_pass_single_component.shadow_map_texture
     };
 
     shadow_pass_single_component.gbuffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
