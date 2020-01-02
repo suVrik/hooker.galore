@@ -12,8 +12,8 @@ TransformComponent:
     x: 1
     y: 1
     z: 1
-ModelComponent:
-  path: blockout.glb
+ResourceGeometryComponent:
+  path: /geometry/blockout.glb
 MaterialComponent:
   material: blockout_orange
 BlockoutComponent: 

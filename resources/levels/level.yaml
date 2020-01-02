@@ -1,6 +1,6 @@
 entities:
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -28,8 +28,8 @@ entities:
         z: 5.00000048
         y: 2.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -57,8 +57,8 @@ entities:
         z: -8.5
         y: 2.43402958
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -86,8 +86,8 @@ entities:
         z: -8.5
         y: 3.95751715
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -115,8 +115,8 @@ entities:
         z: -7.5
         y: 2.82003546
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -144,8 +144,8 @@ entities:
         z: -7.5
         y: 4.34694576
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -173,8 +173,8 @@ entities:
         z: -6.5
         y: 3.17388582
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -202,8 +202,8 @@ entities:
         z: -6.5
         y: 4.6988554
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -231,8 +231,8 @@ entities:
         z: -13.7033587
         y: 0.244477451
         x: -8.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -260,8 +260,8 @@ entities:
         z: -13.7114725
         y: 1.77858269
         x: -8.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -289,8 +289,8 @@ entities:
         z: -13.7033587
         y: -0.10486716
         x: -7.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -318,8 +318,8 @@ entities:
         z: -13.7114725
         y: 1.42923844
         x: -7.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -347,8 +347,8 @@ entities:
         z: 11
         y: 3.5
         x: 8
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -376,8 +376,8 @@ entities:
         z: 2.5
         y: 4.11366272
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -405,8 +405,8 @@ entities:
         z: 3.5
         y: 4.29106426
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -434,8 +434,8 @@ entities:
         z: 3.5
         y: 3.76209831
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -463,8 +463,8 @@ entities:
         z: 5.98096085
         y: 4.1531291
         x: -10.5034342
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -492,8 +492,8 @@ entities:
         z: 5.98096085
         y: 4.28979301
         x: -9.50343418
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -521,8 +521,8 @@ entities:
         z: 5.98096085
         y: 3.77217007
         x: -9.50343418
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -550,8 +550,8 @@ entities:
         z: -1.50000048
         y: 10.999999
         x: -0.0417588055
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -579,8 +579,8 @@ entities:
         z: -3
         y: 9.5
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -608,8 +608,8 @@ entities:
         z: -15
         y: 7.50000048
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -637,8 +637,8 @@ entities:
         z: -9.14251041
         y: 7.50000048
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -666,8 +666,8 @@ entities:
         z: 1.17528617
         y: 3.5
         x: 11.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -695,8 +695,8 @@ entities:
         z: 8.5
         y: 7.50000048
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -724,8 +724,8 @@ entities:
         z: 2.85748672
         y: 7.50000048
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -753,8 +753,8 @@ entities:
         z: -3.14251328
         y: 7.50000048
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -782,8 +782,8 @@ entities:
         z: -12.6750736
         y: 1.42708492
         x: 5.97321129
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -811,8 +811,8 @@ entities:
         z: -12.6973295
         y: 0.242324114
         x: 6.97299576
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -840,8 +840,8 @@ entities:
         z: -12.6892157
         y: 1.77642918
         x: 6.97311211
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -869,8 +869,8 @@ entities:
         z: -12.7114735
         y: 0.625519753
         x: 7.97289658
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -898,8 +898,8 @@ entities:
         z: -12.7033587
         y: 2.15962553
         x: 7.97301102
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -927,8 +927,8 @@ entities:
         z: -12.7256155
         y: 0.972277641
         x: 8.97279739
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -956,8 +956,8 @@ entities:
         z: -12.7175016
         y: 2.50638151
         x: 8.97291183
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -985,8 +985,8 @@ entities:
         z: 5.31883526
         y: 3.5
         x: 11.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1014,8 +1014,8 @@ entities:
         z: -12.7397585
         y: 1.36886859
         x: 9.9726963
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1043,8 +1043,8 @@ entities:
         z: -12.7316456
         y: 2.9029727
         x: 9.97281075
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1072,8 +1072,8 @@ entities:
         z: -12.6973295
         y: 2.03767538
         x: 11.9729958
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1101,8 +1101,8 @@ entities:
         z: -12.6892157
         y: 3.57178116
         x: 11.9731121
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1130,8 +1130,8 @@ entities:
         z: -12.7114735
         y: 2.42087126
         x: 12.9728966
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1159,8 +1159,8 @@ entities:
         z: -12.7033587
         y: 3.9549787
         x: 12.973011
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1188,8 +1188,8 @@ entities:
         z: -12.7256155
         y: 2.72481632
         x: 13.9727974
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1217,8 +1217,8 @@ entities:
         z: -12.7175016
         y: 4.25892353
         x: 13.9729118
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1246,8 +1246,8 @@ entities:
         z: -12.7397585
         y: 3.16421986
         x: 14.9726963
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1275,8 +1275,8 @@ entities:
         z: -12.7316456
         y: 4.65551472
         x: 14.9728107
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1304,8 +1304,8 @@ entities:
         z: 7
         y: 5.5
         x: 13.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1333,8 +1333,8 @@ entities:
         z: -12.7397585
         y: 3.12140703
         x: 14.9726963
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1362,8 +1362,8 @@ entities:
         z: -12.7316456
         y: 5.03346634
         x: 15.9728107
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1391,8 +1391,8 @@ entities:
         z: -12.7397585
         y: 3.49935913
         x: 15.9726963
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1420,8 +1420,8 @@ entities:
         z: 1.5
         y: 4.5
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1449,8 +1449,8 @@ entities:
         z: 12.5
         y: 5.5
         x: 7.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1478,8 +1478,8 @@ entities:
         z: 11
         y: 6.5
         x: -6.50000048
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1507,8 +1507,8 @@ entities:
         z: 11.2459469
         y: 4.50000095
         x: 12.175087
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1536,8 +1536,8 @@ entities:
         z: 11.5965557
         y: 5.50000095
         x: 12.5315571
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1565,8 +1565,8 @@ entities:
         z: 5.00000048
         y: 3.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1594,8 +1594,8 @@ entities:
         z: -3.99999952
         y: 3
         x: -8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1623,8 +1623,8 @@ entities:
         z: 11.8220015
         y: 5.50000095
         x: 2.42813754
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1652,8 +1652,8 @@ entities:
         z: -3.99999952
         y: 2
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1681,8 +1681,8 @@ entities:
         z: -9.52079964
         y: 5.49999952
         x: -6
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1710,8 +1710,8 @@ entities:
         z: -9
         y: 5.5
         x: 7.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1739,8 +1739,8 @@ entities:
         z: -8.5
         y: 8.99999905
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1768,8 +1768,8 @@ entities:
         z: -7.09314299
         y: 3.62079859
         x: 9.86618137
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1797,8 +1797,8 @@ entities:
         z: -6.99999952
         y: 7
         x: -8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1826,8 +1826,8 @@ entities:
         z: -0.499999523
         y: 7
         x: -8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1855,8 +1855,8 @@ entities:
         z: -3.49999952
         y: 8.5
         x: -8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1884,8 +1884,8 @@ entities:
         z: 1.50000048
         y: 6.5
         x: 6
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1913,8 +1913,8 @@ entities:
         z: -13.7033587
         y: 0.974430919
         x: -10.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1942,8 +1942,8 @@ entities:
         z: -14.5
         y: 7.5
         x: 17.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -1971,8 +1971,8 @@ entities:
         z: -3.5
         y: 7.5
         x: 17.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2000,8 +2000,8 @@ entities:
         z: -3.5
         y: 7.5
         x: 13.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2029,8 +2029,8 @@ entities:
         z: -4.50223446
         y: 4
         x: 12.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2058,8 +2058,8 @@ entities:
         z: -1.49999952
         y: 6
         x: 13.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2087,8 +2087,8 @@ entities:
         z: 0.500000477
         y: 2.14963913
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2116,8 +2116,8 @@ entities:
         z: -12.7316456
         y: 4.69832611
         x: 14.9728107
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2145,8 +2145,8 @@ entities:
         z: -3.5
         y: 6
         x: 16
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2174,8 +2174,8 @@ entities:
         z: -9.5
         y: 6
         x: 17.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2203,8 +2203,8 @@ entities:
         z: 1.50000048
         y: 6.5
         x: -6
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2232,8 +2232,8 @@ entities:
         z: -3.99999952
         y: 3.02490926
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2261,8 +2261,8 @@ entities:
         z: -0.49999994
         y: 1.01877308
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2290,8 +2290,8 @@ entities:
         z: -7.47975779
         y: 4.6527977
         x: 10.3318157
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2319,8 +2319,8 @@ entities:
         z: -4.37797976
         y: 5.01415682
         x: 14.8507385
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2348,8 +2348,8 @@ entities:
         z: -12.6831875
         y: 1.68833077
         x: 10.9730968
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2377,8 +2377,8 @@ entities:
         z: -12.6750736
         y: 3.22243643
         x: 10.9732113
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2406,8 +2406,8 @@ entities:
         z: 5.01082897
         y: 3.9936862
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2435,8 +2435,8 @@ entities:
         z: 2.5
         y: 4.64262867
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2464,8 +2464,8 @@ entities:
         z: 1.5
         y: 5.02896595
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2493,8 +2493,8 @@ entities:
         z: -6.49999762
         y: 9.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2522,8 +2522,8 @@ entities:
         z: 1.98096085
         y: 4.50740385
         x: -11.5034342
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2551,8 +2551,8 @@ entities:
         z: -3.49999762
         y: 9.5
         x: 5.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2580,8 +2580,8 @@ entities:
         z: -3.49999762
         y: 9.5
         x: -5.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2609,8 +2609,8 @@ entities:
         z: -7.96419096
         y: 11
         x: 7.93660593
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2638,8 +2638,8 @@ entities:
         z: -8.99237633
         y: 10.5
         x: 15.9222651
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2667,8 +2667,8 @@ entities:
         z: -15.5
         y: 5.5
         x: 10
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2696,8 +2696,8 @@ entities:
         z: -9.5
         y: 9
         x: 17.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2725,8 +2725,8 @@ entities:
         z: -2
         y: 9
         x: 13.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2754,8 +2754,8 @@ entities:
         z: -3.5
         y: 9
         x: 16
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2783,8 +2783,8 @@ entities:
         z: -0.5
         y: 9.5
         x: 11
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2812,8 +2812,8 @@ entities:
         z: -12.5
         y: 0.571386635
         x: 0.500000834
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2841,8 +2841,8 @@ entities:
         z: 5.50000048
         y: 6.5
         x: 8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2870,8 +2870,8 @@ entities:
         z: -12.6831875
         y: -0.107020617
         x: 5.97309685
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2899,8 +2899,8 @@ entities:
         z: -15.5
         y: 5.5
         x: -8
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2928,8 +2928,8 @@ entities:
         z: -15.5
         y: 2.00000024
         x: 5.06639481e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2957,8 +2957,8 @@ entities:
         z: -15.5
         y: 9
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -2986,8 +2986,8 @@ entities:
         z: -3
         y: 4.00480413
         x: -14.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3015,8 +3015,8 @@ entities:
         z: -2.95761967
         y: 11
         x: -8.49263
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3044,8 +3044,8 @@ entities:
         z: -13.7114725
         y: 2.50853634
         x: -10.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3073,8 +3073,8 @@ entities:
         z: 1.98096085
         y: 5.0250268
         x: -11.5034342
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3102,8 +3102,8 @@ entities:
         z: -0.5
         y: 7.5
         x: 13.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3131,8 +3131,8 @@ entities:
         z: -15.5
         y: 5.39359999
         x: 5.06639481e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3160,8 +3160,8 @@ entities:
         z: 5.50000143
         y: 9.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3189,8 +3189,8 @@ entities:
         z: -15.5
         y: 5.39359999
         x: 5.06639481e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3218,8 +3218,8 @@ entities:
         z: -15.5
         y: 5.39359999
         x: -0.999999523
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3247,8 +3247,8 @@ entities:
         z: -15.5
         y: 5.39359999
         x: 1.00000048
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3276,8 +3276,8 @@ entities:
         z: -15.5
         y: 6.18231678
         x: -0.0111554172
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3305,8 +3305,8 @@ entities:
         z: -15.5
         y: 4.58836508
         x: 0.0113900891
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3334,8 +3334,8 @@ entities:
         z: 12.5
         y: 8
         x: 8.5
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3363,8 +3363,8 @@ entities:
         z: -10.5
         y: 10.999999
         x: -0.02540344
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3392,8 +3392,8 @@ entities:
         z: 5.98096085
         y: 4.67075205
         x: -10.5034342
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3421,8 +3421,8 @@ entities:
         z: -0.499999523
         y: 1.79578888
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3450,8 +3450,8 @@ entities:
         z: -1.49999952
         y: 1.40978301
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3479,8 +3479,8 @@ entities:
         z: 1.50000048
         y: 8.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3508,8 +3508,8 @@ entities:
         z: -1.49999952
         y: 1.40978301
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3537,8 +3537,8 @@ entities:
         z: -2.49999952
         y: 1.04672885
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3566,8 +3566,8 @@ entities:
         z: -3.49999952
         y: 0.676940203
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3595,8 +3595,8 @@ entities:
         z: -4.49999952
         y: 0.260306716
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3624,8 +3624,8 @@ entities:
         z: -5.49999952
         y: -0.0910932422
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3653,8 +3653,8 @@ entities:
         z: -5.49999952
         y: 1.43370581
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3682,8 +3682,8 @@ entities:
         z: -4.49999952
         y: 1.78973269
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3711,8 +3711,8 @@ entities:
         z: -3.49999952
         y: 2.20209432
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3740,8 +3740,8 @@ entities:
         z: -2.49999952
         y: 2.56932044
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3769,8 +3769,8 @@ entities:
         z: -1.49999952
         y: 2.93327022
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3798,8 +3798,8 @@ entities:
         z: 5.00000048
         y: 2.5
         x: 0
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3827,8 +3827,8 @@ entities:
         z: -0.499999523
         y: 3.32269692
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3856,8 +3856,8 @@ entities:
         z: 0.500000477
         y: 3.67460442
         x: 2.38418579e-07
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3885,8 +3885,8 @@ entities:
         z: -13.7033587
         y: 0.627673149
         x: -9.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3914,8 +3914,8 @@ entities:
         z: -13.7114725
         y: 2.16177893
         x: -9.66655827
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3943,8 +3943,8 @@ entities:
         z: -13.7114725
         y: 2.90512705
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -3972,8 +3972,8 @@ entities:
         z: -13.7033587
         y: 1.37102199
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -4001,8 +4001,8 @@ entities:
         z: -10.5
         y: 1.70118666
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -4030,8 +4030,8 @@ entities:
         z: -10.5
         y: 3.22634077
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -4059,8 +4059,8 @@ entities:
         z: -9.5
         y: 2.07097554
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     BlockoutComponent:
       {}
     NameComponent:
@@ -4088,8 +4088,8 @@ entities:
         z: -9.5
         y: 3.59356666
         x: -11.6665583
-  - ModelComponent:
-      path: blockout.glb
+  - ResourceGeometryComponent:
+      geometry: /geometry/blockout.glb
     LightComponent:
       color:
         z: 150
