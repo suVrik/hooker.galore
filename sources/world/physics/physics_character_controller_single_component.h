@@ -10,8 +10,8 @@ namespace hg {
 
 class PhysicsCharacterControllerSystem;
 
-/** `PhysicsCharacterControllerPrivateComponent` is added, updated and removed automatically by `PhysicsCharacterControllerSystem`.
-    To make an entity a character controller use `PhysicsCharacterControllerComponent` instead. */
+/** `PhysicsCharacterControllerSingleComponent` contains a character controller manager which manages an array of
+    character controllers on a scene and which is required to create a new character controller on that scene. */
 class PhysicsCharacterControllerSingleComponent final {
 private:
     physx::PxControllerManager* m_character_controller_manager = nullptr;
