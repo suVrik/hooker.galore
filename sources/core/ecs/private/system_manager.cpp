@@ -33,12 +33,22 @@ void SystemManager::commit() {
             }
 
             assert(!system_descriptor.name.empty());
-            assert(system_mapping.count(system_descriptor.name) == 0);
-            system_mapping.emplace(system_descriptor.name, i);
+            [[maybe_unused]] auto& [_, is_inserted] = system_mapping.emplace(system_descriptor.name, i);
+            assert(is_inserted);
         }
 
         for (size_t i = 0; i < systems.size(); i++) {
             SystemDescriptor& system_descriptor = systems[i];
+
+            entt::meta_prop context_property = system_descriptor.system_type.prop("context"_hs);
+            if (context_property) {
+                entt::meta_any context_property_value = context_property.value();
+
+                assert(context_property_value);
+                assert(context_property_value.type() == entt::resolve<std::vector<entt::meta_type>>());
+
+                system_descriptor.context = context_property_value.fast_cast<std::vector<entt::meta_type>>();
+            }
 
             entt::meta_prop before_property = system_descriptor.system_type.prop("before"_hs);
             if (before_property) {

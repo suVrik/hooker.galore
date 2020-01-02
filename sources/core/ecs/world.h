@@ -6,6 +6,7 @@
 #include <entt/entity/registry.hpp>
 #include <entt/meta/factory.hpp>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace hg {
@@ -219,6 +220,8 @@ private:
     std::vector<SystemInstance> m_systems[2];
     std::vector<size_t> m_system_order[2];
     std::vector<PropagateState> m_propagate_state[2];
+
+    std::unordered_set<entt::meta_type> m_context;
 
     std::vector<bool> m_owned_tags;
     std::vector<bool> m_inherited_tags;

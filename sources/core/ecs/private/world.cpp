@@ -126,16 +126,22 @@ entt::meta_handle World::replace_move_or_copy(entt::entity entity, entt::meta_ha
 
 void World::remove(entt::entity entity, entt::meta_type component_type) {
     assert(ComponentManager::is_registered(component_type));
+    assert(ComponentManager::is_copy_assignable(component_type) ||
+           ComponentManager::is_move_assignable(component_type));
     ComponentManager::descriptors[component_type].remove(this, entity);
 }
 
 bool World::has(entt::entity entity, entt::meta_type component_type) const {
     assert(ComponentManager::is_registered(component_type));
+    assert(ComponentManager::is_copy_assignable(component_type) ||
+           ComponentManager::is_move_assignable(component_type));
     return ComponentManager::descriptors[component_type].has(this, entity);
 }
 
 entt::meta_handle World::get(entt::entity entity, entt::meta_type component_type) const {
     assert(ComponentManager::is_registered(component_type));
+    assert(ComponentManager::is_copy_assignable(component_type) ||
+           ComponentManager::is_move_assignable(component_type));
     return ComponentManager::descriptors[component_type].get(this, entity);
 }
 
@@ -453,6 +459,26 @@ void World::sort_systems(size_t system_type) {
             }
         }
     }
+
+    std::unordered_set<entt::meta_type> new_context;
+    for (size_t i = 0, size = system_order.size(); i < size; i++) {
+        for (entt::meta_type component_type : system_descriptors[system_order[i]].context) {
+            if (m_context.count(component_type) == 0) {
+                assert(ComponentManager::descriptors[component_type].set);
+                ComponentManager::descriptors[component_type].set(this);
+                new_context.insert(component_type);
+            }
+        }
+    }
+
+    for (entt::meta_type component_type : m_context) {
+        if (new_context.count(component_type) == 0) {
+            assert(ComponentManager::descriptors[component_type].unset);
+            ComponentManager::descriptors[component_type].unset(this);
+        }
+    }
+
+    m_context = std::move(new_context);
 
     [[maybe_unused]] std::chrono::steady_clock::time_point before_constructors = std::chrono::steady_clock::now();
 

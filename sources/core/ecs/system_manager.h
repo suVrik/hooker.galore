@@ -32,6 +32,7 @@ private:
         std::string name;
 
         TagWrapper* tag_expression;
+        std::vector<entt::meta_type> context;
         std::vector<size_t> after;
     };
 

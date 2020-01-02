@@ -81,6 +81,8 @@ private:
         entt::meta_any(*construct)();
         entt::meta_any(*copy)(entt::meta_handle component);
         entt::meta_any(*move)(entt::meta_handle component);
+        entt::meta_handle(*set)(entt::registry* registry);
+        void(*unset)(entt::registry* registry);
         entt::meta_handle(*ctx)(const entt::registry* registry);
         entt::meta_handle(*assign_default)(entt::registry* registry, entt::entity entity);
         entt::meta_handle(*assign_copy)(entt::registry* registry, entt::entity entity, entt::meta_handle component);
