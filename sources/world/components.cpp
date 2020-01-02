@@ -24,8 +24,6 @@
 #include "world/render/light_component.h"
 #include "world/render/lighting_pass_single_component.h"
 #include "world/render/material_component.h"
-#include "world/render/model_component.h"
-#include "world/render/model_single_component.h"
 #include "world/render/outline_component.h"
 #include "world/render/outline_pass_single_component.h"
 #include "world/render/picking_pass_single_component.h"
@@ -58,7 +56,6 @@ void register_components() {
     REGISTER_COMPONENT(ImguiSingleComponent);
     REGISTER_COMPONENT(LevelSingleComponent);
     REGISTER_COMPONENT(LightingPassSingleComponent);
-    REGISTER_COMPONENT(ModelSingleComponent);
     REGISTER_COMPONENT(NameSingleComponent);
     REGISTER_COMPONENT(NormalInputSingleComponent);
     REGISTER_COMPONENT(OutlinePassSingleComponent);
@@ -76,7 +73,6 @@ void register_components() {
     REGISTER_COMPONENT(EditorCameraComponent);
     REGISTER_COMPONENT(LightComponent);
     REGISTER_COMPONENT(MaterialComponent);
-    REGISTER_COMPONENT(ModelComponent);
     REGISTER_COMPONENT(NameComponent);
     REGISTER_COMPONENT(OutlineComponent);
     REGISTER_COMPONENT(PhysicsBoxShapeComponent);
