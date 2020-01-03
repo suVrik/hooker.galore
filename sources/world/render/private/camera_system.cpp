@@ -11,6 +11,7 @@ namespace hg {
 SYSTEM_DESCRIPTOR(
     SYSTEM(CameraSystem),
     TAGS(render),
+    CONTEXT(CameraSingleComponent),
     AFTER("WindowSystem")
 )
 

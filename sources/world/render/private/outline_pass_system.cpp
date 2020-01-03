@@ -6,14 +6,17 @@
 #include "shaders/outline_pass/outline_pass.vertex.h"
 #include "shaders/quad_pass/quad_pass.vertex.h"
 #include "world/render/camera_single_component.h"
+#include "world/render/outline_component.h"
 #include "world/render/outline_pass_single_component.h"
 #include "world/render/outline_pass_system.h"
 #include "world/render/quad_single_component.h"
 #include "world/render/render_tags.h"
+#include "world/resource/resource_geometry_component.h"
+#include "world/shared/transform_component.h"
 #include "world/shared/window_single_component.h"
 
 #include <bgfx/embedded_shader.h>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace hg {
 
@@ -31,63 +34,44 @@ static const bgfx::EmbeddedShader OUTLINE_BLUR_PASS_SHADER[] = {
         BGFX_EMBEDDED_SHADER_END()
 };
 
-static const uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP;
-
 } // namespace outline_pass_system
 
 SYSTEM_DESCRIPTOR(
     SYSTEM(OutlinePassSystem),
     TAGS(render),
+    CONTEXT(OutlinePassSingleComponent),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem")
 )
 
 OutlinePassSystem::OutlinePassSystem(World& world)
-        : NormalSystem(world)
-        , m_group(world.group<OutlineComponent>(entt::get<ModelComponent, TransformComponent>)) {
+        : NormalSystem(world) {
     using namespace outline_pass_system_details;
 
-    auto& outline_pass_single_component = world.set<OutlinePassSingleComponent>();
+    auto& outline_pass_single_component = world.ctx<OutlinePassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     reset(outline_pass_single_component, window_single_component.width, window_single_component.height);
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
 
-    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(OUTLINE_PASS_SHADER, type, "outline_pass_vertex");
-    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(OUTLINE_PASS_SHADER, type, "outline_pass_fragment");
-    outline_pass_single_component.outline_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
+    bgfx::ShaderHandle vertex_shader_handle         = bgfx::createEmbeddedShader(OUTLINE_PASS_SHADER, type, "outline_pass_vertex");
+    bgfx::ShaderHandle fragment_shader_handle       = bgfx::createEmbeddedShader(OUTLINE_PASS_SHADER, type, "outline_pass_fragment");
+    outline_pass_single_component.offscreen_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
     vertex_shader_handle   = bgfx::createEmbeddedShader(OUTLINE_BLUR_PASS_SHADER, type, "quad_pass_vertex");
     fragment_shader_handle = bgfx::createEmbeddedShader(OUTLINE_BLUR_PASS_SHADER, type, "outline_blur_pass_fragment");
-    outline_pass_single_component.outline_blur_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
+    outline_pass_single_component.onscreen_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-    outline_pass_single_component.texture_uniform       = bgfx::createUniform("s_texture",       bgfx::UniformType::Sampler);
-    outline_pass_single_component.outline_color_uniform = bgfx::createUniform("u_outline_color", bgfx::UniformType::Vec4);
-    outline_pass_single_component.group_index_uniform   = bgfx::createUniform("u_group_index",   bgfx::UniformType::Vec4);
+    outline_pass_single_component.texture_sampler_uniform = bgfx::createUniform("s_texture",       bgfx::UniformType::Sampler);
+    outline_pass_single_component.outline_color_uniform   = bgfx::createUniform("u_outline_color", bgfx::UniformType::Vec4);
+    outline_pass_single_component.group_index_uniform     = bgfx::createUniform("u_group_index",   bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(OUTLINE_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.f, 0);
-    bgfx::setViewName(OUTLINE_PASS, "outline_pass");
+    bgfx::setViewClear(OUTLINE_OFFSCREEN_PASS, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00000000, 1.f);
+    bgfx::setViewName(OUTLINE_OFFSCREEN_PASS, "outline_pass");
 
-    bgfx::setViewClear(OUTLINE_BLUR_PASS, BGFX_CLEAR_NONE, 0x000000FF, 1.f, 0);
-    bgfx::setViewName(OUTLINE_BLUR_PASS, "outline_blur_pass");
-}
-
-OutlinePassSystem::~OutlinePassSystem() {
-    auto& outline_pass_single_component = world.ctx<OutlinePassSingleComponent>();
-
-    auto destroy_valid = [](auto handle) {
-        if (bgfx::isValid(handle)) {
-            bgfx::destroy(handle);
-        }
-    };
-
-    destroy_valid(outline_pass_single_component.buffer);
-    destroy_valid(outline_pass_single_component.group_index_uniform);
-    destroy_valid(outline_pass_single_component.outline_blur_pass_program);
-    destroy_valid(outline_pass_single_component.outline_color_uniform);
-    destroy_valid(outline_pass_single_component.outline_pass_program);
-    destroy_valid(outline_pass_single_component.texture_uniform);
+    bgfx::setViewClear(OUTLINE_ONSCREEN_PASS, BGFX_CLEAR_NONE);
+    bgfx::setViewName(OUTLINE_ONSCREEN_PASS, "outline_blur_pass");
 }
 
 void OutlinePassSystem::update(float /*elapsed_time*/) {
@@ -100,88 +84,81 @@ void OutlinePassSystem::update(float /*elapsed_time*/) {
         reset(outline_pass_single_component, window_single_component.width, window_single_component.height);
     }
 
-    bgfx::setViewTransform(OUTLINE_PASS, glm::value_ptr(camera_single_component.view_matrix), glm::value_ptr(camera_single_component.projection_matrix));
+    bgfx::setViewTransform(OUTLINE_OFFSCREEN_PASS, &camera_single_component.view_matrix, &camera_single_component.projection_matrix);
 
-    bgfx::touch(OUTLINE_PASS);
+    bgfx::touch(OUTLINE_OFFSCREEN_PASS);
+    world.group<OutlineComponent>(entt::get<ResourceGeometryComponent, TransformComponent>).each([&](entt::entity entity, OutlineComponent& outline_component, ResourceGeometryComponent& resource_geometry_component, TransformComponent& transform_component) {
+        const std::shared_ptr<ResourceGeometry>& geometry = resource_geometry_component.get_geometry();
+        if (geometry && geometry->is_loaded()) {
+            assert(bgfx::isValid(geometry->get_index_buffer()));
+            bgfx::setIndexBuffer(geometry->get_index_buffer(), 0, geometry->get_indices_count());
 
-    m_group.each([&](entt::entity entity, OutlineComponent& outline_component, ModelComponent& model_component, TransformComponent& transform_component) {
-        glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
-        transform = transform * glm::mat4_cast(transform_component.rotation);
-        transform = glm::scale(transform, transform_component.scale);
+            assert(bgfx::isValid(geometry->get_vertex_buffer()));
+            bgfx::setVertexBuffer(0, geometry->get_vertex_buffer(), 0, geometry->get_vertices_count());
 
-        for (const Model::Node& node : model_component.model.children) {
-            draw_node(outline_pass_single_component, node, transform, outline_component.group_index);
-        }
-    });
-
-    bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
-    bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
-
-    bgfx::setTexture(0, outline_pass_single_component.texture_uniform, outline_pass_single_component.color_texture);
-    bgfx::setUniform(outline_pass_single_component.outline_color_uniform, glm::value_ptr(outline_pass_single_component.outline_color));
-
-    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA));
-
-    bgfx::submit(OUTLINE_BLUR_PASS, outline_pass_single_component.outline_blur_pass_program);
-}
-
-void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) const {
-    using namespace outline_pass_system_details;
-
-    if (bgfx::isValid(outline_pass_single_component.buffer)) {
-        bgfx::destroy(outline_pass_single_component.buffer);
-    }
-
-    outline_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
-    outline_pass_single_component.depth_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
-
-    const bgfx::TextureHandle attachments[] = {
-            outline_pass_single_component.color_texture,
-            outline_pass_single_component.depth_texture
-    };
-    outline_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, true);
-
-    bgfx::setViewFrameBuffer(OUTLINE_PASS, outline_pass_single_component.buffer);
-    bgfx::setViewRect(OUTLINE_PASS, 0, 0, width, height);
-
-    bgfx::setViewRect(OUTLINE_BLUR_PASS, 0, 0, width, height);
-}
-
-void OutlinePassSystem::draw_node(const OutlinePassSingleComponent& outline_pass_single_component, const Model::Node& node, const glm::mat4& transform, uint32_t group_index) const {
-    glm::mat4 local_transform = glm::translate(glm::mat4(1.f), node.translation);
-    local_transform = local_transform * glm::mat4_cast(node.rotation);
-    local_transform = glm::scale(local_transform, node.scale);
-
-    const glm::mat4 world_transform = transform * local_transform;
-
-    if (node.mesh) {
-        for (const Model::Primitive& primitive : node.mesh->primitives) {
-            assert(bgfx::isValid(primitive.vertex_buffer));
-            assert(bgfx::isValid(primitive.index_buffer));
-
-            bgfx::setVertexBuffer(0, primitive.vertex_buffer, 0, static_cast<uint32_t>(primitive.num_vertices));
-            bgfx::setIndexBuffer(primitive.index_buffer, 0, static_cast<uint32_t>(primitive.num_indices));
+            auto group_index = static_cast<uint32_t>(entity);
 
             glm::vec4 uniform_value;
             uniform_value.x = ((group_index >> 16) & 0xFF) / 255.f;
             uniform_value.y = ((group_index >> 8) & 0xFF) / 255.f;
             uniform_value.z = (group_index & 0xFF) / 255.f;
             uniform_value.w = 1.f;
-            bgfx::setUniform(outline_pass_single_component.group_index_uniform, glm::value_ptr(uniform_value));
 
-            bgfx::setTransform(glm::value_ptr(world_transform), 1);
+            assert(bgfx::isValid(*outline_pass_single_component.group_index_uniform));
+            bgfx::setUniform(*outline_pass_single_component.group_index_uniform, &uniform_value);
 
-            bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_WRITE_Z | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
+            glm::mat4 transform = glm::translate(glm::mat4(1.f), transform_component.translation);
+            transform = transform * glm::mat4_cast(transform_component.rotation);
+            transform = glm::scale(transform, transform_component.scale);
+            bgfx::setTransform(&transform, 1);
 
-            assert(bgfx::isValid(outline_pass_single_component.outline_pass_program));
+            bgfx::setState(BGFX_STATE_WRITE_MASK | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_CULL_CW);
 
-            bgfx::submit(OUTLINE_PASS, outline_pass_single_component.outline_pass_program);
+            assert(bgfx::isValid(*outline_pass_single_component.offscreen_program));
+            bgfx::submit(OUTLINE_OFFSCREEN_PASS, *outline_pass_single_component.offscreen_program);
         }
-    }
+    });
 
-    for (const Model::Node& child_node : node.children) {
-        draw_node(outline_pass_single_component, child_node, world_transform, group_index);
-    }
+    assert(bgfx::isValid(*quad_single_component.vertex_buffer));
+    bgfx::setVertexBuffer(0, *quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
+
+    assert(bgfx::isValid(*quad_single_component.index_buffer));
+    bgfx::setIndexBuffer(*quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
+
+    assert(bgfx::isValid(*outline_pass_single_component.texture_sampler_uniform));
+    assert(bgfx::isValid(*outline_pass_single_component.color_texture));
+    bgfx::setTexture(0, *outline_pass_single_component.texture_sampler_uniform, *outline_pass_single_component.color_texture);
+
+    assert(bgfx::isValid(*outline_pass_single_component.outline_color_uniform));
+    bgfx::setUniform(*outline_pass_single_component.outline_color_uniform, &outline_pass_single_component.outline_color);
+
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW | BGFX_STATE_BLEND_ALPHA);
+
+    assert(bgfx::isValid(*outline_pass_single_component.onscreen_program));
+    bgfx::submit(OUTLINE_ONSCREEN_PASS, *outline_pass_single_component.onscreen_program);
+}
+
+void OutlinePassSystem::reset(OutlinePassSingleComponent& outline_pass_single_component, uint16_t width, uint16_t height) {
+    constexpr uint64_t ATTACHMENT_FLAGS = BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT | BGFX_SAMPLER_UVW_CLAMP;
+
+    outline_pass_single_component.color_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::BGRA8, ATTACHMENT_FLAGS);
+    bgfx::setName(*outline_pass_single_component.color_texture, "outline_pass_color_texture");
+
+    outline_pass_single_component.depth_texture = bgfx::createTexture2D(width, height, false, 1, bgfx::TextureFormat::D24S8, ATTACHMENT_FLAGS);
+    bgfx::setName(*outline_pass_single_component.color_texture, "outline_pass_depth_texture");
+
+    const bgfx::TextureHandle attachments[] = {
+            *outline_pass_single_component.color_texture,
+            *outline_pass_single_component.depth_texture,
+    };
+
+    outline_pass_single_component.buffer = bgfx::createFrameBuffer(static_cast<uint8_t>(std::size(attachments)), attachments, false);
+    bgfx::setName(*outline_pass_single_component.buffer, "outline_pass_frame_buffer");
+
+    bgfx::setViewFrameBuffer(OUTLINE_OFFSCREEN_PASS, *outline_pass_single_component.buffer);
+    bgfx::setViewRect(OUTLINE_OFFSCREEN_PASS, 0, 0, width, height);
+
+    bgfx::setViewRect(OUTLINE_ONSCREEN_PASS, 0, 0, width, height);
 }
 
 } // namespace hg

@@ -6,7 +6,7 @@
 
 namespace hg {
 
-/** `CameraSingleComponent` points to an active camera entity. */
+/** `CameraSingleComponent` references the active camera entity and contains information about its matrices. */
 struct CameraSingleComponent final {
     entt::entity active_camera = entt::null;
 

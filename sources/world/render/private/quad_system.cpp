@@ -43,6 +43,7 @@ static const bgfx::EmbeddedShader QUAD_PASS_SHADER[] = {
 SYSTEM_DESCRIPTOR(
     SYSTEM(QuadSystem),
     TAGS(render),
+    CONTEXT(QuadSingleComponent),
     BEFORE("RenderSystem"),
     AFTER("RenderFetchSystem")
 )
@@ -51,28 +52,16 @@ QuadSystem::QuadSystem(World& world)
         : NormalSystem(world) {
     using namespace quad_system_details;
 
-    auto& quad_single_component = world.set<QuadSingleComponent>();
+    auto& quad_single_component = world.ctx<QuadSingleComponent>();
     quad_single_component.index_buffer = bgfx::createIndexBuffer(bgfx::makeRef(QUAD_INDICES, sizeof(QUAD_INDICES)));
     quad_single_component.vertex_buffer = bgfx::createVertexBuffer(bgfx::makeRef(QUAD_VERTICES, sizeof(QUAD_VERTICES)), QUAD_VERTEX_DECLARATION);
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
     bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(QUAD_PASS_SHADER, type, "quad_pass_vertex");
     bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(QUAD_PASS_SHADER, type, "quad_pass_fragment");
-    quad_single_component.program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
-}
+    quad_single_component.program             = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
-QuadSystem::~QuadSystem() {
-    auto& quad_single_component = world.ctx<QuadSingleComponent>();
-
-    auto destroy_valid = [](auto handle) {
-        if (bgfx::isValid(handle)) {
-            bgfx::destroy(handle);
-        }
-    };
-
-    destroy_valid(quad_single_component.index_buffer);
-    destroy_valid(quad_single_component.program);
-    destroy_valid(quad_single_component.vertex_buffer);
+    quad_single_component.texture_sampler_uniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 }
 
 void QuadSystem::update(float /*elapsed_time*/) {

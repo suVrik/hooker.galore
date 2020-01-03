@@ -1,23 +1,24 @@
 #pragma once
 
-#include <bgfx/bgfx.h>
+#include "core/render/unique_handle.h"
+
 #include <glm/vec4.hpp>
 
 namespace hg {
 
 /** `OutlinePassSingleComponent` contains outline pass shaders, textures and uniforms. */
 struct OutlinePassSingleComponent final {
-    bgfx::FrameBufferHandle buffer = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
 
-    bgfx::ProgramHandle outline_blur_pass_program = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle outline_pass_program      = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::ProgramHandle> offscreen_program;
+    UniqueHandle<bgfx::ProgramHandle> onscreen_program;
 
-    bgfx::TextureHandle color_texture = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle depth_texture = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::TextureHandle> color_texture;
+    UniqueHandle<bgfx::TextureHandle> depth_texture;
 
-    bgfx::UniformHandle outline_color_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle texture_uniform       = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle group_index_uniform   = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::UniformHandle> texture_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> outline_color_uniform;
+    UniqueHandle<bgfx::UniformHandle> group_index_uniform;
 
     glm::vec4 outline_color = glm::vec4(1.f, 1.f, 0.f, 1.f);
 };

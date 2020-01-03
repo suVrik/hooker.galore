@@ -5,8 +5,6 @@ $input v_texcoord0
 
 SAMPLER2D(s_texture, 0);
 
-uniform vec4 u_pixel_size;
-
 #define EDGE_THRESHOLD_MIN 0.0312
 #define EDGE_THRESHOLD_MAX 0.125
 #define QUALITY(q) ((q) < 5 ? 1.0 : ((q) > 5 ? ((q) < 10 ? 2.0 : ((q) < 11 ? 4.0 : 8.0)) : 1.5))
@@ -23,10 +21,10 @@ void main() {
     vec3 color = texture2D(s_texture, uv).rgb;
 
     float luma       = rgb2luma(color);
-    float luma_down  = rgb2luma(texture2D(s_texture, uv + vec2(0.0, -u_pixel_size.y)).rgb);
-    float luma_up    = rgb2luma(texture2D(s_texture, uv + vec2(0.0,  u_pixel_size.y)).rgb);
-    float luma_left  = rgb2luma(texture2D(s_texture, uv + vec2(-u_pixel_size.x, 0.0)).rgb);
-    float luma_right = rgb2luma(texture2D(s_texture, uv + vec2( u_pixel_size.x, 0.0)).rgb);
+    float luma_down  = rgb2luma(texture2D(s_texture, uv + vec2(0.0, -u_viewTexel.y)).rgb);
+    float luma_up    = rgb2luma(texture2D(s_texture, uv + vec2(0.0,  u_viewTexel.y)).rgb);
+    float luma_left  = rgb2luma(texture2D(s_texture, uv + vec2(-u_viewTexel.x, 0.0)).rgb);
+    float luma_right = rgb2luma(texture2D(s_texture, uv + vec2( u_viewTexel.x, 0.0)).rgb);
     float luma_min   = min(luma, min(min(luma_down, luma_up), min(luma_left, luma_right)));
     float luma_max   = max(luma, max(max(luma_down, luma_up), max(luma_left, luma_right)));
     float luma_range = luma_max - luma_min;
@@ -38,10 +36,10 @@ void main() {
     }
 
     // Query the 4 remaining corners lumas.
-    float luma_down_left  = rgb2luma(texture2D(s_texture, uv + vec2(-u_pixel_size.x, -u_pixel_size.y)).rgb);
-    float luma_up_right   = rgb2luma(texture2D(s_texture, uv + vec2( u_pixel_size.x,  u_pixel_size.y)).rgb);
-    float luma_up_left    = rgb2luma(texture2D(s_texture, uv + vec2(-u_pixel_size.x,  u_pixel_size.y)).rgb);
-    float luma_down_right = rgb2luma(texture2D(s_texture, uv + vec2( u_pixel_size.x, -u_pixel_size.y)).rgb);
+    float luma_down_left  = rgb2luma(texture2D(s_texture, uv + vec2(-u_viewTexel.x, -u_viewTexel.y)).rgb);
+    float luma_up_right   = rgb2luma(texture2D(s_texture, uv + vec2( u_viewTexel.x,  u_viewTexel.y)).rgb);
+    float luma_up_left    = rgb2luma(texture2D(s_texture, uv + vec2(-u_viewTexel.x,  u_viewTexel.y)).rgb);
+    float luma_down_right = rgb2luma(texture2D(s_texture, uv + vec2( u_viewTexel.x, -u_viewTexel.y)).rgb);
     // Combine the edges and corners lumas.
     float luma_down_up       = luma_down + luma_up;
     float luma_left_right    = luma_left + luma_right;
@@ -57,7 +55,7 @@ void main() {
     bool is_horizontal = edge_horizontal >= edge_vertical;
 
     // Choose the step size (one pixel) accordingly.
-    float step_size = is_horizontal ? u_pixel_size.y : u_pixel_size.x;
+    float step_size = is_horizontal ? u_viewTexel.y : u_viewTexel.x;
 
     // Select the two neighboring texels lumas in the opposite direction to the local edge.
     float luma1 = is_horizontal ? luma_down : luma_left;
@@ -87,7 +85,7 @@ void main() {
         uv_tmp.x += step_size * 0.5;
     }
 
-    vec2 offset = is_horizontal ? vec2(u_pixel_size.x, 0.0) : vec2(0.0, u_pixel_size.y);
+    vec2 offset = is_horizontal ? vec2(u_viewTexel.x, 0.0) : vec2(0.0, u_viewTexel.y);
     // Compute UVs to explore on each side of the edge, orthogonally.
     vec2 uv1 = uv_tmp - offset * QUALITY(0);
     vec2 uv2 = uv_tmp + offset * QUALITY(0);

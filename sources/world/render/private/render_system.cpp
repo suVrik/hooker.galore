@@ -11,12 +11,12 @@ namespace hg {
 SYSTEM_DESCRIPTOR(
     SYSTEM(RenderSystem),
     TAGS(render),
+    CONTEXT(RenderSingleComponent),
     AFTER("RenderFetchSystem")
 )
 
 RenderSystem::RenderSystem(World& world)
         : NormalSystem(world) {
-    world.set<RenderSingleComponent>();
 }
 
 void RenderSystem::update(float /*elapsed_time*/) {

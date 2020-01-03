@@ -1,23 +1,22 @@
 #pragma once
 
-#include <bgfx/bgfx.h>
+#include "core/render/unique_handle.h"
 
 namespace hg {
 
-/** `GeometryPassSingleComponent` contains geometry pass shaders, uniforms and framebuffers. */
+/** `GeometryPassSingleComponent` contains geometry pass shaders, uniforms and frame buffers. */
 struct GeometryPassSingleComponent final {
-    bgfx::FrameBufferHandle gbuffer = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
 
-    bgfx::ProgramHandle geometry_blockout_pass_program    = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle geometry_pass_program             = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::ProgramHandle> program;
 
-    bgfx::TextureHandle color_roughness_texture = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle depth_texture           = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle depth_stencil_texture   = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle normal_metal_ao_texture = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::TextureHandle> color_roughness_texture;
+    UniqueHandle<bgfx::TextureHandle> depth_texture;
+    UniqueHandle<bgfx::TextureHandle> depth_stencil_texture;
+    UniqueHandle<bgfx::TextureHandle> normal_metal_ao_texture;
 
-    bgfx::UniformHandle color_roughness_uniform   = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle normal_metal_ao_uniform   = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::UniformHandle> color_roughness_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> normal_metal_ao_sampler_uniform;
 };
 
 } // namespace hg

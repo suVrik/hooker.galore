@@ -25,8 +25,7 @@ SYSTEM_DESCRIPTOR(
 
 EditorCameraSystem::EditorCameraSystem(World& world)
         : NormalSystem(world) {
-    // TODO: Create `CameraSingleComponent` in `CameraSystem`?
-    auto& camera_single_component = world.set<CameraSingleComponent>();
+    auto& camera_single_component = world.ctx<CameraSingleComponent>();
     camera_single_component.active_camera = world.create();
 
     auto& editor_camera_component = world.assign<EditorCameraComponent>(camera_single_component.active_camera);

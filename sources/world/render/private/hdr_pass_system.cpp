@@ -27,6 +27,7 @@ static const bgfx::EmbeddedShader HDR_PASS_SHADER[] = {
 SYSTEM_DESCRIPTOR(
     SYSTEM(HDRPassSystem),
     TAGS(render),
+    CONTEXT(HDRPassSingleComponent),
     BEFORE("RenderSystem"),
     AFTER("WindowSystem", "RenderFetchSystem", "CameraSystem", "AAPassSystem")
 )
@@ -35,32 +36,20 @@ HDRPassSystem::HDRPassSystem(World& world)
         : NormalSystem(world) {
     using namespace hdr_pass_system_details;
 
-    auto& hdr_pass_single_component = world.set<HDRPassSingleComponent>();
+    auto& hdr_pass_single_component = world.ctx<HDRPassSingleComponent>();
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     bgfx::RendererType::Enum type = bgfx::getRendererType();
-    bgfx::ShaderHandle vertex_shader_handle   = bgfx::createEmbeddedShader(HDR_PASS_SHADER, type, "quad_pass_vertex");
-    bgfx::ShaderHandle fragment_shader_handle = bgfx::createEmbeddedShader(HDR_PASS_SHADER, type, "hdr_pass_fragment");
-    hdr_pass_single_component.hdr_pass_program = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
-    hdr_pass_single_component.texture_uniform  = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
-    reset(hdr_pass_single_component, window_single_component.width, window_single_component.height);
+    bgfx::ShaderHandle vertex_shader_handle    = bgfx::createEmbeddedShader(HDR_PASS_SHADER, type, "quad_pass_vertex");
+    bgfx::ShaderHandle fragment_shader_handle  = bgfx::createEmbeddedShader(HDR_PASS_SHADER, type, "hdr_pass_fragment");
+    hdr_pass_single_component.program          = bgfx::createProgram(vertex_shader_handle, fragment_shader_handle, true);
 
+    hdr_pass_single_component.texture_sampler_uniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+
+    bgfx::setViewRect(HDR_PASS, 0, 0, window_single_component.width, window_single_component.height);
     bgfx::setViewClear(HDR_PASS, BGFX_CLEAR_DEPTH | BGFX_CLEAR_STENCIL, 0x000000FF, 1.f, 0);
     bgfx::setViewName(HDR_PASS, "hdr_pass");
-}
-
-HDRPassSystem::~HDRPassSystem() {
-    auto& hdr_pass_single_component = world.ctx<HDRPassSingleComponent>();
-
-    auto destroy_valid = [](auto handle) {
-        if (bgfx::isValid(handle)) {
-            bgfx::destroy(handle);
-        }
-    };
-
-    destroy_valid(hdr_pass_single_component.hdr_pass_program);
-    destroy_valid(hdr_pass_single_component.texture_uniform);
 }
 
 void HDRPassSystem::update(float /*elapsed_time*/) {
@@ -70,23 +59,23 @@ void HDRPassSystem::update(float /*elapsed_time*/) {
     auto& window_single_component = world.ctx<WindowSingleComponent>();
 
     if (window_single_component.resized) {
-        reset(hdr_pass_single_component, window_single_component.width, window_single_component.height);
+        bgfx::setViewRect(HDR_PASS, 0, 0, window_single_component.width, window_single_component.height);
     }
 
-    bgfx::setVertexBuffer(0, quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
-    bgfx::setIndexBuffer(quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
+    assert(bgfx::isValid(*quad_single_component.index_buffer));
+    bgfx::setIndexBuffer(*quad_single_component.index_buffer, 0, QuadSingleComponent::NUM_INDICES);
 
-    bgfx::setTexture(0, hdr_pass_single_component.texture_uniform, aa_pass_single_component.color_texture);
+    assert(bgfx::isValid(*quad_single_component.vertex_buffer));
+    bgfx::setVertexBuffer(0, *quad_single_component.vertex_buffer, 0, QuadSingleComponent::NUM_VERTICES);
+
+    assert(bgfx::isValid(*hdr_pass_single_component.texture_sampler_uniform));
+    assert(bgfx::isValid(*aa_pass_single_component.color_texture));
+    bgfx::setTexture(0, *hdr_pass_single_component.texture_sampler_uniform, *aa_pass_single_component.color_texture);
 
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_CULL_CW);
 
-    bgfx::submit(HDR_PASS, hdr_pass_single_component.hdr_pass_program);
-}
-
-void HDRPassSystem::reset(HDRPassSingleComponent &hdr_pass_single_component, uint16_t width, uint16_t height) const {
-    using namespace hdr_pass_system_details;
-
-    bgfx::setViewRect(HDR_PASS, 0, 0, width, height);
+    assert(bgfx::isValid(*hdr_pass_single_component.program));
+    bgfx::submit(HDR_PASS, *hdr_pass_single_component.program);
 }
 
 } // namespace hg

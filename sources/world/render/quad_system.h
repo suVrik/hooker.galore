@@ -4,11 +4,10 @@
 
 namespace hg {
 
-/** `QuadSystem` simply allocated a quad and stores it in `QuadSingleComponent`. */
+/** `QuadSystem` simply allocates quad's vertices and indices and stores it in `QuadSingleComponent`. */
 class QuadSystem final : public NormalSystem {
 public:
     explicit QuadSystem(World& world);
-    ~QuadSystem() override;
     void update(float elapsed_time) override;
 };
 

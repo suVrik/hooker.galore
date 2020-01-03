@@ -1,26 +1,26 @@
 #pragma once
 
-#include <bgfx/bgfx.h>
+#include "core/render/unique_handle.h"
 
 namespace hg {
 
 /** `LightingPassSingleComponent` contains lighting pass shaders, textures and uniforms. */
 struct LightingPassSingleComponent final {
-    bgfx::FrameBufferHandle buffer            = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle lighting_pass_program = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle color_texture         = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
+    UniqueHandle<bgfx::ProgramHandle> program;
+    UniqueHandle<bgfx::TextureHandle> color_texture;
 
-    bgfx::UniformHandle color_roughness_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle depth_uniform           = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle light_color_uniform     = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle light_position_uniform  = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle normal_metal_ao_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle texture_uniform         = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::UniformHandle> color_roughness_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> normal_metal_ao_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> depth_sampler_uniform;
 
-    bgfx::UniformHandle skybox_mip_prefilter_max_uniform  = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle skybox_texture_irradiance_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle skybox_texture_lut_uniform        = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle skybox_texture_prefilter_uniform  = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::UniformHandle> skybox_irradiance_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> skybox_prefilter_sampler_uniform;
+    UniqueHandle<bgfx::UniformHandle> skybox_lut_sampler_uniform;
+
+    UniqueHandle<bgfx::UniformHandle> light_color_uniform;
+    UniqueHandle<bgfx::UniformHandle> light_position_uniform;
+    UniqueHandle<bgfx::UniformHandle> skybox_mip_prefilter_max_uniform;
 };
 
 } // namespace hg

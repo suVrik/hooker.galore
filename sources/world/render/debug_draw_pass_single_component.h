@@ -1,18 +1,16 @@
 #pragma once
 
-#include <bgfx/bgfx.h>
+#include "core/render/unique_handle.h"
 
 namespace hg {
 
 /** `DebugDrawSingleComponent` holds programs and uniforms needed for debug draw pass. */
 struct DebugDrawPassSingleComponent final {
-    bgfx::FrameBufferHandle buffer = BGFX_INVALID_HANDLE;
-
-    bgfx::ProgramHandle solid_program    = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle textured_program = BGFX_INVALID_HANDLE;
-
-    bgfx::TextureHandle color_texture   = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle texture_uniform = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
+    UniqueHandle<bgfx::ProgramHandle> solid_program;
+    UniqueHandle<bgfx::ProgramHandle> textured_program;
+    UniqueHandle<bgfx::TextureHandle> color_texture;
+    UniqueHandle<bgfx::UniformHandle> texture_sampler_uniform;
 };
 
 } // namespace hg

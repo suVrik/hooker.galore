@@ -1,17 +1,15 @@
 #pragma once
 
-#include <bgfx/bgfx.h>
+#include "core/render/unique_handle.h"
 
 namespace hg {
 
 /** `AAPassSingleComponent` contains AA pass shaders, textures and uniforms. */
 struct AAPassSingleComponent final {
-    bgfx::FrameBufferHandle buffer      = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle aa_pass_program = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle color_texture   = BGFX_INVALID_HANDLE;
-
-    bgfx::UniformHandle pixel_size_uniform = BGFX_INVALID_HANDLE;
-    bgfx::UniformHandle texture_uniform    = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
+    UniqueHandle<bgfx::ProgramHandle> program;
+    UniqueHandle<bgfx::TextureHandle> color_texture;
+    UniqueHandle<bgfx::UniformHandle> color_sampler_uniform;
 };
 
 } // namespace hg

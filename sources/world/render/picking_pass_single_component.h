@@ -1,19 +1,21 @@
 #pragma once
 
+#include "core/render/unique_handle.h"
+
 #include <bgfx/bgfx.h>
 
 namespace hg {
 
 /** `PickingPassSingleComponent` contains picking pass shaders, textures and uniforms. */
-struct PickingPassSingleComponent final {
-    bgfx::FrameBufferHandle buffer = BGFX_INVALID_HANDLE;
-    bgfx::ProgramHandle program    = BGFX_INVALID_HANDLE;
+struct PickingPassSingleComponent {
+    UniqueHandle<bgfx::FrameBufferHandle> buffer;
+    UniqueHandle<bgfx::ProgramHandle> program;
 
-    bgfx::TextureHandle color_texture    = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle rt_color_texture = BGFX_INVALID_HANDLE;
-    bgfx::TextureHandle rt_depth_buffer  = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::TextureHandle> color_texture;
+    UniqueHandle<bgfx::TextureHandle> rt_color_texture;
+    UniqueHandle<bgfx::TextureHandle> rt_depth_buffer;
 
-    bgfx::UniformHandle object_index_uniform = BGFX_INVALID_HANDLE;
+    UniqueHandle<bgfx::UniformHandle> object_index_uniform;
 
     bool perform_picking = false;
     uint32_t target_frame = 0;
