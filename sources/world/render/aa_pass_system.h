@@ -10,7 +10,6 @@ struct AAPassSingleComponent;
 class AAPassSystem final : public NormalSystem {
 public:
     explicit AAPassSystem(World& world);
-    ~AAPassSystem() override;
     void update(float elapsed_time) override;
 
 private:
