@@ -16,7 +16,6 @@
 #include "world/physics/physics_static_rigid_body_component.h"
 #include "world/physics/physics_static_rigid_body_private_component.h"
 #include "world/render/aa_pass_single_component.h"
-#include "world/render/blockout_component.h"
 #include "world/render/camera_single_component.h"
 #include "world/render/debug_draw_pass_single_component.h"
 #include "world/render/geometry_pass_single_component.h"
@@ -69,7 +68,6 @@ void register_components() {
     REGISTER_COMPONENT(TextureSingleComponent);
     REGISTER_COMPONENT(WindowSingleComponent);
 
-    REGISTER_COMPONENT(BlockoutComponent);
     REGISTER_COMPONENT(EditorCameraComponent);
     REGISTER_COMPONENT(LightComponent);
     REGISTER_COMPONENT(MaterialComponent);

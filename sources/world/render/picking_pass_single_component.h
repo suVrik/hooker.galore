@@ -2,8 +2,6 @@
 
 #include "core/render/unique_handle.h"
 
-#include <bgfx/bgfx.h>
-
 namespace hg {
 
 /** `PickingPassSingleComponent` contains picking pass shaders, textures and uniforms. */
