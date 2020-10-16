@@ -6,6 +6,7 @@
 #include "world/shared/level_single_component.h"
 
 #include <SDL2/SDL_messagebox.h>
+#include <algorithm>
 #include <chrono>
 #include <clara.hpp>
 #include <fmt/format.h>
@@ -24,6 +25,9 @@ int main(int argc, char* argv[]) {
     hg::register_components();
 
     try {
+        // Move to a system constructor without any tag.
+        // <ALL THIS> ///////////////
+
         bool is_editor         = false;
         std::string level_file = "default.yaml";
 
@@ -43,11 +47,14 @@ int main(int argc, char* argv[]) {
         auto& level_single_component = world.set<hg::LevelSingleComponent>();
         level_single_component.level_name = level_file;
 
+        // </ALL THIS> ///////////////
+        // Move to a system constructor without any tag (or tag like `entry`).
+
         std::chrono::steady_clock::time_point last = std::chrono::steady_clock::now();
         while (true) {
             std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
             world.update_fixed(1.f / 60.f); // TODO: Call `update_fixed` from one of normal update systems.
-            if (!world.update_normal(std::chrono::duration<float>(now - last).count())) {
+            if (!world.update_normal(std::clamp(std::chrono::duration<float>(now - last).count(), 0.001f, 0.1f))) {
                 break;
             }
             last = now;

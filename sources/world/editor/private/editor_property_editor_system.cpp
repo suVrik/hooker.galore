@@ -9,7 +9,6 @@
 
 #include <fmt/format.h>
 #include <glm/detail/type_quat.hpp>
-#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -292,21 +291,33 @@ bool EditorPropertyEditorSystem::list_properties(EditorSelectionSingleComponent&
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 0.f, 1.f));
         }
 
-        // Validate editor function signature.
-        assert(editor_function.is_static());
-        assert(editor_function.size() == 2);
-        assert(editor_function.arg(0) == entt::resolve<const char*>());
-        assert(editor_function.arg(1) == entt::resolve<entt::meta_handle>());
-        assert(editor_function.ret() == entt::resolve<bool>());
+        entt::meta_any result;
 
-        entt::meta_any result = editor_function.invoke(entt::meta_handle(), name.c_str(), test_object);
-        assert(result);
-        assert(result.type() == entt::resolve<bool>());
+        assert(editor_function.is_static());
+        if (editor_function.size() == 2) {
+            // "editor" function specialization for 2 arguments: name and meta_handle.
+            assert(editor_function.arg(0) == entt::resolve<const char*>());
+            assert(editor_function.arg(1) == entt::resolve<entt::meta_handle>());
+            assert(editor_function.ret() == entt::resolve<bool>());
+
+            result = editor_function.invoke(entt::meta_handle(), name.c_str(), test_object);
+        } else {
+            // "editor" function specialization for 3 arguments: name, world reference and meta_handle.
+            assert(editor_function.size() == 3);
+            assert(editor_function.arg(0) == entt::resolve<const char*>());
+            assert(editor_function.arg(1) == entt::resolve<World&>());
+            assert(editor_function.arg(2) == entt::resolve<entt::meta_handle>());
+            assert(editor_function.ret() == entt::resolve<bool>());
+
+            result = editor_function.invoke(entt::meta_handle(), name.c_str(), std::reference_wrapper(world), test_object);
+        }
 
         if (!is_equal) {
             ImGui::PopStyleColor(1);
         }
 
+        assert(result);
+        assert(result.type() == entt::resolve<bool>());
         if (result.fast_cast<bool>()) {
             for (size_t i = 1; i < objects.size(); i++) {
                 objects[i] = objects[0];
@@ -320,18 +331,34 @@ bool EditorPropertyEditorSystem::list_properties(EditorSelectionSingleComponent&
     } else if (object_type.is_class()) {
         const entt::meta_func advanced_editor_function = object_type.func("advanced_editor"_hs);
         if (advanced_editor_function) {
-            assert(editor_function.is_static());
-            assert(editor_function.size() == 3);
-            assert(editor_function.arg(0) == entt::resolve<const char*>());
-            assert(editor_function.arg(1) == entt::resolve<const entt::meta_any*>());
-            assert(editor_function.arg(2) == entt::resolve<size_t>());
-            assert(editor_function.ret() == entt::resolve<bool>());
+            assert(advanced_editor_function.is_static());
+            if (advanced_editor_function.size() == 3) {
+                // "advanced_editor" function specialization for 3 arguments: name, array of objects and size of that array.
+                assert(advanced_editor_function.arg(0) == entt::resolve<const char*>());
+                assert(advanced_editor_function.arg(1) == entt::resolve<entt::meta_any*>());
+                assert(advanced_editor_function.arg(2) == entt::resolve<size_t>());
+                assert(advanced_editor_function.ret() == entt::resolve<bool>());
 
-            entt::meta_any result = editor_function.invoke(entt::meta_handle(), name.c_str(), objects.data(), objects.size());
-            assert(result);
-            assert(result.type() == entt::resolve<bool>());
+                entt::meta_any result = advanced_editor_function.invoke(entt::meta_handle(), name.c_str(), objects.data(), objects.size());
+                assert(result);
+                assert(result.type() == entt::resolve<bool>());
 
-            return result.fast_cast<bool>();
+                return result.fast_cast<bool>();
+            } else {
+                // "advanced_editor" function specialization for 4 arguments: name, world reference, array of objects and size of that array.
+                assert(advanced_editor_function.size() == 4);
+                assert(advanced_editor_function.arg(0) == entt::resolve<const char*>());
+                assert(advanced_editor_function.arg(1) == entt::resolve<World&>());
+                assert(advanced_editor_function.arg(2) == entt::resolve<entt::meta_any*>());
+                assert(advanced_editor_function.arg(3) == entt::resolve<size_t>());
+                assert(advanced_editor_function.ret() == entt::resolve<bool>());
+
+                entt::meta_any result = advanced_editor_function.invoke(entt::meta_handle(), name.c_str(), std::reference_wrapper(world), objects.data(), objects.size());
+                assert(result);
+                assert(result.type() == entt::resolve<bool>());
+
+                return result.fast_cast<bool>();
+            }
         } else {
             bool object_changed = false;
             if (is_component || ImGui::TreeNode(name.c_str())) {

@@ -7,7 +7,6 @@
 #include "world/editor/editor_selection_single_component.h"
 #include "world/editor/editor_tags.h"
 #include "world/render/camera_single_component.h"
-#include "world/render/model_component.h"
 #include "world/render/outline_component.h"
 #include "world/shared/name_component.h"
 #include "world/shared/normal_input_single_component.h"
@@ -167,9 +166,10 @@ void EditorGizmoSystem::process_single_entity(CameraSingleComponent& camera_sing
         float* local_bounds = nullptr;
         float* bounds_snap = nullptr;
         if (editor_gizmo_single_component.operation == ImGuizmo::OPERATION::BOUNDS) {
-            if (auto* const model_component = world.try_get<ModelComponent>(selected_entity); model_component != nullptr) {
-                local_bounds = reinterpret_cast<float*>(&model_component->model.bounds);
-            }
+            // TODO: Put it back.
+            //if (auto* const model_component = world.try_get<ModelComponent>(selected_entity); model_component != nullptr) {
+            //    local_bounds = reinterpret_cast<float*>(&model_component->model.bounds);
+            //}
 
             if (is_snapping) {
                 static float BOUNDS_SNAP[3];

@@ -30,6 +30,8 @@
 #include "world/render/render_single_component.h"
 #include "world/render/skybox_pass_single_component.h"
 #include "world/render/texture_single_component.h"
+#include "world/resource/resource_single_component.h"
+#include "world/resource/resource_geometry_component.h"
 #include "world/shared/level_single_component.h"
 #include "world/shared/name_component.h"
 #include "world/shared/name_single_component.h"
@@ -63,6 +65,7 @@ void register_components() {
     REGISTER_COMPONENT(PickingPassSingleComponent);
     REGISTER_COMPONENT(QuadSingleComponent);
     REGISTER_COMPONENT(RenderSingleComponent);
+    REGISTER_COMPONENT(ResourceSingleComponent);
     REGISTER_COMPONENT(RunningWorldSingleComponent);
     REGISTER_COMPONENT(SkyboxPassSingleComponent);
     REGISTER_COMPONENT(TextureSingleComponent);
@@ -79,6 +82,7 @@ void register_components() {
     REGISTER_COMPONENT(PhysicsCharacterControllerPrivateComponent);
     REGISTER_COMPONENT(PhysicsStaticRigidBodyComponent);
     REGISTER_COMPONENT(PhysicsStaticRigidBodyPrivateComponent);
+    REGISTER_COMPONENT(ResourceGeometryComponent);
     REGISTER_COMPONENT(TransformComponent);
 }
 

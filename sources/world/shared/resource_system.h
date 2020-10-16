@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/ecs/system.h"
-#include "core/resource/model.h"
 
 #include <entt/entity/observer.hpp>
 #include <string>
@@ -23,6 +22,8 @@ class meta_any;
 
 namespace hg {
 
+class Texture;
+
 /** `ResourceSystem` loads all the resources asynchronously. */
 class ResourceSystem final : public NormalSystem {
 public:
@@ -33,12 +34,6 @@ public:
 private:
     void load_textures() const;
     Texture load_texture(const std::string &path) const;
-
-    void load_models() const;
-    void load_model(Model& result, const std::string &path) const;
-    void load_model_node(const glm::mat4& parent_transform, Model::Node& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const;
-    void load_model_mesh(const glm::mat4& parent_transform, Model::Mesh& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Node &node) const;
-    void load_model_primitive(const glm::mat4& parent_transform, Model::Primitive& result, Model::AABB& bounds, const tinygltf::Model &model, const tinygltf::Primitive& primitive) const;
 
     void load_presets() const;
     void load_preset(std::vector<entt::meta_any>& result, const std::string &path) const;
