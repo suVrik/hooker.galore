@@ -1,6 +1,6 @@
 # Hooker Galore
 
-![](screenshots/video.mp4)
+![](screenshots/video.gif)
 
 An experimental game engine in which *everything* works through ECS.
 
@@ -106,6 +106,7 @@ System execution order is an important topic in every ECS game engine. Initially
 but after a couple of dozen systems, it has become difficult to add new systems to that list.
 
 Now each system has a small descriptor that defines before/after which systems a certain system must execute.
+System manager uses this information to order systems automatically.
 
 ```cpp
 SYSTEM_DESCRIPTOR(
