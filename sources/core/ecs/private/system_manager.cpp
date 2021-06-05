@@ -4,6 +4,8 @@
 #include <entt/core/hashed_string.hpp>
 #include <entt/meta/factory.hpp>
 
+#include <algorithm>
+
 namespace hg {
 
 std::vector<SystemManager::SystemDescriptor> SystemManager::m_systems[2];

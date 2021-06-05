@@ -10,6 +10,8 @@
 #include <bgfx/platform.h>
 #include <SDL2/SDL_syswm.h>
 
+#include <stdexcept>
+
 namespace hg {
 
 SYSTEM_DESCRIPTOR(

@@ -12,6 +12,8 @@
 #include <characterkinematic/PxCapsuleController.h>
 #include <characterkinematic/PxControllerManager.h>
 
+#include <stdexcept>
+
 namespace hg {
 
 SYSTEM_DESCRIPTOR(
